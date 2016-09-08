@@ -1,4 +1,4 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.Model
 {
     using System;
     using System.Diagnostics;
@@ -23,7 +23,7 @@
         /// <summary>
         /// Gets the description of the branch.
         /// </summary>
-        public string FriendlyName { get;  }
+        public string FriendlyName { get; }
 
         /// <summary>
         /// Gets a value indicating whether the branch is remote.

@@ -5,8 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ReactiveGit.Gui.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" 
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button Content="Open" Command="{Binding SelectRepository}"/>
+        <TabControl ItemsSource="{Binding RepositoryViewModels}" Grid.Row="1">
+            <TabControl.ItemTemplate>
+                <!-- this is the header template-->
+                <DataTemplate>
+                    <TextBlock
+                    Text="{Binding FriendlyName}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBox Text="{Binding FriendlyName, Mode=OneWay}"/>
+                        <TextBox Text="{Binding CurrentBranch.FriendlyName, Mode=OneWay}" />
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
 </Window>

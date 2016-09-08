@@ -1,10 +1,11 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.Exceptions
 {
     using System;
 
     /// <summary>
     /// A exception that occurs when a GIT operation didn't occurr as expected.
     /// </summary>
+    [Serializable]
     public sealed class GitProcessException : Exception
     {
         /// <summary>
@@ -19,7 +20,7 @@
         /// </summary>
         /// <param name="message">The message about the exception.</param>
         public GitProcessException(string message)
-        : base(message)
+            : base(message)
         {
         }
 
@@ -29,7 +30,7 @@
         /// <param name="message">The message to show.</param>
         /// <param name="inner">An inner exception.</param>
         public GitProcessException(string message, Exception inner)
-        : base(message, inner)
+            : base(message, inner)
         {
         }
 

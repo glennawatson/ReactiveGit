@@ -1,8 +1,10 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.Model
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+
+    using ReactiveGit.Managers;
 
     /// <summary>
     /// A commit in GIT.
@@ -12,7 +14,7 @@
     {
         private readonly IBranchManager branchManager;
 
-        private Lazy<string> messageLong;
+        private readonly Lazy<string> messageLong;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitCommit"/> class.

@@ -1,4 +1,4 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.Managers
 {
     using System;
     using System.Collections.Generic;
@@ -7,6 +7,9 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using ReactiveGit.Loggers;
+    using ReactiveGit.Model;
 
     /// <summary>
     /// Helper which manages branch history.
@@ -54,9 +57,9 @@
         }
 
         /// <inheritdoc />
-        public async Task<GitBranch> GetCurrentCheckedOutBranch(CancellationToken token)
+        public IObservable<GitBranch> GetCurrentCheckedOutBranch()
         {
-            return await this.gitProcessManager.RunGit(new[] { "branch" }).Where(x => x.StartsWith("*")).Select(line => new GitBranch(line.Substring(2), false)).FirstOrDefaultAsync();
+            return this.gitProcessManager.RunGit(new[] { "branch" }).Where(x => x.StartsWith("*")).Select(line => new GitBranch(line.Substring(2), false));
         }
 
         /// <inheritdoc />
@@ -97,7 +100,7 @@
         {
             return Observable.Create<string>(async (observer, token) =>
                 {
-                    IEnumerable<string> arguments = this.ExtractLogParameter(await this.GetCurrentCheckedOutBranch(token), 0, 0, GitLogOptions.None, $"{parent.Sha}..HEAD");
+                    IEnumerable<string> arguments = this.ExtractLogParameter(await this.GetCurrentCheckedOutBranch().LastOrDefaultAsync(), 0, 0, GitLogOptions.None, $"{parent.Sha}..HEAD");
                     this.gitProcessManager.RunGit(arguments).Select(x => this.ConvertStringToGitCommit(x).MessageLong.Trim('\r', '\n')).Subscribe(observer.OnNext, observer.OnCompleted, token);
                 });
         }

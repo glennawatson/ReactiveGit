@@ -1,4 +1,4 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.Managers
 {
     using System;
     using System.Collections.Generic;
@@ -10,13 +10,18 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using ReactiveGit.Exceptions;
+    using ReactiveGit.Helpers;
+    using ReactiveGit.Loggers;
+
     /// <summary>
     /// Manages and starts GIT processes.
     /// </summary>
     public class GitProcessManager : IGitProcessManager
     {
-        private readonly string repoDirectory;
         private readonly IOutputLogger outputLogger;
+
+        private readonly string repoDirectory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitProcessManager"/> class.
@@ -28,6 +33,9 @@
             this.repoDirectory = repoDirectory;
             this.outputLogger = newOutputLogger;
         }
+
+        /// <inheritdoc />
+        public string RepositoryPath => this.repoDirectory;
 
         /// <summary>
         /// Runs a new instance of GIT.
@@ -73,16 +81,16 @@
                             };
 
                         process.OutputDataReceived += (sender, e) =>
-                        {
-                            if (e.Data == null)
                             {
-                                return;
-                            }
+                                if (e.Data == null)
+                                {
+                                    return;
+                                }
 
-                            this.outputLogger?.WriteLine(e.Data);
-                            errorOutput.AppendLine(e.Data);
-                            observer.OnNext(e.Data);
-                        };
+                                this.outputLogger?.WriteLine(e.Data);
+                                errorOutput.AppendLine(e.Data);
+                                observer.OnNext(e.Data);
+                            };
 
                         int returnValue = await RunProcessAsync(process, token);
 
@@ -100,23 +108,7 @@
         {
             string gitInstallationPath = GitHelper.GetGitInstallationPath();
             string pathToGit = Path.Combine(Path.Combine(gitInstallationPath, @"bin\git.exe"));
-            return new Process
-            {
-                StartInfo =
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    FileName = pathToGit,
-                    Arguments = arguments,
-                    WorkingDirectory = repoDirectory,
-                    StandardErrorEncoding = Encoding.UTF8,
-                    StandardOutputEncoding = Encoding.UTF8
-                },
-                EnableRaisingEvents = true
-            };
+            return new Process { StartInfo = { CreateNoWindow = true, UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true, FileName = pathToGit, Arguments = arguments, WorkingDirectory = repoDirectory, StandardErrorEncoding = Encoding.UTF8, StandardOutputEncoding = Encoding.UTF8 }, EnableRaisingEvents = true };
         }
 
         private static Task<int> RunProcessAsync(Process process, CancellationToken token)
@@ -134,11 +126,10 @@
 
             return Task.Run(
                 () =>
-                    {
-                        process.WaitForExit();
-                        return process.ExitCode;
-                    },
-                token);
+                {
+                    process.WaitForExit();
+                    return process.ExitCode;
+                }, token);
         }
     }
 }

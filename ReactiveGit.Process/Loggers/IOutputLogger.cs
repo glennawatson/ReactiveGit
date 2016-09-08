@@ -1,4 +1,4 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.Loggers
 {
     /// <summary>
     /// Represents the ability to output to the end user.

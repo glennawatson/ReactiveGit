@@ -1,4 +1,4 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit
 {
     /// <summary>
     /// A response after we have initiated a command to GIT.

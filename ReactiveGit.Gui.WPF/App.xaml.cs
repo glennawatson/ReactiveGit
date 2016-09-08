@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace ReactiveGit.Gui.WPF
+﻿namespace ReactiveGit.Gui.WPF
 {
+    using System.Windows;
+
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Interaction logic for App.
     /// </summary>
     public partial class App : Application
     {

@@ -1,4 +1,4 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.Managers
 {
     using System;
     using System.Collections.Generic;
@@ -9,6 +9,11 @@
     /// </summary>
     public interface IGitProcessManager
     {
+        /// <summary>
+        /// Gets the path to the repository.
+        /// </summary>
+        string RepositoryPath { get; }
+
         /// <summary>
         /// Runs a new GIT instance.
         /// </summary>

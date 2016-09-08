@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.UnitTests", "Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.Gui.WPF", "ReactiveGit.Gui.WPF\ReactiveGit.Gui.WPF.csproj", "{146536C0-7F87-4D4E-9FF8-A40F09ED9519}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.Gui.Base", "ReactiveGit.Gui.Base\ReactiveGit.Gui.Base.csproj", "{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,22 @@ Global
 		{146536C0-7F87-4D4E-9FF8-A40F09ED9519}.Release|x64.Build.0 = Release|Any CPU
 		{146536C0-7F87-4D4E-9FF8-A40F09ED9519}.Release|x86.ActiveCfg = Release|Any CPU
 		{146536C0-7F87-4D4E-9FF8-A40F09ED9519}.Release|x86.Build.0 = Release|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Debug|ARM.Build.0 = Debug|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Debug|x64.Build.0 = Debug|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Debug|x86.Build.0 = Debug|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|ARM.ActiveCfg = Release|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|ARM.Build.0 = Release|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|x64.ActiveCfg = Release|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|x64.Build.0 = Release|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|x86.ActiveCfg = Release|Any CPU
+		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

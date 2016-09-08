@@ -1,7 +1,6 @@
 ﻿// <copyright file="GitUnitTest.cs" company="Glenn Watson">
 // Copyright (c) Glenn Watson. All rights reserved.
 // </copyright>
-
 namespace Git.VisualStudio.UnitTests
 {
     using System.Collections.Generic;
@@ -10,8 +9,11 @@ namespace Git.VisualStudio.UnitTests
     using System.Reactive.Linq;
 
     using FluentAssertions;
-
     using LibGit2Sharp;
+
+    using ReactiveGit.Exceptions;
+    using ReactiveGit.Managers;
+    using ReactiveGit.Model;
 
     using Xunit;
 
@@ -40,10 +42,13 @@ namespace Git.VisualStudio.UnitTests
 
             using (Repository repository = new Repository(tempDirectory))
             {
-                var branch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "master");
+                Branch branch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "master");
                 branch.Should().NotBeNull();
 
-                CheckCommits(branch.Commits.ToList(), commits);
+                if (branch != null)
+                {
+                    CheckCommits(branch.Commits.ToList(), commits);
+                }
             }
 
             commits.Should().BeInDescendingOrder(x => x.DateTime);

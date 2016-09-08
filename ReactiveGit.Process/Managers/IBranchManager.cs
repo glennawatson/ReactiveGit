@@ -1,9 +1,10 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.Managers
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using ReactiveGit.Model;
 
     /// <summary>
     /// Manages and handling getting branch information.
@@ -31,9 +32,8 @@
         /// <summary>
         /// Gets the current checked out branch.
         /// </summary>
-        /// <param name="token">A cancellation token to stop the process.</param>
         /// <returns>The local checked out branch.</returns>
-        Task<GitBranch> GetCurrentCheckedOutBranch(CancellationToken token);
+        IObservable<GitBranch> GetCurrentCheckedOutBranch();
 
         /// <summary>
         /// Gets the commits for the specified branch.

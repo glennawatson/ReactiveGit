@@ -1,10 +1,6 @@
-﻿namespace Git.VisualStudio
+﻿namespace ReactiveGit.ExtensionMethods
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Extension methods related to strings.
@@ -23,12 +19,7 @@
                 return new string[0];
             }
 
-            return str.Split(
-                new[]
-                    {
-                        "\r\n",
-                        "\n"
-                    }, StringSplitOptions.RemoveEmptyEntries);
+            return str.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         /// <summary>
