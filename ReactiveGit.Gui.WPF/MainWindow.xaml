@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ReactiveGit.Gui.WPF"
+        xmlns:converters="clr-namespace:ReactiveGit.Gui.WPF.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" 
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}">
@@ -14,7 +15,7 @@
         </Grid.RowDefinitions>
 
         <Button Content="Open" Command="{Binding SelectRepository}"/>
-        <TabControl ItemsSource="{Binding RepositoryViewModels}" Grid.Row="1">
+        <TabControl ItemsSource="{Binding RepositoryViewModels}" Grid.Row="1" SelectedItem="{Binding SelectedRepositoryViewModel}">
             <TabControl.ItemTemplate>
                 <!-- this is the header template-->
                 <DataTemplate>
@@ -24,10 +25,14 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBox Text="{Binding FriendlyName, Mode=OneWay}"/>
-                        <TextBox Text="{Binding CurrentBranch.FriendlyName, Mode=OneWay}" />
-                    </StackPanel>
+                    <DataGrid Grid.Row="1" IsReadOnly="True" SelectionMode="Single" ItemsSource="{Binding CommitHistory}" AutoGenerateColumns="False" Margin="0,0,6,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn MaxWidth="50" Binding="{Binding Sha, Converter={converters:PrefixValueConverter PrefixLength=6}}" Header="ID"/>
+                            <DataGridTextColumn Binding="{Binding MessageShort}"  Width="250" Header="Message" />
+                            <DataGridTextColumn Binding="{Binding Author}"  Width="250" Header="Author" />
+                            <DataGridTextColumn Binding="{Binding DateTime}"  Width="250" Header="Date Time" />
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

@@ -3,11 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reactive;
     using System.Reactive.Linq;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
+    using ReactiveGit.ExtensionMethods;
     using ReactiveGit.Loggers;
     using ReactiveGit.Model;
 
@@ -63,6 +65,12 @@
         }
 
         /// <inheritdoc />
+        public int GetCommitCount(GitBranch branchName)
+        {
+            return Convert.ToInt32(this.gitProcessManager.RunGit(new[] { $"rev-list --count {branchName.FriendlyName}" }).ToList().Wait().First());
+        }
+
+        /// <inheritdoc />
         public async Task<bool> IsMergeConflict(CancellationToken token)
         {
             return await this.gitProcessManager.RunGit(new[] { "ls-files", "-u" }).Any();
@@ -78,21 +86,9 @@
         /// <inheritdoc />
         public IObservable<GitCommit> GetCommitsForBranch(GitBranch branch, int skip, int limit, GitLogOptions logOptions)
         {
-            return Observable.Create<GitCommit>(async (observer, token) =>
-                {
-                    string[] arguments = new[] { "log" }.Concat(this.ExtractLogParameter(branch, skip, limit, logOptions, "HEAD")).ToArray();
+            string[] arguments = new[] { "log" }.Concat(this.ExtractLogParameter(branch, skip, limit, logOptions, "HEAD")).ToArray();
 
-                    var commits = this.gitProcessManager.RunGit(arguments).Select(this.ConvertStringToGitCommit);
-                    commits.Subscribe(observer.OnNext, token);
-                    var last = commits.Wait();
-
-                    if (logOptions.HasFlag(GitLogOptions.BranchOnlyAndParent) && last != null && last.Parents.Any())
-                    {
-                        observer.OnNext(await this.GetSingleCommitLog(last.Parents.First()));
-                    }
-
-                    observer.OnCompleted();
-                });
+            return this.gitProcessManager.RunGit(arguments).Select(this.ConvertStringToGitCommit);
         }
 
         /// <inheritdoc />
@@ -103,6 +99,19 @@
                     IEnumerable<string> arguments = this.ExtractLogParameter(await this.GetCurrentCheckedOutBranch().LastOrDefaultAsync(), 0, 0, GitLogOptions.None, $"{parent.Sha}..HEAD");
                     this.gitProcessManager.RunGit(arguments).Select(x => this.ConvertStringToGitCommit(x).MessageLong.Trim('\r', '\n')).Subscribe(observer.OnNext, observer.OnCompleted, token);
                 });
+        }
+
+        /// <inheritdoc />
+        public IObservable<Unit> CheckoutBranch(GitBranch branch, bool force = false)
+        {
+            IList<string> arguments = new List<string>() { $"checkout {branch.FriendlyName}" };
+
+            if (force == true)
+            {
+                arguments.Add("-f");
+            }
+
+            return this.gitProcessManager.RunGit(arguments).WhenDone();
         }
 
         /// <inheritdoc />
@@ -201,9 +210,9 @@
             {
                 StringBuilder ignoreBranches = new StringBuilder("--not ");
 
-                var branches = this.GetLocalBranches().ToList().Wait();
+                IList<GitBranch> branches = this.GetLocalBranches().ToList().Wait();
 
-                foreach (var testBranch in branches)
+                foreach (GitBranch testBranch in branches)
                 {
                     if (testBranch != branch)
                     {

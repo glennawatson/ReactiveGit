@@ -23,6 +23,8 @@
 
         private readonly string repoDirectory;
 
+        private static SemaphoreSlim repoLimiterSemaphore = new SemaphoreSlim(1, 1);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GitProcessManager"/> class.
         /// </summary>
@@ -92,6 +94,12 @@
                                 observer.OnNext(e.Data);
                             };
 
+                        if (token.IsCancellationRequested)
+                        {
+                            observer.OnCompleted();
+                            return;
+                        }
+
                         int returnValue = await RunProcessAsync(process, token);
 
                         if (returnValue != 0)
@@ -111,25 +119,35 @@
             return new Process { StartInfo = { CreateNoWindow = true, UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true, FileName = pathToGit, Arguments = arguments, WorkingDirectory = repoDirectory, StandardErrorEncoding = Encoding.UTF8, StandardOutputEncoding = Encoding.UTF8 }, EnableRaisingEvents = true };
         }
 
-        private static Task<int> RunProcessAsync(Process process, CancellationToken token)
+        private static async Task<int> RunProcessAsync(Process process, CancellationToken token)
         {
-            bool started = process.Start();
-            if (!started)
+            await repoLimiterSemaphore.WaitAsync(token);
+
+            try
             {
-                // you may allow for the process to be re-used (started = false) 
-                // but I'm not sure about the guarantees of the Exited event in such a case
-                throw new InvalidOperationException("Could not start process: " + process);
-            }
 
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            return Task.Run(
-                () =>
+                bool started = process.Start();
+                if (!started)
                 {
-                    process.WaitForExit();
-                    return process.ExitCode;
-                }, token);
+                    // you may allow for the process to be re-used (started = false) 
+                    // but I'm not sure about the guarantees of the Exited event in such a case
+                    throw new InvalidOperationException("Could not start process: " + process);
+                }
+
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
+                return await Task.Run(
+                            () =>
+                           {
+                               process.WaitForExit();
+                               return process.ExitCode;
+                           }, token);
+            }
+            finally
+            {
+                repoLimiterSemaphore.Release();
+            }
         }
     }
 }

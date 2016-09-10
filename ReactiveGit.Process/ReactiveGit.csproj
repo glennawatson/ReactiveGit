@@ -66,6 +66,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtensionMethods\ObservableExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\TypeExtensionMethods.cs" />
     <Compile Include="Managers\BranchManager.cs" />
     <Compile Include="Loggers\DebugOutputLog.cs" />

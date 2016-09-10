@@ -7,17 +7,12 @@ namespace ReactiveGit.Gui.Base.ViewModel
     using System;
     using System.Collections.Generic;
     using System.Reactive;
-    using System.Reactive.Linq;
     using System.Windows.Input;
-
-    using Managers;
 
     using ReactiveGit.Gui.Base.View;
 
     using ReactiveUI;
     using ReactiveUI.Fody.Helpers;
-
-    using Splat;
 
     /// <summary>
     /// The main view model.
@@ -39,7 +34,12 @@ namespace ReactiveGit.Gui.Base.ViewModel
             this.folderSelector = folderSelector;
 
             this.selectRepository = ReactiveCommand.CreateFromObservable(() => this.folderSelector.Prompt());
-            this.selectRepository.Subscribe(x => this.repositoryViewModels.Add(new RepositoryViewModel(x)));
+            this.selectRepository.Subscribe(x =>
+                {
+                    var newModel = new RepositoryViewModel(x);
+                    this.repositoryViewModels.Add(newModel);
+                    this.SelectedRepositoryViewModel = newModel;
+                });
 
             this.repositoryViewModels = new ReactiveList<IRepositoryViewModel>();
         }
@@ -51,5 +51,8 @@ namespace ReactiveGit.Gui.Base.ViewModel
 
         /// <inheritdoc />
         public IReadOnlyList<IRepositoryViewModel> RepositoryViewModels => this.repositoryViewModels;
+
+        [Reactive]
+        public IRepositoryViewModel SelectedRepositoryViewModel { get; set; }
     }
 }

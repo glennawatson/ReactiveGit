@@ -1,6 +1,7 @@
 ﻿namespace ReactiveGit.Managers
 {
     using System;
+    using System.Reactive;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -36,6 +37,13 @@
         IObservable<GitBranch> GetCurrentCheckedOutBranch();
 
         /// <summary>
+        /// Gets the number of commits for a branch.
+        /// </summary>
+        /// <param name="branchName">The name of the branch.</param>
+        /// <returns>The number of commits.</returns>
+        int GetCommitCount(GitBranch branchName);
+
+            /// <summary>
         /// Gets the commits for the specified branch.
         /// </summary>
         /// <param name="branch">The branch to get the commits for.</param>
@@ -53,6 +61,14 @@
         IObservable<string> GetCommitMessagesAfterParent(GitCommit parent);
 
         /// <summary>
+        /// Checks out the specified branch.
+        /// </summary>
+        /// <param name="branch">The branch to check out.</param>
+        /// <param name="force">If to force the branch change.</param>
+        /// <returns>The observable.</returns>
+        IObservable<Unit> CheckoutBranch(GitBranch branch, bool force = false);
+
+            /// <summary>
         /// Gets a remote branch of the specified branch.
         /// </summary>
         /// <param name="branch">The branch to get the </param>

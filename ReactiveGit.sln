@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.Gui.WPF", "Reac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.Gui.Base", "ReactiveGit.Gui.Base\ReactiveGit.Gui.Base.csproj", "{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.Gui.Uwp", "ReactiveGit.Gui.Uwp\ReactiveGit.Gui.Uwp.csproj", "{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,26 @@ Global
 		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|x64.Build.0 = Release|Any CPU
 		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|x86.ActiveCfg = Release|Any CPU
 		{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}.Release|x86.Build.0 = Release|Any CPU
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|ARM.ActiveCfg = Debug|ARM
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|ARM.Build.0 = Debug|ARM
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|ARM.Deploy.0 = Debug|ARM
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|x64.ActiveCfg = Debug|x64
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|x64.Build.0 = Debug|x64
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|x64.Deploy.0 = Debug|x64
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|x86.ActiveCfg = Debug|x86
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|x86.Build.0 = Debug|x86
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Debug|x86.Deploy.0 = Debug|x86
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|Any CPU.ActiveCfg = Release|x86
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|ARM.ActiveCfg = Release|ARM
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|ARM.Build.0 = Release|ARM
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|ARM.Deploy.0 = Release|ARM
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|x64.ActiveCfg = Release|x64
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|x64.Build.0 = Release|x64
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|x64.Deploy.0 = Release|x64
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|x86.ActiveCfg = Release|x86
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|x86.Build.0 = Release|x86
+		{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
