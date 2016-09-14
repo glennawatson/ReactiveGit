@@ -13,6 +13,11 @@
     public interface IBranchManager
     {
         /// <summary>
+        /// Gets a observable to the current branch.
+        /// </summary>
+        IObservable<GitBranch> CurrentBranch { get; }
+
+        /// <summary>
         /// Gets a list of local branches.
         /// </summary>
         /// <returns>The local branches.</returns>
@@ -29,12 +34,6 @@
         /// </summary>
         /// <returns>The local and remote branches.</returns>
         IObservable<GitBranch> GetLocalAndRemoteBranches();
-
-        /// <summary>
-        /// Gets the current checked out branch.
-        /// </summary>
-        /// <returns>The local checked out branch.</returns>
-        IObservable<GitBranch> GetCurrentCheckedOutBranch();
 
         /// <summary>
         /// Gets the number of commits for a branch.

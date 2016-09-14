@@ -5,29 +5,40 @@
     using System.Linq;
     using System.Reactive;
     using System.Reactive.Linq;
+    using System.Reactive.Subjects;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using ReactiveGit.ExtensionMethods;
-    using ReactiveGit.Loggers;
-    using ReactiveGit.Model;
+    using ExtensionMethods;
+    using Model;
 
     /// <summary>
     /// Helper which manages branch history.
     /// </summary>
     public class BranchManager : IBranchManager
     {
-        private readonly GitProcessManager gitProcessManager;
+        private readonly IGitProcessManager gitProcessManager;
+
+        private readonly Subject<GitBranch> currentBranch = new Subject<GitBranch>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchManager"/> class.
         /// </summary>
-        /// <param name="repoPath">The directory to the repo.</param>
-        /// <param name="logger">The logger to use.</param>
-        public BranchManager(string repoPath, IOutputLogger logger)
+        /// <param name="gitProcessManager">The git process to use.</param>
+        public BranchManager(IGitProcessManager gitProcessManager)
         {
-            this.gitProcessManager = new GitProcessManager(repoPath, logger);
+            this.gitProcessManager = gitProcessManager;
+        }
+
+        /// <inheritdoc />
+        public IObservable<GitBranch> CurrentBranch
+        {
+            get
+            {
+                this.GetCurrentCheckedOutBranch();
+                return this.currentBranch;
+            }
         }
 
         /// <inheritdoc />
@@ -56,12 +67,6 @@
         public IObservable<GitBranch> GetLocalAndRemoteBranches()
         {
             return this.GetLocalBranches().Merge(this.GetRemoteBranches());
-        }
-
-        /// <inheritdoc />
-        public IObservable<GitBranch> GetCurrentCheckedOutBranch()
-        {
-            return this.gitProcessManager.RunGit(new[] { "branch" }).Where(x => x.StartsWith("*")).Select(line => new GitBranch(line.Substring(2), false));
         }
 
         /// <inheritdoc />
@@ -96,7 +101,7 @@
         {
             return Observable.Create<string>(async (observer, token) =>
                 {
-                    IEnumerable<string> arguments = this.ExtractLogParameter(await this.GetCurrentCheckedOutBranch().LastOrDefaultAsync(), 0, 0, GitLogOptions.None, $"{parent.Sha}..HEAD");
+                    IEnumerable<string> arguments = this.ExtractLogParameter(await this.CurrentBranch.LastOrDefaultAsync(), 0, 0, GitLogOptions.None, $"{parent.Sha}..HEAD");
                     this.gitProcessManager.RunGit(arguments).Select(x => this.ConvertStringToGitCommit(x).MessageLong.Trim('\r', '\n')).Subscribe(observer.OnNext, observer.OnCompleted, token);
                 });
         }
@@ -106,12 +111,13 @@
         {
             IList<string> arguments = new List<string>() { $"checkout {branch.FriendlyName}" };
 
-            if (force == true)
+            if (force)
             {
                 arguments.Add("-f");
             }
 
-            return this.gitProcessManager.RunGit(arguments).WhenDone();
+            var observable = this.gitProcessManager.RunGit(arguments).WhenDone();
+            return observable.Finally(() => this.currentBranch.OnNext(branch));
         }
 
         /// <inheritdoc />
@@ -138,6 +144,11 @@
             arguments.Add("--date=iso");
         }
 
+        private void GetCurrentCheckedOutBranch()
+        {
+             this.gitProcessManager.RunGit(new[] { "branch" }).Where(x => x.StartsWith("*")).Select(line => new GitBranch(line.Substring(2), false)).Subscribe(this.currentBranch.OnNext);
+        }
+
         private GitCommit ConvertStringToGitCommit(string line)
         {
             string[] fields = line.Split('\u001f');
@@ -158,16 +169,6 @@
             string messageShort = fields[9];
 
             return new GitCommit(this, changeset, messageShort, commitDate, author, committer, changesetShort, parents);
-        }
-
-        private async Task<GitCommit> GetSingleCommitLog(string sha)
-        {
-            IList<string> singleCommitArguments = new List<string>();
-            singleCommitArguments.Add("log");
-            singleCommitArguments.Add($"-1 {sha} ");
-            GenerateFormat(singleCommitArguments);
-
-            return await this.gitProcessManager.RunGit(singleCommitArguments).Select(this.ConvertStringToGitCommit).FirstOrDefaultAsync();
         }
 
         private IEnumerable<string> ExtractLogParameter(GitBranch branch, int skip, int limit, GitLogOptions logOptions, string revisionRange)

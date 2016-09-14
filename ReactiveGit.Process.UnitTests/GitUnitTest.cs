@@ -35,7 +35,7 @@ namespace Git.VisualStudio.UnitTests
             int numberCommits = 10;
             this.GenerateCommits(numberCommits, tempDirectory, local, "master");
 
-            BranchManager branchManager = new BranchManager(tempDirectory, null);
+            BranchManager branchManager = new BranchManager(local);
 
             IList<GitCommit> commits = branchManager.GetCommitsForBranch(new GitBranch("master", false), 0, 0, GitLogOptions.BranchOnlyAndParent).ToList().Wait();
             commits.Count.Should().Be(numberCommits, $"We have done {numberCommits} commits");
@@ -82,7 +82,7 @@ namespace Git.VisualStudio.UnitTests
 
             int numberCommits = 10;
             this.GenerateCommits(numberCommits, tempDirectory, local, "master");
-            BranchManager branchManager = new BranchManager(tempDirectory, null);
+            BranchManager branchManager = new BranchManager(local);
 
             var commits = branchManager.GetCommitsForBranch(new GitBranch("master", false), 0, 0, GitLogOptions.BranchOnlyAndParent).ToList().Wait();
 
@@ -114,7 +114,7 @@ namespace Git.VisualStudio.UnitTests
             int numberCommits = 10;
             this.GenerateCommits(numberCommits, tempDirectory, local, "master", commitNames);
 
-            BranchManager branchManager = new BranchManager(tempDirectory, null);
+            BranchManager branchManager = new BranchManager(local);
             var commits = branchManager.GetCommitsForBranch(new GitBranch("test1", false), 0, 0, GitLogOptions.TopologicalOrder).ToList().Wait();
 
             commits.Select(x => x.MessageLong).Should().BeEquivalentTo(commitNames.Reverse());

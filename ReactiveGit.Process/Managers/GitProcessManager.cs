@@ -23,7 +23,7 @@
 
         private readonly string repoDirectory;
 
-        private static SemaphoreSlim repoLimiterSemaphore = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim RepoLimiterSemaphore = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitProcessManager"/> class.
@@ -121,7 +121,7 @@
 
         private static async Task<int> RunProcessAsync(Process process, CancellationToken token)
         {
-            await repoLimiterSemaphore.WaitAsync(token);
+            await RepoLimiterSemaphore.WaitAsync(token);
 
             try
             {
@@ -146,7 +146,7 @@
             }
             finally
             {
-                repoLimiterSemaphore.Release();
+                RepoLimiterSemaphore.Release();
             }
         }
     }

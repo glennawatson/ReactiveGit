@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.Windows.Input;
 
+    using ReactiveGit.Gui.Base.ViewModel.Repository;
+
     using ReactiveUI;
 
     /// <summary>
@@ -18,6 +20,6 @@
         /// <summary>
         /// Gets a list of repository view models.
         /// </summary>
-        IReadOnlyList<IRepositoryViewModel> RepositoryViewModels { get; }
+        IReadOnlyList<IRepositoryDocumentViewModel> RepositoryViewModels { get; }
     }
 }

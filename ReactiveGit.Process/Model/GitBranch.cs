@@ -88,5 +88,11 @@
         {
             return this.FriendlyName?.GetHashCode() ?? 0;
         }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return this.FriendlyName;
+        }
     }
 }
