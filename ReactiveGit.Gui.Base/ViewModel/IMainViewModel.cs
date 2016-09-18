@@ -18,6 +18,11 @@
         ICommand SelectRepository { get; }
 
         /// <summary>
+        /// Gets a command which will create a new repository.
+        /// </summary>
+        ICommand NewRepository { get; }
+
+        /// <summary>
         /// Gets a list of repository view models.
         /// </summary>
         IReadOnlyList<IRepositoryDocumentViewModel> RepositoryViewModels { get; }

@@ -68,8 +68,11 @@
   <ItemGroup>
     <Compile Include="ExtensionMethods\ObservableExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\TypeExtensionMethods.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Managers\BranchManager.cs" />
     <Compile Include="Loggers\DebugOutputLog.cs" />
+    <Compile Include="Managers\IRepositoryCreator.cs" />
+    <Compile Include="Managers\RepositoryCreator.cs" />
     <Compile Include="Model\GitBranch.cs" />
     <Compile Include="GitCommandResponse.cs" />
     <Compile Include="Model\GitCommit.cs" />

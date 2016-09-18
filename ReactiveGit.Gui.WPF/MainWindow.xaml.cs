@@ -23,7 +23,7 @@ namespace ReactiveGit.Gui.WPF
         public MainWindow()
         {
             this.InitializeComponent();
-            Application.Current.Dispatcher.InvokeAsync(() => this.ViewModel = new MainViewModel(new WpfFolderSelector(), new DefaultRepositoryDetailsFactory(), new DefaultRepositoryViewModelFactory()));
+            Application.Current.Dispatcher.InvokeAsync(() => this.ViewModel = new MainViewModel(new WpfFolderSelector(), new DefaultRepositoryFactory(), new DefaultRepositoryViewModelFactory()));
         }
 
         /// <inheritdoc />

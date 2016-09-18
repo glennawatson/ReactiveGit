@@ -136,7 +136,8 @@
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
 
-                return await Task.Run(() =>
+                return await Task.Run(
+                    () =>
                            {
                                process.WaitForExit();
                                return process.ExitCode;

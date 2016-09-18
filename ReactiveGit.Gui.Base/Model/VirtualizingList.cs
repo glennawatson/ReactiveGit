@@ -51,6 +51,22 @@
         }
 
         /// <inheritdoc />
+        public int Count => this.branchManager.GetCommitCount(this.branchName);
+
+        /// <summary>
+        /// Gets the sizes of the pages.
+        /// </summary>
+        public int PageSize { get; } = 100;
+
+        /// <summary>
+        /// Gets the time out of the pages.
+        /// </summary>
+        public TimeSpan PageTimeout { get; } = TimeSpan.FromMilliseconds(10000);
+
+        /// <inheritdoc />
+        public bool IsReadOnly => true;
+
+        /// <inheritdoc />
         public GitCommit this[int index]
         {
             get
@@ -78,13 +94,7 @@
                 this.CleanUpPages();
 
                 // defensive check in case of async load
-                if (this.pages[pageIndex] == null)
-                {
-                    return null;
-                }
-
-                // return requested item
-                return this.pages[pageIndex][pageOffset];
+                return this.pages[pageIndex] == null ? null : this.pages[pageIndex][pageOffset];
             }
 
             set
@@ -92,22 +102,6 @@
                 throw new NotSupportedException();
             }
         }
-
-        /// <inheritdoc />
-        public int Count => this.branchManager.GetCommitCount(this.branchName);
-
-        /// <summary>
-        /// Gets the sizes of the pages.
-        /// </summary>
-        public int PageSize { get; } = 100;
-
-        /// <summary>
-        /// Gets the time out of the pages.
-        /// </summary>
-        public TimeSpan PageTimeout { get; } = TimeSpan.FromMilliseconds(10000);
-
-        /// <inheritdoc />
-        public bool IsReadOnly => true;
 
         /// <inheritdoc />
         public void Add(GitCommit item)

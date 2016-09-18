@@ -14,10 +14,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" 
         DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}" Closed="Window_Closed">
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Control" Command="{Binding NewRepository}"/>
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding SelectRepository}"/>
+    </Window.InputBindings>
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open Repository" Command="{Binding SelectRepository}" />
+                <MenuItem Header="_New Repository" InputGestureText="Ctrl+N" Command="{Binding NewRepository}" />
+                <MenuItem Header="_Open Repository" InputGestureText="Ctrl+O" Command="{Binding SelectRepository}" />
             </MenuItem>
         </Menu>
         <xcad:DockingManager x:Name="dockManager" 
@@ -60,34 +65,5 @@
             </xcad:LayoutRoot>
 
         </xcad:DockingManager>
-        <!--<TabControl ItemsSource="{Binding RepositoryViewModels}" Grid.Row="1" SelectedItem="{Binding SelectedRepositoryViewModel}">
-            <TabControl.ItemTemplate>
-                -->
-        <!-- this is the header template-->
-        <!--
-                <DataTemplate>
-                    <TextBlock
-                    Text="{Binding FriendlyName}" />
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <DockPanel LastChildFill="True">
-                        <StackPanel Margin="2"  Orientation="Horizontal" DockPanel.Dock="Top">
-                            <Image Source="Images/git-branch.png" Width="25" Height="25" Margin="2,0,2,0" />
-                            <ComboBox Height="25" ItemsSource="{Binding Branches}" SelectedItem="{Binding CurrentBranch}" Margin="2,0,2,0" />
-                        </StackPanel>
-                        <DataGrid IsReadOnly="True" SelectionMode="Single" ItemsSource="{Binding CommitHistory}" AutoGenerateColumns="False" Margin="0,0,6,0">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn MaxWidth="50" Binding="{Binding Sha, Converter={converters:PrefixValueConverter PrefixLength=6}}" Header="ID"/>
-                                <DataGridTextColumn Binding="{Binding MessageShort}"  Width="250" Header="Message" />
-                                <DataGridTextColumn Binding="{Binding Author}"  Width="250" Header="Author" />
-                                <DataGridTextColumn Binding="{Binding DateTime}"  Width="250" Header="Date Time" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </DockPanel>
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>-->
     </DockPanel>
 </Window>
