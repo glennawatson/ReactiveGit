@@ -5,28 +5,33 @@
     using System.Windows.Data;
     using System.Windows.Markup;
 
-    /// <summary>
-    /// Grabs only the prefix of a value.
-    /// </summary>
-    public class PrefixValueConverter : MarkupExtension, IValueConverter
-    {
-        /// <summary>
-        /// Gets or sets the length of the prefix.
-        /// </summary>
-        public int PrefixLength { get; set; } = 6;
+    using ReactiveGit.Gui.Base.ViewModel.Repository;
 
+    /// <summary>
+    /// Makes only the repository selectable.
+    /// </summary>
+    public class RepositoryConverter : MarkupExtension, IValueConverter
+    {
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string s = value.ToString();
+            if (value is IRepositoryDocumentViewModel)
+            {
+                return value;
+            }
 
-            return s.Length <= this.PrefixLength ? s : s.Substring(0, this.PrefixLength);
+            return Binding.DoNothing;
         }
 
         /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if (value is IRepositoryDocumentViewModel)
+            {
+                return value;
+            }
+
+            return Binding.DoNothing;
         }
 
         /// <inheritdoc />

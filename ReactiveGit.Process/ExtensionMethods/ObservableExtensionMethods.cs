@@ -18,15 +18,13 @@
         public static IObservable<Unit> WhenDone<T>(this IObservable<T> source)
         {
             return Observable.Create<Unit>(observer =>
-            {
-                return source.Subscribe(
-                    _ => { },
-                    observer.OnError,
-                    () => {
-                        observer.OnNext(Unit.Default);
-                        observer.OnCompleted();
-                    });
-            });
+                {
+                    return source.Subscribe(_ => { }, observer.OnError, () =>
+                        {
+                            observer.OnNext(Unit.Default);
+                            observer.OnCompleted();
+                        });
+                });
         }
     }
 }

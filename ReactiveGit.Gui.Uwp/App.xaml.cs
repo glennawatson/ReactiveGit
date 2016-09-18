@@ -11,7 +11,7 @@
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    internal sealed partial class App 
+    internal sealed partial class App
     {
         /// <summary>Initializes a new instance of the <see cref="App"/> class. 
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -19,7 +19,7 @@
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            this.Suspending += this.OnSuspending;
         }
 
         /// <summary>
@@ -34,6 +34,7 @@
             {
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
+
 #endif
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -44,11 +45,11 @@
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.NavigationFailed += this.OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Load state from previously suspended application
+                    // TODO: Load state from previously suspended application
                 }
 
                 // Place the frame in the current Window
@@ -91,7 +92,7 @@
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
-            //TODO: Save application state and stop any background activity
+            // TODO: Save application state and stop any background activity
             deferral.Complete();
         }
     }

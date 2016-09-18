@@ -17,9 +17,9 @@
     /// </summary>
     public class RebaseManager : IRebaseManager
     {
-        private readonly IGitProcessManager gitProcess;
-
         private readonly IBranchManager branchManager;
+
+        private readonly IGitProcessManager gitProcess;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RebaseManager"/> class.
@@ -103,8 +103,7 @@
         /// <inheritdoc />
         public IObservable<string> Squash(string newCommitMessage, GitCommit startCommit)
         {
-            return Observable.Create<string>(
-                async (observer, token) =>
+            return Observable.Create<string>(async (observer, token) =>
                 {
                     if (await this.branchManager.IsWorkingDirectoryDirty(token))
                     {
@@ -116,7 +115,7 @@
                     if (GetWritersName(out rewriterName, out commentWriterName) == false)
                     {
                         observer.OnError(new GitProcessException("Cannot get valid paths to GIT parameters"));
-                        }
+                    }
 
                     string fileName = Path.GetTempFileName();
                     File.WriteAllText(fileName, newCommitMessage);
@@ -154,8 +153,7 @@
         /// <inheritdoc />
         public IObservable<string> Continue(string commitMessage)
         {
-            return Observable.Create<string>(
-                (observer) =>
+            return Observable.Create<string>((observer) =>
                 {
                     string rewriterName;
                     string commentWriterName;

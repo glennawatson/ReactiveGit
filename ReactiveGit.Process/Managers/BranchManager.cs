@@ -10,17 +10,17 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using ExtensionMethods;
-    using Model;
+    using ReactiveGit.ExtensionMethods;
+    using ReactiveGit.Model;
 
     /// <summary>
     /// Helper which manages branch history.
     /// </summary>
     public class BranchManager : IBranchManager
     {
-        private readonly IGitProcessManager gitProcessManager;
-
         private readonly Subject<GitBranch> currentBranch = new Subject<GitBranch>();
+
+        private readonly IGitProcessManager gitProcessManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchManager"/> class.
@@ -146,7 +146,7 @@
 
         private void GetCurrentCheckedOutBranch()
         {
-             this.gitProcessManager.RunGit(new[] { "branch" }).Where(x => x.StartsWith("*")).Select(line => new GitBranch(line.Substring(2), false)).Subscribe(this.currentBranch.OnNext);
+            this.gitProcessManager.RunGit(new[] { "branch" }).Where(x => x.StartsWith("*")).Select(line => new GitBranch(line.Substring(2), false)).Subscribe(this.currentBranch.OnNext);
         }
 
         private GitCommit ConvertStringToGitCommit(string line)

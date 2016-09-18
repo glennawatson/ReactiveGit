@@ -21,5 +21,10 @@
         /// Gets a list of repository view models.
         /// </summary>
         IReadOnlyList<IRepositoryDocumentViewModel> RepositoryViewModels { get; }
+
+        /// <summary>
+        /// Gets or sets the selected repository.
+        /// </summary>
+        IRepositoryDocumentViewModel SelectedRepositoryViewModel { get; set; }
     }
 }

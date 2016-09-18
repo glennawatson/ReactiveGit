@@ -6,10 +6,10 @@
              xmlns:local="clr-namespace:ReactiveGit.Gui.WPF.View"
              xmlns:converters="clr-namespace:ReactiveGit.Gui.WPF.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" 
-             DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}">
+             x:Name="HistoryViewWindow"
+             d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <DataGrid IsReadOnly="True" SelectionMode="Single" ItemsSource="{Binding CommitHistory}" AutoGenerateColumns="False" Margin="0,0,6,0">
+        <DataGrid IsReadOnly="True" SelectionMode="Single" ItemsSource="{Binding ViewModel.CommitHistory, ElementName=HistoryViewWindow}" AutoGenerateColumns="False" Margin="0,0,6,0">
             <DataGrid.Columns>
                 <DataGridTextColumn MaxWidth="50" Binding="{Binding Sha, Converter={converters:PrefixValueConverter PrefixLength=6}}" Header="ID"/>
                 <DataGridTextColumn Binding="{Binding MessageShort}"  Width="250" Header="Message" />

@@ -9,6 +9,7 @@ namespace Git.VisualStudio.UnitTests
     using System.Reactive.Linq;
 
     using FluentAssertions;
+
     using LibGit2Sharp;
 
     using ReactiveGit.Exceptions;

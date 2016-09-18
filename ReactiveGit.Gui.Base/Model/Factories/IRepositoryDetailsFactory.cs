@@ -1,7 +1,5 @@
 ﻿namespace ReactiveGit.Gui.Base.Model.Factories
 {
-    using ReactiveGit.Gui.Base.Model;
-
     /// <summary>
     /// Factory for generating 
     /// </summary>

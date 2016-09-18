@@ -1,7 +1,6 @@
 ﻿// <copyright file="MainViewModel.cs" company="Glenn Watson">
 // Copyright (c) Glenn Watson. All rights reserved.
 // </copyright>
-
 namespace ReactiveGit.Gui.Base.ViewModel
 {
     using System;
@@ -10,15 +9,13 @@ namespace ReactiveGit.Gui.Base.ViewModel
     using System.Reactive;
     using System.Windows.Input;
 
-    using ReactiveGit.Gui.Base.Model;
     using ReactiveGit.Gui.Base.Model.Factories;
+    using ReactiveGit.Gui.Base.View;
     using ReactiveGit.Gui.Base.ViewModel.Factories;
     using ReactiveGit.Gui.Base.ViewModel.Repository;
 
     using ReactiveUI;
     using ReactiveUI.Fody.Helpers;
-
-    using View;
 
     /// <summary>
     /// The main view model.
@@ -27,11 +24,11 @@ namespace ReactiveGit.Gui.Base.ViewModel
     {
         private readonly IFolderSelector folderSelector;
 
-        private readonly ReactiveCommand<Unit, string> selectRepository;
+        private readonly IRepositoryDetailsFactory repositoryFactory;
 
         private readonly ReactiveList<IRepositoryDocumentViewModel> repositoryViewModels;
 
-        private readonly IRepositoryDetailsFactory repositoryFactory;
+        private readonly ReactiveCommand<Unit, string> selectRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.

@@ -9,29 +9,56 @@
         xmlns:commits="clr-namespace:ReactiveGit.Gui.Base.ViewModel;assembly=ReactiveGit.Gui.Base"
         xmlns:commitHistory="clr-namespace:ReactiveGit.Gui.Base.ViewModel.CommitHistory;assembly=ReactiveGit.Gui.Base"
         xmlns:view="clr-namespace:ReactiveGit.Gui.WPF.View"
+        xmlns:selectors="clr-namespace:ReactiveGit.Gui.WPF.Selectors"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" 
-        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}" Closed="Window_Closed">
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open Repository" Command="{Binding SelectRepository}" />
             </MenuItem>
         </Menu>
-        <xcad:DockingManager x:Name="dockManager" DocumentsSource="{Binding RepositoryViewModels}">
-            <xcad:DockingManager.LayoutItemTemplate>
+        <xcad:DockingManager x:Name="dockManager" 
+                             DocumentsSource="{Binding RepositoryViewModels}"
+                             ActiveContent="{Binding SelectedRepositoryViewModel, Mode=TwoWay, Converter={converters:RepositoryConverter}}">
+            <!--<xcad:DockingManager.Theme>
+                <xcad:MetroTheme />
+            </xcad:DockingManager.Theme>-->
+            <xcad:DockingManager.LayoutItemTemplateSelector>
+                <selectors:DockingElementTemplateSelector>
+                    <selectors:DockingElementTemplateSelector.Template>
+                        <DataTemplate>
+                            <DataGrid IsReadOnly="True" SelectionMode="Single" ItemsSource="{Binding CommitHistoryViewModel.CommitHistory}" AutoGenerateColumns="False" Margin="0,0,6,0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn MaxWidth="50" Binding="{Binding Sha, Converter={converters:PrefixValueConverter PrefixLength=6}}" Header="ID"/>
+                                    <DataGridTextColumn Binding="{Binding MessageShort}"  Width="250" Header="Message" />
+                                    <DataGridTextColumn Binding="{Binding Author}"  Width="250" Header="Author" />
+                                    <DataGridTextColumn Binding="{Binding DateTime}"  Width="250" Header="Date Time" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DataTemplate>
+                    </selectors:DockingElementTemplateSelector.Template>
+                </selectors:DockingElementTemplateSelector>
+            </xcad:DockingManager.LayoutItemTemplateSelector>
+            <xcad:DockingManager.DocumentHeaderTemplate>
                 <DataTemplate>
-                    <view:HistoryView ViewModel="{Binding CommitHistoryViewModel}" />
+                    <TextBlock Text="{Binding Content.FriendlyName}" />
                 </DataTemplate>
-            </xcad:DockingManager.LayoutItemTemplate>
-            <xcad:DockingManager.LayoutItemContainerStyle>
-                <!-- you can add additional bindings from the layoutitem to the DockWindowViewModel -->
-                <Style TargetType="{x:Type xcad:LayoutItem}" >
-                    <Setter Property="Title" Value="{Binding FriendlyName}" />
-                    <!--<Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />-->
-                    <Setter Property="CanClose" Value="true" />
-                </Style>
-            </xcad:DockingManager.LayoutItemContainerStyle>
+            </xcad:DockingManager.DocumentHeaderTemplate>
+
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutDocumentPane/>
+                    <xcad:LayoutAnchorablePane Name="ToolsPane" DockWidth="150">
+                        <xcad:LayoutAnchorable ContentId="branches" Title="Branches" >
+                            <ListBox ItemsSource="{Binding Path=SelectedRepositoryViewModel.BranchViewModel.Branches}" x:Name="BranchesListBox" SelectedItem="{Binding Path=SelectedRepositoryViewModel.CommitHistoryViewModel.CurrentBranch}" />
+                        </xcad:LayoutAnchorable>
+                    </xcad:LayoutAnchorablePane>
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+
         </xcad:DockingManager>
         <!--<TabControl ItemsSource="{Binding RepositoryViewModels}" Grid.Row="1" SelectedItem="{Binding SelectedRepositoryViewModel}">
             <TabControl.ItemTemplate>
@@ -64,4 +91,3 @@
         </TabControl>-->
     </DockPanel>
 </Window>
-

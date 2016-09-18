@@ -19,11 +19,11 @@
     /// </summary>
     public class GitProcessManager : IGitProcessManager
     {
+        private static readonly SemaphoreSlim RepoLimiterSemaphore = new SemaphoreSlim(1, 1);
+
         private readonly IOutputLogger outputLogger;
 
         private readonly string repoDirectory;
-
-        private static readonly SemaphoreSlim RepoLimiterSemaphore = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitProcessManager"/> class.
@@ -125,7 +125,6 @@
 
             try
             {
-
                 bool started = process.Start();
                 if (!started)
                 {
@@ -137,8 +136,7 @@
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
 
-                return await Task.Run(
-                            () =>
+                return await Task.Run(() =>
                            {
                                process.WaitForExit();
                                return process.ExitCode;

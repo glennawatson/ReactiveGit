@@ -6,6 +6,7 @@
     using System.Reactive.Linq;
     using System.Windows.Input;
 
+    using ReactiveGit.Gui.Base.ExtensionMethods;
     using ReactiveGit.Gui.Base.Model;
     using ReactiveGit.Model;
 
@@ -17,15 +18,13 @@
     /// </summary>
     public class BranchViewModel : ReactiveObject, IBranchViewModel
     {
+        private readonly ReactiveCommand<GitBranch, Unit> checkoutBranch;
+
         private readonly ObservableAsPropertyHelper<GitBranch> currentBranch;
 
-        private readonly ReactiveCommand<GitBranch, Unit> checkoutBranch;
-      
         private readonly ReactiveCommand<Unit, GitBranch> getBranches;
 
         private readonly IRepositoryDetails repositoryDetails;
-
-        private readonly ReactiveCommand<Unit, GitBranch> refresh;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchViewModel"/> class.
@@ -46,6 +45,8 @@
 
             var isValidBranch = this.WhenAnyValue(x => x.CurrentBranch).Select(x => x != null);
             this.checkoutBranch = ReactiveCommand.CreateFromObservable<GitBranch, Unit>(x => repositoryDetails.BranchManager.CheckoutBranch(x), isValidBranch);
+
+            this.Refresh.InvokeCommand();
         }
 
         /// <summary>
@@ -57,7 +58,10 @@
         [Reactive]
         public IEnumerable<GitBranch> Branches { get; set; }
 
-        public ICommand Refresh => this.refresh;
+        /// <summary>
+        /// Gets a command which will refresh the branches.
+        /// </summary>
+        public ICommand Refresh => this.getBranches;
 
         /// <inheritdoc />
         public ICommand CheckoutBranch => this.checkoutBranch;

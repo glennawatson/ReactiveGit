@@ -1,7 +1,6 @@
 ﻿namespace ReactiveGit.Gui.Base.ViewModel.CommitHistory
 {
     using System.Collections.Generic;
-    using System.Windows.Input;
 
     using ReactiveGit.Model;
 
@@ -16,13 +15,8 @@
         IEnumerable<GitCommit> CommitHistory { get; }
 
         /// <summary>
-        /// Gets the current branch that the repository is in.
+        /// Gets or sets the current branch that the repository is in.
         /// </summary>
-        GitBranch CurrentBranch { get; }
-
-        /// <summary>
-        /// Gets a command that refreshes the values from GIT.
-        /// </summary>
-        ICommand Refresh { get; }
+        GitBranch CurrentBranch { get; set; }
     }
 }

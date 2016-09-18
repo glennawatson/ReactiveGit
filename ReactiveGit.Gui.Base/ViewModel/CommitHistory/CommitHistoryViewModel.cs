@@ -19,9 +19,9 @@
     /// </summary>
     public class CommitHistoryViewModel : ReactiveObject, ICommitHistoryViewModel
     {
-        private readonly IRepositoryDetails repositoryDetails;
-
         private readonly ReactiveCommand<Unit, GitCommit> refresh;
+
+        private readonly IRepositoryDetails repositoryDetails;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommitHistoryViewModel"/> class.
@@ -33,9 +33,9 @@
             this.repositoryDetails = repositoryDetails;
             IObservable<bool> isCurrentBranchObservable = this.WhenAnyValue(x => x.CurrentBranch).Select(x => x != null);
 
-            this.WhenAnyValue(x => x.CurrentBranch).Where(x => x != null).InvokeCommand(this.refresh);
-
             this.refresh = ReactiveCommand.CreateFromObservable(() => this.GetCommitsImpl(this.CurrentBranch), isCurrentBranchObservable);
+
+            isCurrentBranchObservable.Subscribe(x => this.Refresh.InvokeCommand());
 
             this.Refresh.InvokeCommand();
 

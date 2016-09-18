@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
- 
+
     /// <summary>
     /// Extension methods related to Type's.
     /// </summary>

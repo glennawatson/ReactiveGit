@@ -42,7 +42,7 @@
         /// <returns>The number of commits.</returns>
         int GetCommitCount(GitBranch branchName);
 
-            /// <summary>
+        /// <summary>
         /// Gets the commits for the specified branch.
         /// </summary>
         /// <param name="branch">The branch to get the commits for.</param>
@@ -67,7 +67,7 @@
         /// <returns>The observable.</returns>
         IObservable<Unit> CheckoutBranch(GitBranch branch, bool force = false);
 
-            /// <summary>
+        /// <summary>
         /// Gets a remote branch of the specified branch.
         /// </summary>
         /// <param name="branch">The branch to get the </param>

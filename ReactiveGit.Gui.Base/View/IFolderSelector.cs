@@ -1,7 +1,6 @@
 ﻿// <copyright file="IFolderSelector.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
 namespace ReactiveGit.Gui.Base.View
 {
     using System;

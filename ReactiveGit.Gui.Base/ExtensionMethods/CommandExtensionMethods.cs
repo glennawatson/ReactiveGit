@@ -16,7 +16,7 @@
             if (command.CanExecute(null))
             {
                 command.Execute(null);
-            } 
+            }
         }
     }
 }

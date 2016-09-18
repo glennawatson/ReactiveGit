@@ -5,8 +5,7 @@
     using System.Collections.Generic;
     using System.Reactive.Linq;
 
-    using Managers;
-
+    using ReactiveGit.Managers;
     using ReactiveGit.Model;
 
     /// <summary>
@@ -22,14 +21,15 @@
     /// </remarks>
     public class VirtualizingList : IList<GitCommit>
     {
-        private readonly Dictionary<int, IList<GitCommit>> pages = new Dictionary<int, IList<GitCommit>>();
-        private readonly Dictionary<int, DateTime> pageTouchTimes = new Dictionary<int, DateTime>();
+        private readonly IBranchManager branchManager;
 
         private readonly GitBranch branchName;
 
-        private readonly IBranchManager branchManager;
+        private readonly Dictionary<int, IList<GitCommit>> pages = new Dictionary<int, IList<GitCommit>>();
 
-       /// <summary>
+        private readonly Dictionary<int, DateTime> pageTouchTimes = new Dictionary<int, DateTime>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VirtualizingList"/> class.
         /// </summary>
         /// <param name="branchManager">The items provider.</param>
@@ -49,22 +49,6 @@
             this.branchManager = branchManager;
             this.branchName = branchName;
         }
-
-        /// <inheritdoc />
-        public int Count => this.branchManager.GetCommitCount(this.branchName);
-
-        /// <summary>
-        /// Gets the sizes of the pages.
-        /// </summary>
-        public int PageSize { get; } = 100;
-
-        /// <summary>
-        /// Gets the time out of the pages.
-        /// </summary>
-        public TimeSpan PageTimeout { get; } = TimeSpan.FromMilliseconds(10000);
-
-        /// <inheritdoc />
-        public bool IsReadOnly => true;
 
         /// <inheritdoc />
         public GitCommit this[int index]
@@ -101,7 +85,6 @@
 
                 // return requested item
                 return this.pages[pageIndex][pageOffset];
-
             }
 
             set
@@ -109,6 +92,22 @@
                 throw new NotSupportedException();
             }
         }
+
+        /// <inheritdoc />
+        public int Count => this.branchManager.GetCommitCount(this.branchName);
+
+        /// <summary>
+        /// Gets the sizes of the pages.
+        /// </summary>
+        public int PageSize { get; } = 100;
+
+        /// <summary>
+        /// Gets the time out of the pages.
+        /// </summary>
+        public TimeSpan PageTimeout { get; } = TimeSpan.FromMilliseconds(10000);
+
+        /// <inheritdoc />
+        public bool IsReadOnly => true;
 
         /// <inheritdoc />
         public void Add(GitCommit item)
@@ -185,7 +184,6 @@
             {
                 this.pageTouchTimes[pageIndex] = DateTime.Now;
             }
-
         }
 
         private void LoadPage(int pageIndex)
