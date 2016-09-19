@@ -14,10 +14,12 @@
         /// </summary>
         /// <param name="friendlyName">A human friendly name of the branch.</param>
         /// <param name="isRemote">If the branch is remote or not.</param>
-        public GitBranch(string friendlyName, bool isRemote)
+        /// <param name="isCheckedOut">If the branch is checked out or not.</param>
+        public GitBranch(string friendlyName, bool isRemote, bool isCheckedOut)
         {
             this.FriendlyName = friendlyName;
             this.IsRemote = isRemote;
+            this.IsCheckedOut = isCheckedOut;
         }
 
         /// <summary>
@@ -29,6 +31,11 @@
         /// Gets a value indicating whether the branch is remote.
         /// </summary>
         public bool IsRemote { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the branch is checked out.
+        /// </summary>
+        public bool IsCheckedOut { get; }
 
         /// <summary>
         /// Operator for equality.

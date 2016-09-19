@@ -94,6 +94,10 @@
       <HintPath>..\packages\Rx-XAML.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -136,11 +140,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Behaviours\TreeViewSelectedItemBehaviour.cs" />
     <Compile Include="Converters\PrefixValueConverter.cs" />
     <Compile Include="Converters\RepositoryConverter.cs" />
     <Compile Include="Selectors\DockingElementTemplateSelector.cs" />
     <Compile Include="View\HistoryView.xaml.cs">
       <DependentUpon>HistoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RefLogView.xaml.cs">
+      <DependentUpon>RefLogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WpfFolderSelector.cs" />
     <Page Include="MainWindow.xaml">
@@ -156,6 +164,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\HistoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RefLogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

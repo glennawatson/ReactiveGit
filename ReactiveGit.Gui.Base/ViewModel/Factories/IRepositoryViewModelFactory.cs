@@ -3,6 +3,7 @@
     using ReactiveGit.Gui.Base.Model;
     using ReactiveGit.Gui.Base.ViewModel.Branches;
     using ReactiveGit.Gui.Base.ViewModel.CommitHistory;
+    using ReactiveGit.Gui.Base.ViewModel.RefLog;
     using ReactiveGit.Gui.Base.ViewModel.Repository;
 
     /// <summary>
@@ -30,5 +31,12 @@
         /// <param name="repositoryDetails">The details about the repository.</param>
         /// <returns>The branch view model.</returns>
         IBranchViewModel CreateBranchViewModel(IRepositoryDetails repositoryDetails);
+
+        /// <summary>
+        /// Creates a ref log view model.
+        /// </summary>
+        /// <param name="repositoryDetails">The details about the repository.</param>
+        /// <returns>The ref log view model.</returns>
+        IRefLogViewModel CreateRefLogViewModel(IRepositoryDetails repositoryDetails);
     }
 }

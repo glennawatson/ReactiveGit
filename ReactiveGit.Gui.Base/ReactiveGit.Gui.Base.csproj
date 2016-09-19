@@ -86,6 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods\CommandExtensionMethods.cs" />
+    <Compile Include="Model\Branches\BranchLeaf.cs" />
+    <Compile Include="Model\Branches\BranchNode.cs" />
+    <Compile Include="Model\Branches\BranchParent.cs" />
     <Compile Include="Model\Factories\DefaultRepositoryDetailsFactory.cs" />
     <Compile Include="Model\IRepositoryDetails.cs" />
     <Compile Include="Model\Factories\IRepositoryDetailsFactory.cs" />
@@ -106,6 +109,8 @@
     <Compile Include="ViewModel\CommitHistory\ICommitHistoryViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\CommitHistory\CommitHistoryViewModel.cs" />
+    <Compile Include="ViewModel\RefLog\IRefLogViewModel.cs" />
+    <Compile Include="ViewModel\RefLog\RefLogViewModel.cs" />
     <Compile Include="ViewModel\Repository\IRepositoryDocumentViewModel.cs" />
     <Compile Include="ViewModel\Repository\RepositoryDocumentViewModel.cs" />
     <Compile Include="View\IFolderSelector.cs" />
@@ -133,9 +138,7 @@
       <Name>ReactiveGit</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Branches\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.28.3\build\Fody.targets" Condition="Exists('..\packages\Fody.1.28.3\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

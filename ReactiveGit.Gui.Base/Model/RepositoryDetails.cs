@@ -26,6 +26,7 @@
             var gitProcessManager = new GitProcessManager(repositoryPath, null);
             this.BranchManager = new BranchManager(gitProcessManager);
             this.RebaseManager = new RebaseManager(gitProcessManager, this.BranchManager);
+            this.RefLogManager = new RefLogManager(gitProcessManager);
             this.FriendlyName = Path.GetFileName(repositoryPath);
         }
 
@@ -34,6 +35,9 @@
 
         /// <inheritdoc />
         public IRebaseManager RebaseManager { get; }
+
+        /// <inheritdoc />
+        public IRefLogManager RefLogManager { get; }
 
         /// <inheritdoc />
         public string FriendlyName { get; }

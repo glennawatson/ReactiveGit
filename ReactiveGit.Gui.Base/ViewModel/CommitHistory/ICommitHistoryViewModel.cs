@@ -13,10 +13,5 @@
         /// Gets a collection of commit history.
         /// </summary>
         IEnumerable<GitCommit> CommitHistory { get; }
-
-        /// <summary>
-        /// Gets or sets the current branch that the repository is in.
-        /// </summary>
-        GitBranch CurrentBranch { get; set; }
     }
 }

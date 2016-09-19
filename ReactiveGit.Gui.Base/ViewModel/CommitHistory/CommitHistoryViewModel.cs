@@ -30,6 +30,11 @@
         /// <exception cref="ArgumentException">If the repository does not exist.</exception>
         public CommitHistoryViewModel(IRepositoryDetails repositoryDetails)
         {
+            if (repositoryDetails == null)
+            {
+                throw new ArgumentNullException(nameof(repositoryDetails));
+            }
+
             this.repositoryDetails = repositoryDetails;
             IObservable<bool> isCurrentBranchObservable = this.WhenAnyValue(x => x.CurrentBranch).Select(x => x != null);
 

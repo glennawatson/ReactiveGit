@@ -18,6 +18,11 @@
         IRebaseManager RebaseManager { get; }
 
         /// <summary>
+        /// Gets the ref log manager.
+        /// </summary>
+        IRefLogManager RefLogManager { get; }
+
+        /// <summary>
         /// Gets the friendly name of the repository.
         /// </summary>
         string FriendlyName { get; }

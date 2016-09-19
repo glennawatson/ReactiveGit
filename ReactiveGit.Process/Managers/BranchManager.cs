@@ -44,7 +44,7 @@
         /// <inheritdoc />
         public IObservable<GitBranch> GetLocalBranches()
         {
-            return this.gitProcessManager.RunGit(new[] { "branch" }).Select(line => new GitBranch(line.Substring(2), false));
+            return this.gitProcessManager.RunGit(new[] { "branch" }).Select(line => new GitBranch(line.Substring(2), false, line[0] == '*'));
         }
 
         /// <inheritdoc />
@@ -59,7 +59,7 @@
                         branch = line.Substring(0, arrowPos);
                     }
 
-                    return new GitBranch(branch.Trim(), true);
+                    return new GitBranch(branch.Trim(), true, false);
                 });
         }
 
@@ -146,7 +146,7 @@
 
         private void GetCurrentCheckedOutBranch()
         {
-            this.gitProcessManager.RunGit(new[] { "branch" }).Where(x => x.StartsWith("*")).Select(line => new GitBranch(line.Substring(2), false)).Subscribe(this.currentBranch.OnNext);
+            this.gitProcessManager.RunGit(new[] { "branch" }).Where(x => x.StartsWith("*")).Select(line => new GitBranch(line.Substring(2), false, true)).Subscribe(this.currentBranch.OnNext);
         }
 
         private GitCommit ConvertStringToGitCommit(string line)
