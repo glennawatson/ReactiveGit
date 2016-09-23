@@ -10,11 +10,10 @@
              d:DesignWidth="300"
              mc:Ignorable="d">
     <Grid DataContext="{Binding ViewModel, ElementName=HistoryViewWindow}">
-        <DataGrid Margin="2"
+        <DataGrid x:Name="CommitDataGrid"
+                  Margin="2"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  ItemsSource="{Binding CommitHistory,
-                                        Mode=OneWay}"
                   SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn MaxWidth="50"

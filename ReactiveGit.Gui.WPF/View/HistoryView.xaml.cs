@@ -15,17 +15,11 @@
         /// Initializes a new instance of the <see cref="HistoryView"/> class.
         /// </summary>
         public HistoryView()
-            : this(null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HistoryView"/> class.
-        /// </summary>
-        /// <param name="viewModel">The view model of the class.</param>
-        public HistoryView(ICommitHistoryViewModel viewModel)
         {
             this.InitializeComponent();
+
+            this.OneWayBind(this.ViewModel, vm => vm.CommitHistory, view => view.CommitDataGrid.ItemsSource);
+            this.Bind(this.ViewModel, vm => vm.SelectedGitObject, view => view.CommitDataGrid.SelectedItem);
         }
 
         /// <inheritdoc />

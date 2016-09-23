@@ -17,7 +17,7 @@
     /// <summary>
     /// A view model related to a repository.
     /// </summary>
-    public class CommitHistoryViewModel : ReactiveObject, ICommitHistoryViewModel
+    public class CommitHistoryViewModel : GitObjectViewModelBase, ICommitHistoryViewModel
     {
         private readonly ReactiveCommand<Unit, GitCommit> refresh;
 
@@ -29,6 +29,7 @@
         /// <param name="repositoryDetails">The details of the repository.</param>
         /// <exception cref="ArgumentException">If the repository does not exist.</exception>
         public CommitHistoryViewModel(IRepositoryDetails repositoryDetails)
+            : base(repositoryDetails)
         {
             if (repositoryDetails == null)
             {
@@ -41,13 +42,6 @@
             this.refresh = ReactiveCommand.CreateFromObservable(() => this.GetCommitsImpl(this.CurrentBranch), isCurrentBranchObservable);
 
             isCurrentBranchObservable.Subscribe(x => this.Refresh.InvokeCommand());
-
-            this.Refresh.InvokeCommand();
-
-            if (Settings.Default.AutomaticRefreshIntervalMinutes > 0)
-            {
-                Observable.Interval(TimeSpan.FromMinutes(Settings.Default.AutomaticRefreshIntervalMinutes)).InvokeCommand(this.refresh);
-            }
         }
 
         /// <inheritdoc />
@@ -55,15 +49,9 @@
         public IEnumerable<GitCommit> CommitHistory { get; set; }
 
         /// <summary>
-        /// Gets or sets the current checked out branch.
-        /// </summary>
-        [Reactive]
-        public GitBranch CurrentBranch { get; set; }
-
-        /// <summary>
         /// Gets a command that will refresh the display.
         /// </summary>
-        public ICommand Refresh => this.refresh;
+        public override ICommand Refresh => this.refresh;
 
         /// <summary>
         /// Gets or sets the selected branch.

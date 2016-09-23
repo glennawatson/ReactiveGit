@@ -8,14 +8,14 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
-    <Grid DataContext="{Binding ElementName=RefLogUserControl, Path=ViewModel}">
-        <DataGrid AutoGenerateColumns="False"
+    <Grid>
+        <DataGrid x:Name="RefLogDataGrid"
+                  AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  ItemsSource="{Binding RefLog}"
                   SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn MaxWidth="50"
-                                    Binding="{Binding ShortSha}"
+                                    Binding="{Binding ShaShort}"
                                     Header="ID" />
                 <DataGridTextColumn Width="250"
                                     Binding="{Binding MessageShort}"
@@ -27,6 +27,15 @@
                                     Binding="{Binding DateTime}"
                                     Header="Date Time" />
             </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Reset">
+                        <MenuItem x:Name="ResetHardMenuItem" Header="Hard - Delete Changes" />
+                        <MenuItem x:Name="ResetSoftMenuItem" Header="Soft - Keep Changes" />
+                        <MenuItem x:Name="ResetMixedMenuItem" Header="Mixed - Reset Index/Keep Working Directory" />
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
 
         </DataGrid>
     </Grid>

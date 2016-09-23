@@ -7,7 +7,7 @@
     /// <summary>
     /// A view model for a GIT repository.
     /// </summary>
-    public interface ICommitHistoryViewModel : IChildRepositoryDocumentViewModel
+    public interface ICommitHistoryViewModel : IGitObjectViewModel
     {
         /// <summary>
         /// Gets a collection of commit history.

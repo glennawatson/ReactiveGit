@@ -10,7 +10,7 @@
     /// A commit in GIT.
     /// </summary>
     [DebuggerDisplay("Id = {Sha}")]
-    public class GitCommit : IEquatable<GitCommit>
+    public class GitCommit : IEquatable<GitCommit>, IGitIdObject
     {
         private readonly IBranchManager branchManager;
 

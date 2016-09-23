@@ -25,29 +25,30 @@
         /// <inheritdoc />
         public IObservable<GitRefLog> GetRefLog(GitBranch branch)
         {
-            string[] arguments = new[] { "reflog", "--format=\"%h\u001f%gd\u001f%gs\u001f%ci\"", branch.FriendlyName };
+            string[] arguments = { "reflog", "--format=\"%H\u001f%h\u001f%gd\u001f%gs\u001f%ci\"", "--decorate=full", branch.FriendlyName };
 
-            return this.gitProcessManager.RunGit(arguments).Select(this.StringToRefLog);
+            return this.gitProcessManager.RunGit(arguments).Select(StringToRefLog);
         }
 
-        private GitRefLog StringToRefLog(string line)
+        private static GitRefLog StringToRefLog(string line)
         {
             string[] fields = line.Split('\u001f');
 
-            if (fields.Length != 4)
+            if (fields.Length != 5)
             {
                 throw new GitProcessException($"Cannot process ref log entry {line}");
             }
 
-            string shaShort = fields[0];
-            string[] refLogSubject = fields[2].Split(new[] { ':' }, 2);
+            string sha = fields[0];
+            string shaShort = fields[1];
+            string[] refLogSubject = fields[3].Split(new[] { ':' }, 2);
             string operation = refLogSubject[0];
             string condenseText = refLogSubject[1];
 
             DateTime commitDate;
-            DateTime.TryParse(fields[3], out commitDate);
+            DateTime.TryParse(fields[4], out commitDate);
 
-            return new GitRefLog(shaShort, operation, condenseText, commitDate);
+            return new GitRefLog(sha, shaShort, operation, condenseText, commitDate);
         }
     }
 }

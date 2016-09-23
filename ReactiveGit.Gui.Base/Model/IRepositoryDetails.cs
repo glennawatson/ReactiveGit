@@ -23,6 +23,11 @@
         IRefLogManager RefLogManager { get; }
 
         /// <summary>
+        /// Gets the git object manager.
+        /// </summary>
+        IGitObjectManager GitObjectManager { get; }
+
+        /// <summary>
         /// Gets the friendly name of the repository.
         /// </summary>
         string FriendlyName { get; }
