@@ -1,4 +1,4 @@
-﻿namespace ReactiveGit.Managers
+﻿namespace ReactiveGit.Process.Managers
 {
     using System;
     using System.Collections.Generic;
@@ -10,8 +10,9 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using ReactiveGit.ExtensionMethods;
-    using ReactiveGit.Model;
+    using ReactiveGit.Core.ExtensionMethods;
+    using ReactiveGit.Core.Managers;
+    using ReactiveGit.Core.Model;
 
     /// <summary>
     /// Helper which manages branch history.
@@ -163,12 +164,14 @@
             string[] parents = fields[2].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim('\r', '\n').Trim()).ToArray();
             DateTime commitDate;
             DateTime.TryParse(fields[3], out commitDate);
-            string committer = $"{fields[4]} <{fields[5]}>";
-            string author = $"{fields[6]} <{fields[7]}>";
+            string committer = fields[4];
+            string commiterEmail = fields[5];
+            string author = fields[6];
+            string authorEmail = fields[7];
             string refs = fields[8];
             string messageShort = fields[9];
 
-            return new GitCommit(this, changeset, messageShort, commitDate, author, committer, changesetShort, parents);
+            return new GitCommit(this, changeset, messageShort, commitDate, author, authorEmail, committer, commiterEmail, changesetShort, parents);
         }
 
         private IEnumerable<string> ExtractLogParameter(GitBranch branch, int skip, int limit, GitLogOptions logOptions, string revisionRange)

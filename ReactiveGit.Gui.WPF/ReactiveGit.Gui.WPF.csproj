@@ -29,7 +29,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\ReactiveGit.Gui.WPF.XML</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\ReactiveGit.Process\git.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\git.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,6 +48,10 @@
       <HintPath>..\packages\AutoDependencyProperty.Fody.1.2.2.0\lib\net40\AutoDependencyPropertyMarker.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.3\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
       <Private>True</Private>
@@ -58,10 +62,6 @@
     </Reference>
     <Reference Include="ReactiveUI, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reactiveui-core.7.0.0.1474320879\lib\Net45\ReactiveUI.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ReactiveUI.Fody.Helpers, Version=1.1.53.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveUI.Fody.1.1.53\lib\net45\ReactiveUI.Fody.Helpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SimpleInjector, Version=3.2.2.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
@@ -86,8 +86,8 @@
       <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-PlatformServices.2.3\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Windows.Threading, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -140,17 +140,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Behaviours\TreeViewSelectedItemBehaviour.cs" />
     <Compile Include="Converters\PrefixValueConverter.cs" />
-    <Compile Include="Converters\RepositoryConverter.cs" />
+    <Compile Include="Factories\DefaultRepositoryFactory.cs" />
+    <Compile Include="Factories\RepositoryDetails.cs" />
     <Compile Include="Selectors\DockingElementTemplateSelector.cs" />
+    <Compile Include="SplatConverters\DocumentTypeConverter.cs" />
+    <Compile Include="View\CommitDetailsView.xaml.cs">
+      <DependentUpon>CommitDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\GravatarLogo.xaml.cs">
+      <DependentUpon>GravatarLogo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\HistoryView.xaml.cs">
       <DependentUpon>HistoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\HistoryViewItem.xaml.cs">
+      <DependentUpon>HistoryViewItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\RefLogView.xaml.cs">
       <DependentUpon>RefLogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WpfFolderSelector.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -163,7 +177,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\CommitDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\GravatarLogo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\HistoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\HistoryViewItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -202,13 +232,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ReactiveGit.Gui.Base\ReactiveGit.Gui.Base.csproj">
-      <Project>{DC06F7DD-6DCA-4AD2-BA27-2981F30B2988}</Project>
-      <Name>ReactiveGit.Gui.Base</Name>
+    <ProjectReference Include="..\ReactiveGit.Core\ReactiveGit.Core.csproj">
+      <Project>{2b0a4fb9-170a-4339-815c-24456de5b882}</Project>
+      <Name>ReactiveGit.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ReactiveGit.Process\ReactiveGit.csproj">
+    <ProjectReference Include="..\ReactiveGit.Gui.Core\ReactiveGit.Gui.Core.csproj">
+      <Project>{e96fc022-b784-477c-b5d4-3e59ddafe1e8}</Project>
+      <Name>ReactiveGit.Gui.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReactiveGit.Process\ReactiveGit.Process.csproj">
       <Project>{f204ea1b-817b-4227-b653-a3f485c22800}</Project>
-      <Name>ReactiveGit</Name>
+      <Name>ReactiveGit.Process</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -9,25 +9,33 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
-    <Grid DataContext="{Binding ViewModel, ElementName=HistoryViewWindow}">
+    <Grid>
         <DataGrid x:Name="CommitDataGrid"
                   Margin="2"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
                   SelectionMode="Single">
             <DataGrid.Columns>
+                <DataGridTemplateColumn Width="SizeToCells"
+                                        Header="Image"
+                                        IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <local:GravatarLogo ViewModel="{Binding Gravatar}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn MaxWidth="50"
-                                    Binding="{Binding Sha,
-                                                      Converter={converters:PrefixValueConverter PrefixLength=6}}"
+                                    Binding="{Binding ShaShort}"
                                     Header="ID" />
                 <DataGridTextColumn Width="250"
                                     Binding="{Binding MessageShort}"
                                     Header="Message" />
                 <DataGridTextColumn Width="250"
-                                    Binding="{Binding Author}"
+                                    Binding="{Binding CommiterName}"
                                     Header="Author" />
                 <DataGridTextColumn Width="250"
-                                    Binding="{Binding DateTime}"
+                                    Binding="{Binding CommitDateTime}"
                                     Header="Date Time" />
             </DataGrid.Columns>
         </DataGrid>

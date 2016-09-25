@@ -12,9 +12,10 @@ namespace Git.VisualStudio.UnitTests
 
     using LibGit2Sharp;
 
-    using ReactiveGit.Exceptions;
-    using ReactiveGit.Managers;
-    using ReactiveGit.Model;
+    using ReactiveGit.Core.Exceptions;
+    using ReactiveGit.Core.Managers;
+    using ReactiveGit.Core.Model;
+    using ReactiveGit.Process.Managers;
 
     using Xunit;
 
@@ -30,7 +31,7 @@ namespace Git.VisualStudio.UnitTests
         [Fact]
         public void TestGitHistoryBranchOnly()
         {
-            GitProcessManager local;
+            IGitProcessManager local;
             string tempDirectory = GenerateGitRepository(out local);
 
             int numberCommits = 10;
@@ -78,7 +79,7 @@ namespace Git.VisualStudio.UnitTests
         [Fact]
         public void TestFullHistory()
         {
-            GitProcessManager local;
+            IGitProcessManager local;
             string tempDirectory = GenerateGitRepository(out local);
 
             int numberCommits = 10;
@@ -108,7 +109,7 @@ namespace Git.VisualStudio.UnitTests
         [Fact]
         public void TestGetAllCommitMessages()
         {
-            GitProcessManager local;
+            IGitProcessManager local;
             string tempDirectory = GenerateGitRepository(out local);
 
             IList<string> commitNames = new List<string>();
@@ -126,12 +127,12 @@ namespace Git.VisualStudio.UnitTests
         /// </summary>
         /// <param name="local">The process manager to use.</param>
         /// <returns>The location of the GIT repository.</returns>
-        private static string GenerateGitRepository(out GitProcessManager local)
+        private static string GenerateGitRepository(out IGitProcessManager local)
         {
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
             Directory.CreateDirectory(tempDirectory);
 
-            local = new GitProcessManager(tempDirectory, null);
+            local = new GitProcessManager(tempDirectory);
 
             local.RunGit(new[] { "init" }).Wait();
             return tempDirectory;

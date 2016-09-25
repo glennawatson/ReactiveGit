@@ -1,4 +1,4 @@
-﻿namespace ReactiveGit.Managers
+﻿namespace ReactiveGit.Process.Managers
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +10,9 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using ReactiveGit.Exceptions;
-    using ReactiveGit.Helpers;
-    using ReactiveGit.Loggers;
+    using ReactiveGit.Core.Exceptions;
+    using ReactiveGit.Core.Managers;
+    using ReactiveGit.Process.Helpers;
 
     /// <summary>
     /// Manages and starts GIT processes.
@@ -21,19 +21,15 @@
     {
         private static readonly SemaphoreSlim RepoLimiterSemaphore = new SemaphoreSlim(1, 1);
 
-        private readonly IOutputLogger outputLogger;
-
         private readonly string repoDirectory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitProcessManager"/> class.
         /// </summary>
         /// <param name="repoDirectory">The location of the GIT repository.</param>
-        /// <param name="newOutputLogger">The output logger where to send output.</param>
-        public GitProcessManager(string repoDirectory, IOutputLogger newOutputLogger)
+        public GitProcessManager(string repoDirectory)
         {
             this.repoDirectory = repoDirectory;
-            this.outputLogger = newOutputLogger;
         }
 
         /// <inheritdoc />
@@ -57,7 +53,7 @@
                         gitArguments = $"--no-pager -c color.branch=false -c color.diff=false -c color.status=false -c diff.mnemonicprefix=false -c core.quotepath=false {gitArguments}";
                     }
 
-                    this.outputLogger?.WriteLine($"execute: git {gitArguments}");
+                    // this.outputLogger?.WriteLine($"execute: git {gitArguments}");
 
                     using (Process process = CreateGitProcess(gitArguments, this.repoDirectory))
                     {
@@ -77,7 +73,7 @@
                                     return;
                                 }
 
-                                this.outputLogger?.WriteLine(e.Data);
+                                // this.outputLogger?.WriteLine(e.Data);
                                 errorOutput.AppendLine(e.Data);
                                 observer.OnNext(e.Data);
                             };
@@ -89,7 +85,7 @@
                                     return;
                                 }
 
-                                this.outputLogger?.WriteLine(e.Data);
+                                // this.outputLogger?.WriteLine(e.Data);
                                 errorOutput.AppendLine(e.Data);
                                 observer.OnNext(e.Data);
                             };

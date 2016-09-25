@@ -3,7 +3,7 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    using ReactiveGit.Gui.Base.ViewModel.Repository;
+    using ReactiveGit.Gui.Core.ViewModel.Repository;
 
     /// <summary>
     /// Selects the appropriate data template.

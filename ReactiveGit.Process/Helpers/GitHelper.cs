@@ -1,7 +1,7 @@
 ﻿// <copyright file="GitHelper.cs" company="Glenn Watson">
 // Copyright (c) Glenn Watson. All rights reserved.
 // </copyright>
-namespace ReactiveGit.Helpers
+namespace ReactiveGit.Process.Helpers
 {
     using System;
     using System.IO;

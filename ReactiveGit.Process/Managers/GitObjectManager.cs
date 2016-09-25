@@ -1,14 +1,11 @@
-﻿namespace ReactiveGit.Managers
+﻿namespace ReactiveGit.Process.Managers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reactive;
-    using System.Text;
-    using System.Threading.Tasks;
 
-    using ReactiveGit.ExtensionMethods;
-    using ReactiveGit.Model;
+    using ReactiveGit.Core.ExtensionMethods;
+    using ReactiveGit.Core.Managers;
+    using ReactiveGit.Core.Model;
 
     /// <summary>
     /// Responsible for handling operations in regards to git objects.

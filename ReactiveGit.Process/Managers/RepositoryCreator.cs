@@ -1,12 +1,13 @@
-﻿namespace ReactiveGit.Managers
+﻿namespace ReactiveGit.Process.Managers
 {
     using System;
     using System.IO;
     using System.Reactive;
     using System.Reactive.Linq;
 
-    using ReactiveGit.Exceptions;
-    using ReactiveGit.Helpers;
+    using ReactiveGit.Core.Exceptions;
+    using ReactiveGit.Core.Managers;
+    using ReactiveGit.Process.Helpers;
 
     /// <summary>
     /// Creates a new repository in a directory if the directory is empty.

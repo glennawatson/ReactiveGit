@@ -1,4 +1,4 @@
-﻿namespace ReactiveGit.ExtensionMethods
+﻿namespace ReactiveGit.Process.ExtensionMethods
 {
     using System;
     using System.Collections.Generic;

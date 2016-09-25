@@ -2,7 +2,7 @@
 {
     using AutoDependencyPropertyMarker;
 
-    using ReactiveGit.Gui.Base.ViewModel.CommitHistory;
+    using ReactiveGit.Gui.Core.ViewModel.CommitHistory;
 
     using ReactiveUI;
 
@@ -18,8 +18,12 @@
         {
             this.InitializeComponent();
 
-            this.OneWayBind(this.ViewModel, vm => vm.CommitHistory, view => view.CommitDataGrid.ItemsSource);
-            this.Bind(this.ViewModel, vm => vm.SelectedGitObject, view => view.CommitDataGrid.SelectedItem);
+            this.WhenActivated(
+                d =>
+                    {
+                        d(this.OneWayBind(this.ViewModel, vm => vm.CommitHistory, view => view.CommitDataGrid.ItemsSource));
+                        d(this.Bind(this.ViewModel, vm => vm.SelectedGitObject, view => view.CommitDataGrid.SelectedItem));
+                    });
         }
 
         /// <inheritdoc />

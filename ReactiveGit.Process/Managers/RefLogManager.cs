@@ -1,10 +1,11 @@
-﻿namespace ReactiveGit.Managers
+﻿namespace ReactiveGit.Process.Managers
 {
     using System;
     using System.Reactive.Linq;
 
-    using ReactiveGit.Exceptions;
-    using ReactiveGit.Model;
+    using ReactiveGit.Core.Exceptions;
+    using ReactiveGit.Core.Managers;
+    using ReactiveGit.Core.Model;
 
     /// <summary>
     /// Manages handling ref log instances.
@@ -25,7 +26,7 @@
         /// <inheritdoc />
         public IObservable<GitRefLog> GetRefLog(GitBranch branch)
         {
-            string[] arguments = { "reflog", "--format=\"%H\u001f%h\u001f%gd\u001f%gs\u001f%ci\"", "--decorate=full", branch.FriendlyName };
+            string[] arguments = { "reflog", "--format=\"%H\u001f%h\u001f%gd\u001f%gs\u001f%ci\"", branch.FriendlyName };
 
             return this.gitProcessManager.RunGit(arguments).Select(StringToRefLog);
         }

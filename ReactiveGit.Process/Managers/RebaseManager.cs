@@ -1,4 +1,4 @@
-﻿namespace ReactiveGit.Managers
+﻿namespace ReactiveGit.Process.Managers
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +9,9 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using ReactiveGit.Exceptions;
-    using ReactiveGit.Model;
+    using ReactiveGit.Core.Exceptions;
+    using ReactiveGit.Core.Managers;
+    using ReactiveGit.Core.Model;
 
     /// <summary>
     /// Class responsible for handling GIT rebases.

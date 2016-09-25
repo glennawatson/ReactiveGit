@@ -1,90 +1,17 @@
 ﻿<Window x:Class="ReactiveGit.Gui.WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:behaviours="clr-namespace:ReactiveGit.Gui.WPF.Behaviours"
-        xmlns:branches="clr-namespace:ReactiveGit.Gui.Base.Model.Branches;assembly=ReactiveGit.Gui.Base"
-        xmlns:converters="clr-namespace:ReactiveGit.Gui.WPF.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:selectors="clr-namespace:ReactiveGit.Gui.WPF.Selectors"
-        xmlns:view="clr-namespace:ReactiveGit.Gui.WPF.View"
-        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:reactiveUi="http://reactiveui.net"
         x:Name="ReactiveGitMainWindow"
         Title="Reactive GIT"
         Width="525"
         Height="350"
         Closed="Window_Closed"
-        DataContext="{Binding ViewModel,
-                              RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d">
-    <Window.InputBindings>
-        <KeyBinding Key="N"
-                    Command="{Binding NewRepository}"
-                    Modifiers="Control" />
-        <KeyBinding Key="O"
-                    Command="{Binding SelectRepository}"
-                    Modifiers="Control" />
-    </Window.InputBindings>
-    <DockPanel LastChildFill="True">
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Command="{Binding NewRepository}"
-                          Header="_New Repository"
-                          InputGestureText="Ctrl+N" />
-                <MenuItem Command="{Binding SelectRepository}"
-                          Header="_Open Repository"
-                          InputGestureText="Ctrl+O" />
-            </MenuItem>
-        </Menu>
-        <xcad:DockingManager x:Name="dockManager"
-                             ActiveContent="{Binding SelectedRepositoryViewModel,
-                                                     Mode=TwoWay,
-                                                     Converter={converters:RepositoryConverter}}"
-                             DocumentsSource="{Binding RepositoryViewModels}">
-            <!--<xcad:DockingManager.Theme>
-                <xcad:MetroTheme />
-            </xcad:DockingManager.Theme>-->
-            <xcad:DockingManager.LayoutItemTemplateSelector>
-                <selectors:DockingElementTemplateSelector>
-                    <selectors:DockingElementTemplateSelector.Template>
-                        <DataTemplate>
-                            <view:HistoryView ViewModel="{Binding CommitHistoryViewModel, Mode=OneWay}" />
-                        </DataTemplate>
-                    </selectors:DockingElementTemplateSelector.Template>
-                </selectors:DockingElementTemplateSelector>
-            </xcad:DockingManager.LayoutItemTemplateSelector>
-            <xcad:DockingManager.DocumentHeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Content.FriendlyName}" />
-                </DataTemplate>
-            </xcad:DockingManager.DocumentHeaderTemplate>
 
-            <xcad:LayoutRoot>
-                <xcad:LayoutPanel Orientation="Horizontal">
-                    <xcad:LayoutDocumentPane />
-                    <xcad:LayoutAnchorablePane Name="ToolsPane" DockWidth="150">
-                        <xcad:LayoutAnchorable Title="Undo">
-                            <view:RefLogView ViewModel="{Binding SelectedRepositoryViewModel.RefLogViewModel}" />
-                        </xcad:LayoutAnchorable>
-                        <xcad:LayoutAnchorable Title="Branches" ContentId="branches">
-                            <TreeView x:Name="BranchesListBox" ItemsSource="{Binding Path=SelectedRepositoryViewModel.BranchViewModel.Branches}">
-                                <i:Interaction.Behaviors>
-                                    <behaviours:TreeViewSelectedItemBehaviour SelectedItem="{Binding SelectedRepositoryViewModel.SelectedBranchNode, Mode=TwoWay}" />
-                                </i:Interaction.Behaviors>
-                                <TreeView.Resources>
-                                    <HierarchicalDataTemplate DataType="{x:Type branches:BranchParent}" ItemsSource="{Binding ChildNodes}">
-                                        <TextBlock Text="{Binding Name}" />
-                                    </HierarchicalDataTemplate>
-                                    <DataTemplate DataType="{x:Type branches:BranchLeaf}">
-                                        <TextBlock Text="{Binding Name}" />
-                                    </DataTemplate>
-                                </TreeView.Resources>
-                            </TreeView>
-                        </xcad:LayoutAnchorable>
-                    </xcad:LayoutAnchorablePane>
-                </xcad:LayoutPanel>
-            </xcad:LayoutRoot>
-        </xcad:DockingManager>
-    </DockPanel>
+    <reactiveUi:RoutedViewHost HorizontalContentAlignment="Stretch"
+                               VerticalContentAlignment="Stretch"
+                               Router="{Binding Router}" />
 </Window>

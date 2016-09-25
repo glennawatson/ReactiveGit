@@ -2,7 +2,7 @@
 {
     using AutoDependencyPropertyMarker;
 
-    using ReactiveGit.Gui.Base.ViewModel.RefLog;
+    using ReactiveGit.Gui.Core.ViewModel.RefLog;
 
     using ReactiveUI;
 
