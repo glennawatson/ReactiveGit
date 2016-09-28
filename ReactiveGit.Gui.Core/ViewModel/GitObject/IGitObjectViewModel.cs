@@ -7,7 +7,7 @@
     /// <summary>
     /// View model dealing with GIT objects.
     /// </summary>
-    public interface IGitObjectViewModel
+    public interface IGitObjectViewModel : IRefreshableViewModel
     {
         /// <summary>
         /// Gets a command which will reset hard to the specified ref log.

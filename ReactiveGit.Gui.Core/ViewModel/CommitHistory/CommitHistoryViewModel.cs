@@ -35,12 +35,9 @@
             }
 
             this.RepositoryDetails = repositoryDetails;
-            IObservable<bool> isCurrentBranchObservable = this.WhenAnyValue(x => x.CurrentBranch).Select(x => x != null);
+            IObservable<bool> isCurrentBranchObservable = this.WhenAnyValue(x => x.RepositoryDetails.SelectedBranch).Select(x => x != null);
 
-            this.refresh = ReactiveCommand.CreateFromObservable(
-                () => this.GetCommitsImpl(this.CurrentBranch),
-                isCurrentBranchObservable);
-
+            this.refresh = ReactiveCommand.CreateFromObservable(() => this.GetCommitsImpl(this.RepositoryDetails.SelectedBranch), isCurrentBranchObservable);
             this.refresh.Subscribe(x => this.commitHistory.Add(new CommitHistoryItemViewModel(x)));
 
             isCurrentBranchObservable.Subscribe(x => this.Refresh.InvokeCommand());
@@ -50,18 +47,12 @@
         public IEnumerable<CommitHistoryItemViewModel> CommitHistory => this.commitHistory;
 
         /// <inheritdoc />
-        public override string Name => "Commit History";
+        public override string FriendlyName => "Commit History";
 
         /// <summary>
         /// Gets a command that will refresh the display.
         /// </summary>
         public override ICommand Refresh => this.refresh;
-
-        /// <summary>
-        /// Gets or sets the selected branch.
-        /// </summary>
-        [Reactive]
-        public GitBranch SelectedBranch { get; set; }
 
         private IObservable<GitCommit> GetCommitsImpl(GitBranch branch)
         {

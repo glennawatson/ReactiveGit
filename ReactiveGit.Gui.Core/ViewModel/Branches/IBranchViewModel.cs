@@ -8,7 +8,7 @@
     /// <summary>
     /// View model associated with branches.
     /// </summary>
-    public interface IBranchViewModel : ISupportViewModel
+    public interface IBranchViewModel : ISupportViewModel, IRefreshableViewModel
     {
         /// <summary>
         /// Gets a list of branches on the repository.

@@ -54,11 +54,13 @@
     <Compile Include="ExtensionMethods\ObservableExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\StringExtensionMethods.cs" />
     <Compile Include="Managers\IBranchManager.cs" />
+    <Compile Include="Managers\IGitRepositoryManager.cs" />
     <Compile Include="Managers\IGitObjectManager.cs" />
     <Compile Include="Managers\IGitProcessManager.cs" />
     <Compile Include="Managers\IRebaseManager.cs" />
     <Compile Include="Managers\IRefLogManager.cs" />
     <Compile Include="Managers\IRepositoryCreator.cs" />
+    <Compile Include="Model\AsyncMemoizingMRUCache.cs" />
     <Compile Include="Model\GitBranch.cs" />
     <Compile Include="Model\GitCommit.cs" />
     <Compile Include="Model\GitLogOptions.cs" />

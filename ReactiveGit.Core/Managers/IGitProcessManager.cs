@@ -7,13 +7,8 @@
     /// <summary>
     /// Represents a process running GIT.
     /// </summary>
-    public interface IGitProcessManager
+    public interface IGitProcessManager : IGitRepositoryManager
     {
-        /// <summary>
-        /// Gets the path to the repository.
-        /// </summary>
-        string RepositoryPath { get; }
-
         /// <summary>
         /// Runs a new GIT instance.
         /// </summary>

@@ -10,6 +10,7 @@ namespace ReactiveGit.Gui.Core.ViewModel
     using System.Reflection;
     using System.Windows.Input;
 
+    using ReactiveGit.Gui.Core.ExtensionMethods;
     using ReactiveGit.Gui.Core.Model;
     using ReactiveGit.Gui.Core.Model.Factories;
     using ReactiveGit.Gui.Core.ViewModel.Factories;
@@ -73,9 +74,9 @@ namespace ReactiveGit.Gui.Core.ViewModel
 
             this.AllSupportViewModels = this.GetAllSupportViewModels();
 
-            this.VisibleSupportViewModels = new ReactiveList<ISupportViewModel>();
+            this.VisibleSupportViewModels = new ReactiveList<ISupportViewModel>(this.AllSupportViewModels);
 
-            this.WhenAnyValue(x => x.SelectedRepositoryViewModel).Subscribe()
+            this.WhenAnyValue(x => x.SelectedRepositoryViewModel).Subscribe(this.UpdateRepositoryDetails);
         }
 
         /// <inheritdoc />
@@ -141,7 +142,10 @@ namespace ReactiveGit.Gui.Core.ViewModel
         {
             foreach (ISupportViewModel supportViewModel in this.VisibleSupportViewModels)
             {
-                supportViewModel.RepositoryDetails = documentViewModel.RepositoryDetails;
+                supportViewModel.RepositoryDetails = documentViewModel?.RepositoryDetails;
+
+                IRefreshableViewModel refreshableViewModel = supportViewModel as IRefreshableViewModel;
+                refreshableViewModel?.Refresh.InvokeCommand();
             }
         }
     }

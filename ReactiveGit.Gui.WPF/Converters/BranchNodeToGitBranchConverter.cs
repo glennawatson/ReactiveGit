@@ -1,32 +1,34 @@
 ﻿namespace ReactiveGit.Gui.WPF.Converters
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
     using System.Windows.Data;
     using System.Windows.Markup;
 
-    /// <summary>
-    /// Grabs only the prefix of a value.
-    /// </summary>
-    public class PrefixValueConverter : MarkupExtension, IValueConverter
-    {
-        /// <summary>
-        /// Gets or sets the length of the prefix.
-        /// </summary>
-        public int PrefixLength { get; set; } = 6;
+    using ReactiveGit.Core.Model;
+    using ReactiveGit.Gui.Core.Model.Branches;
 
+    /// <summary>
+    /// A converter for going to and from the branch node and git branch models.
+    /// </summary>
+    public class BranchNodeToGitBranchConverter : MarkupExtension, IValueConverter
+    {
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string s = value.ToString();
-
-            return s.Length <= this.PrefixLength ? s : s.Substring(0, this.PrefixLength);
+            var gitBranch = value as GitBranch;
+            return gitBranch != null ? new BranchLeaf(gitBranch) : null;
         }
 
         /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            var branchLeaf = value as BranchLeaf;
+            return branchLeaf?.Branch;
         }
 
         /// <inheritdoc />

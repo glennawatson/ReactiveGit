@@ -5,7 +5,7 @@
     using Microsoft.WindowsAPICodePack.Dialogs;
 
     using ReactiveGit.Gui.Core.ViewModel;
-    using ReactiveGit.Gui.WPF.SplatConverters;
+    using ReactiveGit.Gui.WPF.Converters;
 
     using ReactiveUI;
 
@@ -29,6 +29,7 @@
                     d(this.BindCommand(this.ViewModel, vm => vm.SelectRepository, view => view.OpenMenuItem));
                     d(this.OneWayBind(this.ViewModel, vm => vm.RepositoryViewModels, view => view.DockManager.DocumentsSource));
                     d(this.Bind(this.ViewModel, vm => vm.SelectedRepositoryViewModel, view => view.DockManager.ActiveContent, viewToVMConverterOverride: new DocumentTypeConverter()));
+                    d(this.OneWayBind(this.ViewModel, vm => vm.VisibleSupportViewModels, view => view.DockManager.AnchorablesSource));
                 });
         }
 

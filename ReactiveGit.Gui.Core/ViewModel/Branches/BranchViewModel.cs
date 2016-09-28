@@ -37,15 +37,13 @@
             this.getBranches.Subscribe(this.AddNode);
 
             IObservable<bool> isValidBranch =
-                this.WhenAnyValue(x => x.CurrentBranch, x => x.RepositoryDetails).Select(
+                this.WhenAnyValue(x => x.RepositoryDetails.SelectedBranch, x => x.RepositoryDetails).Select(
                     x => x.Item1 != null && x.Item2 != null);
 
             this.checkoutBranch =
                 ReactiveCommand.CreateFromObservable<GitBranch, Unit>(
                     x => this.RepositoryDetails.BranchManager.CheckoutBranch(x),
                     isValidBranch);
-
-            this.Refresh.InvokeCommand();
         }
 
         /// <inheritdoc />
@@ -55,11 +53,7 @@
         public ICommand CheckoutBranch => this.checkoutBranch;
 
         /// <inheritdoc />
-        [Reactive]
-        public GitBranch CurrentBranch { get; set; }
-
-        /// <inheritdoc />
-        public string Name => "Branches";
+        public string FriendlyName => "Branches";
 
         /// <inheritdoc />
         public ICommand Refresh => this.getBranches;
@@ -97,7 +91,7 @@
 
                 if (isLast)
                 {
-                    currentLevel.Add(new BranchLeaf(currentNodeName, gitBranch));
+                    currentLevel.Add(new BranchLeaf(gitBranch));
                     return;
                 }
 

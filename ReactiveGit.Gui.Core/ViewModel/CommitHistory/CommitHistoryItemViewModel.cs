@@ -10,6 +10,9 @@
 
     using ReactiveUI;
 
+    /// <summary>
+    /// Represents a commit item in the history view model.
+    /// </summary>
     public class CommitHistoryItemViewModel : ReactiveObject
     {
         private readonly GitCommit commit;
@@ -22,7 +25,7 @@
         {
             this.commit = commit;
 
-            this.Gravatar = new GravatarViewModel { EmailAddress = this.commit.Author };
+            this.Gravatar = new GravatarViewModel { EmailAddress = this.commit.CommitterEmail };
         }
 
         /// <summary>

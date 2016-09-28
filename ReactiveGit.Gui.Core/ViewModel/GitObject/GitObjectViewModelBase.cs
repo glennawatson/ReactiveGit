@@ -27,7 +27,7 @@
         protected GitObjectViewModelBase()
         {
             var canReset =
-                this.WhenAnyValue(x => x.RepositoryDetails, x => x.CurrentBranch).Select(
+                this.WhenAnyValue(x => x.RepositoryDetails, x => x.RepositoryDetails.SelectedBranch).Select(
                     x => x.Item1 != null && x.Item2 != null);
             this.resetHard =
                 ReactiveCommand.CreateFromObservable<IGitIdObject, Unit>(
@@ -44,11 +44,7 @@
         }
 
         /// <inheritdoc />
-        [Reactive]
-        public GitBranch CurrentBranch { get; set; }
-
-        /// <inheritdoc />
-        public abstract string Name { get; }
+        public abstract string FriendlyName { get; }
 
         /// <inheritdoc />
         public abstract ICommand Refresh { get; }

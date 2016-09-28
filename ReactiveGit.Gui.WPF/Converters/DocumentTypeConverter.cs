@@ -1,4 +1,4 @@
-﻿namespace ReactiveGit.Gui.WPF.SplatConverters
+﻿namespace ReactiveGit.Gui.WPF.Converters
 {
     using System;
 

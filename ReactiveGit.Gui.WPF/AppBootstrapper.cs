@@ -1,9 +1,16 @@
 ﻿namespace ReactiveGit.Gui.WPF
 {
+    using System;
+
     using ReactiveGit.Gui.Core.ExtensionMethods;
     using ReactiveGit.Gui.Core.Model.Factories;
     using ReactiveGit.Gui.Core.ViewModel;
+    using ReactiveGit.Gui.Core.ViewModel.Branches;
+    using ReactiveGit.Gui.Core.ViewModel.CommitHistory;
     using ReactiveGit.Gui.Core.ViewModel.Factories;
+    using ReactiveGit.Gui.Core.ViewModel.Output;
+    using ReactiveGit.Gui.Core.ViewModel.RefLog;
+    using ReactiveGit.Gui.Core.ViewModel.Repository;
     using ReactiveGit.Gui.WPF.Factories;
     using ReactiveGit.Gui.WPF.View;
 
@@ -30,7 +37,7 @@
             LogHost.Default.Level = LogLevel.Debug;
 
             // Navigate to the opening page of the application
-            this.Router.Navigate.Execute(dependencyResolver.GetService<IMainViewModel>());
+            this.Router.Navigate.Execute(dependencyResolver.GetService<IMainViewModel>()).Subscribe();          
         }
 
         /// <inheritdoc />
@@ -45,6 +52,11 @@
             dependencyResolver.Register<MainViewModel, IMainViewModel>();
 
             dependencyResolver.Register<IViewFor<MainViewModel>>(() => new MainView());
+            dependencyResolver.Register<IViewFor<BranchViewModel>>(() => new BranchesView());
+            dependencyResolver.Register<IViewFor<RefLogViewModel>>(() => new RefLogView());
+            dependencyResolver.Register<IViewFor<CommitHistoryViewModel>>(() => new HistoryView());
+            dependencyResolver.Register<IViewFor<OutputViewModel>>(() => new OutputView());
+            dependencyResolver.Register<IViewFor<RepositoryDocumentViewModel>>(() => new RepositoryView());
         }
     }
 }

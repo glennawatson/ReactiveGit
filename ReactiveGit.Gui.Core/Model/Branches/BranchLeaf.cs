@@ -1,5 +1,7 @@
 ﻿namespace ReactiveGit.Gui.Core.Model.Branches
 {
+    using System.Linq;
+
     using ReactiveGit.Core.Model;
 
     /// <summary>
@@ -10,10 +12,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchLeaf"/> class.
         /// </summary>
-        /// <param name="name">The name of the leaf.</param>
         /// <param name="branch">The branch that the lead represents.</param>
-        public BranchLeaf(string name, GitBranch branch)
-            : base(name, branch.FriendlyName)
+        public BranchLeaf(GitBranch branch)
+            : base(branch.FriendlyName.Split('/').Last(), branch.FriendlyName)
         {
             this.Branch = branch;
         }

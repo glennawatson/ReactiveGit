@@ -24,7 +24,9 @@
         /// </summary>
         string RepositoryPath { get; }
 
+        /// <summary>
+        /// Gets the details about the repository.
+        /// </summary>
         IRepositoryDetails RepositoryDetails { get; }
-
     }
 }

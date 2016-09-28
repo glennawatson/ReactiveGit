@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Reactive;
     using System.Reactive.Linq;
+    using System.Reactive.Subjects;
     using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading;
@@ -23,6 +25,9 @@
 
         private readonly string repoDirectory;
 
+        private readonly Subject<string> gitOutput = new Subject<string>();
+        private readonly Subject<Unit> gitUpdated = new Subject<Unit>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GitProcessManager"/> class.
         /// </summary>
@@ -31,6 +36,12 @@
         {
             this.repoDirectory = repoDirectory;
         }
+
+        /// <inheritdoc />
+        public IObservable<string> GitOutput => this.gitOutput;
+
+        /// <inheritdoc />
+        public IObservable<Unit> GitUpdated => this.gitUpdated;
 
         /// <inheritdoc />
         public string RepositoryPath => this.repoDirectory;
@@ -53,7 +64,7 @@
                         gitArguments = $"--no-pager -c color.branch=false -c color.diff=false -c color.status=false -c diff.mnemonicprefix=false -c core.quotepath=false {gitArguments}";
                     }
 
-                    // this.outputLogger?.WriteLine($"execute: git {gitArguments}");
+                    this.gitOutput.OnNext($"execute: git {gitArguments}");
 
                     using (Process process = CreateGitProcess(gitArguments, this.repoDirectory))
                     {
@@ -73,7 +84,7 @@
                                     return;
                                 }
 
-                                // this.outputLogger?.WriteLine(e.Data);
+                                this.gitOutput.OnNext(e.Data);
                                 errorOutput.AppendLine(e.Data);
                                 observer.OnNext(e.Data);
                             };
@@ -85,7 +96,7 @@
                                     return;
                                 }
 
-                                // this.outputLogger?.WriteLine(e.Data);
+                                this.gitOutput.OnNext(e.Data);
                                 errorOutput.AppendLine(e.Data);
                                 observer.OnNext(e.Data);
                             };
@@ -104,6 +115,8 @@
                         }
 
                         observer.OnCompleted();
+
+                        this.gitUpdated.OnNext(Unit.Default);
                     }
                 });
         }

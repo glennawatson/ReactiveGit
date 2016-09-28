@@ -27,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\git.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\ReactiveGit.Gui.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ReactiveGit.Gui.Core.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
@@ -58,12 +60,16 @@
     <Compile Include="ViewModel\CommitHistory\ICommitHistoryViewModel.cs" />
     <Compile Include="ViewModel\Factories\DefaultRepositoryViewModelFactory.cs" />
     <Compile Include="ViewModel\Factories\IRepositoryViewModelFactory.cs" />
-    <Compile Include="ViewModel\GitObjectViewModelBase.cs" />
-    <Compile Include="ViewModel\GravatarViewModel.cs" />
-    <Compile Include="ViewModel\IGitObjectViewModel.cs" />
+    <Compile Include="ViewModel\GitObject\GitObjectViewModelBase.cs" />
+    <Compile Include="ViewModel\Gravatar\GravatarViewModel.cs" />
+    <Compile Include="ViewModel\GitObject\IGitObjectViewModel.cs" />
     <Compile Include="ViewModel\IMainViewModel.cs" />
+    <Compile Include="ViewModel\IRefreshableViewModel.cs" />
     <Compile Include="ViewModel\ISupportViewModel.cs" />
+    <Compile Include="ViewModel\IViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\Output\IOutputViewModel.cs" />
+    <Compile Include="ViewModel\Output\OutputViewModel.cs" />
     <Compile Include="ViewModel\RefLog\IRefLogViewModel.cs" />
     <Compile Include="ViewModel\RefLog\RefLogViewModel.cs" />
     <Compile Include="ViewModel\Repository\IRepositoryDocumentViewModel.cs" />

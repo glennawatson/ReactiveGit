@@ -8,6 +8,7 @@
 
     using ReactiveGit.Core.ExtensionMethods;
     using ReactiveGit.Core.Model;
+    using ReactiveGit.Gui.Core.ExtensionMethods;
 
     using ReactiveUI;
     using ReactiveUI.Fody.Helpers;
@@ -26,16 +27,15 @@
         public RefLogViewModel()
         {
             IObservable<bool> isCurrentBranchObservable =
-                this.WhenAnyValue(x => x.CurrentBranch, x => x.RepositoryDetails).Select(
-                    details => details.Item1 != null && details.Item2 != null);
+                this.WhenAnyValue(x => x.RepositoryDetails.SelectedBranch).Select(details => details != null);
 
             this.refresh = ReactiveCommand.CreateFromObservable(this.RefreshImpl, isCurrentBranchObservable);
 
-            this.WhenAnyValue(x => x.CurrentBranch).WhenDone().InvokeCommand(this.refresh);
+            this.WhenAnyValue(x => x.RepositoryDetails.SelectedBranch).Where(x => x != null).Subscribe(_ => this.Refresh.InvokeCommand());
         }
 
         /// <inheritdoc />
-        public override string Name => "Undo Stack";
+        public override string FriendlyName => "Undo Stack";
 
         /// <inheritdoc />
         [Reactive]
@@ -48,7 +48,7 @@
         {
             this.RefLog = this.refresh.CreateCollection();
 
-            return this.RepositoryDetails.RefLogManager.GetRefLog(this.CurrentBranch);
+            return this.RepositoryDetails.RefLogManager.GetRefLog(this.RepositoryDetails.SelectedBranch);
         }
     }
 }

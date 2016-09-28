@@ -7,12 +7,14 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:ReactiveGit.Gui.WPF.View"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:reactiveUi="http://reactiveui.net"
              xmlns:selectors="clr-namespace:ReactiveGit.Gui.WPF.Selectors"
              xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
     <DockPanel LastChildFill="True">
+        <DockPanel.Resources />
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem x:Name="NewMenuItem"
@@ -31,40 +33,40 @@
                 <selectors:DockingElementTemplateSelector>
                     <selectors:DockingElementTemplateSelector.Template>
                         <DataTemplate>
-                            <local:HistoryView ViewModel="{Binding CommitHistoryViewModel, Mode=OneWay}" />
+                            <Grid>
+                                <reactiveUi:ViewModelViewHost HorizontalAlignment="Stretch"
+                                                              VerticalAlignment="Stretch"
+                                                              HorizontalContentAlignment="Stretch"
+                                                              VerticalContentAlignment="Stretch"
+                                                              ViewModel="{Binding}" />
+                            </Grid>
                         </DataTemplate>
                     </selectors:DockingElementTemplateSelector.Template>
                 </selectors:DockingElementTemplateSelector>
             </xcad:DockingManager.LayoutItemTemplateSelector>
-            <xcad:DockingManager.DocumentHeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Content.FriendlyName}" />
-                </DataTemplate>
-            </xcad:DockingManager.DocumentHeaderTemplate>
+
+            <xcad:DockingManager.LayoutItemContainerStyleSelector>
+                <selectors:DockingElementStyleSelector>
+                    <selectors:DockingElementStyleSelector.DocumentStyle>
+                        <Style TargetType="{x:Type xcad:LayoutItem}">
+                            <Setter Property="Title" Value="{Binding Model.FriendlyName, Mode=OneWay}" />
+                            <Setter Property="ToolTip" Value="{Binding Model.RepositoryPath, Mode=OneWay}" />
+                            <Setter Property="ContentId" Value="{Binding Model.RepositoryPath, Mode=OneWay}" />
+                        </Style>
+                    </selectors:DockingElementStyleSelector.DocumentStyle>
+                    <selectors:DockingElementStyleSelector.SupportPaneStyle>
+                        <Style TargetType="{x:Type xcad:LayoutAnchorableItem}">
+                            <Setter Property="Title" Value="{Binding Model.FriendlyName, Mode=OneWay}" />
+
+                        </Style>
+                    </selectors:DockingElementStyleSelector.SupportPaneStyle>
+                </selectors:DockingElementStyleSelector>
+            </xcad:DockingManager.LayoutItemContainerStyleSelector>
 
             <xcad:LayoutRoot>
                 <xcad:LayoutPanel Orientation="Horizontal">
                     <xcad:LayoutDocumentPane />
-                    <xcad:LayoutAnchorablePane Name="ToolsPane" DockWidth="150">
-                        <xcad:LayoutAnchorable Title="Undo">
-                            <local:RefLogView ViewModel="{Binding SelectedRepositoryViewModel.RefLogViewModel}" />
-                        </xcad:LayoutAnchorable>
-                        <xcad:LayoutAnchorable Title="Branches" ContentId="branches">
-                            <TreeView x:Name="BranchesListBox" ItemsSource="{Binding Path=SelectedRepositoryViewModel.BranchViewModel.Branches}">
-                                <i:Interaction.Behaviors>
-                                    <behaviours:TreeViewSelectedItemBehaviour SelectedItem="{Binding SelectedRepositoryViewModel.SelectedBranchNode, Mode=TwoWay}" />
-                                </i:Interaction.Behaviors>
-                                <TreeView.Resources>
-                                    <HierarchicalDataTemplate DataType="{x:Type branches1:BranchParent}" ItemsSource="{Binding ChildNodes}">
-                                        <TextBlock Text="{Binding Name}" />
-                                    </HierarchicalDataTemplate>
-                                    <DataTemplate DataType="{x:Type branches1:BranchLeaf}">
-                                        <TextBlock Text="{Binding Name}" />
-                                    </DataTemplate>
-                                </TreeView.Resources>
-                            </TreeView>
-                        </xcad:LayoutAnchorable>
-                    </xcad:LayoutAnchorablePane>
+                    <xcad:LayoutAnchorablePane Name="ToolsPane" DockWidth="150" />
                 </xcad:LayoutPanel>
             </xcad:LayoutRoot>
         </xcad:DockingManager>

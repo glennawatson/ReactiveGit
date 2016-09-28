@@ -4,13 +4,17 @@
     using System.IO;
 
     using ReactiveGit.Core.Managers;
+    using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.Model;
     using ReactiveGit.Process.Managers;
+
+    using ReactiveUI;
+    using ReactiveUI.Fody.Helpers;
 
     /// <summary>
     /// Details about a repository.
     /// </summary>
-    public class RepositoryDetails : IRepositoryDetails
+    public class RepositoryDetails : ReactiveObject, IRepositoryDetails
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryDetails"/> class.
@@ -31,6 +35,7 @@
             this.RefLogManager = new RefLogManager(gitProcessManager);
             this.GitObjectManager = new GitObjectManager(gitProcessManager);
             this.FriendlyName = Path.GetFileName(repositoryPath);
+            this.RepositoryManager = gitProcessManager;
         }
 
         /// <inheritdoc />
@@ -43,6 +48,9 @@
         public IRefLogManager RefLogManager { get; }
 
         /// <inheritdoc />
+        public IGitRepositoryManager RepositoryManager { get; }
+
+        /// <inheritdoc />
         public IGitObjectManager GitObjectManager { get; }
 
         /// <inheritdoc />
@@ -50,5 +58,9 @@
 
         /// <inheritdoc />
         public string RepositoryPath { get; }
+
+        /// <inheritdoc />
+        [Reactive]
+        public GitBranch SelectedBranch { get; set; }
     }
 }

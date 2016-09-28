@@ -31,8 +31,9 @@
         public string FriendlyName => this.RepositoryDetails.FriendlyName;
 
         /// <inheritdoc />
-        public string RepositoryPath => this.RepositoryDetails.RepositoryPath;
+        public string RepositoryPath => this.RepositoryDetails.RepositoryManager.RepositoryPath;
 
+        /// <inheritdoc />
         [Reactive]
         public IRepositoryDetails RepositoryDetails { get; set; }
     }

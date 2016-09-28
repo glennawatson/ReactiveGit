@@ -1,0 +1,34 @@
+﻿<reactiveUi:ReactiveUserControl x:Class="ReactiveGit.Gui.WPF.View.BranchesView"
+                                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                xmlns:behaviours="clr-namespace:ReactiveGit.Gui.WPF.Behaviours"
+                                xmlns:branches="clr-namespace:ReactiveGit.Gui.Core.ViewModel.Branches;assembly=ReactiveGit.Gui.Core"
+                                xmlns:branches1="clr-namespace:ReactiveGit.Gui.Core.Model.Branches;assembly=ReactiveGit.Gui.Core"
+                                xmlns:converters="clr-namespace:ReactiveGit.Gui.WPF.Converters"
+                                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                xmlns:reactiveUi="http://reactiveui.net"
+                                d:DesignHeight="300"
+                                d:DesignWidth="300"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                x:TypeArguments="branches:IBranchViewModel"
+                                mc:Ignorable="d">
+    <Grid>
+        <TreeView x:Name="BranchesListBox" ItemsSource="{Binding Branches}">
+            <i:Interaction.Behaviors>
+                <behaviours:TreeViewSelectedItemBehaviour SelectedItem="{Binding RepositoryDetails.SelectedBranch, Mode=TwoWay, Converter={converters:BranchNodeToGitBranchConverter}}" />
+            </i:Interaction.Behaviors>
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type branches1:BranchParent}" ItemsSource="{Binding Path=ChildNodes}">
+                    <TextBlock Text="{Binding Path=Name}" />
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type branches1:BranchLeaf}">
+                    <TextBlock Text="{Binding Path=Name}" />
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+    </Grid>
+</reactiveUi:ReactiveUserControl>
+

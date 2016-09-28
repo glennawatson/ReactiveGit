@@ -1,11 +1,14 @@
 ﻿namespace ReactiveGit.Gui.Core.Model
 {
+    using System.ComponentModel;
+
     using ReactiveGit.Core.Managers;
+    using ReactiveGit.Core.Model;
 
     /// <summary>
     /// Details about the repository.
     /// </summary>
-    public interface IRepositoryDetails
+    public interface IRepositoryDetails : INotifyPropertyChanged
     {
         /// <summary>
         /// Gets the branch manager.
@@ -33,8 +36,13 @@
         IRefLogManager RefLogManager { get; }
 
         /// <summary>
-        /// Gets the path to the repository.
+        /// Gets the repository manager.
         /// </summary>
-        string RepositoryPath { get; }
+        IGitRepositoryManager RepositoryManager { get; }
+
+        /// <summary>
+        /// Gets or sets the selected branch.
+        /// </summary>
+        GitBranch SelectedBranch { get; set; }
     }
 }

@@ -1,0 +1,65 @@
+﻿namespace ReactiveGit.Gui.WPF.Converters
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using ReactiveGit.Core.Model;
+    using ReactiveGit.Gui.Core.Model.Branches;
+
+    using ReactiveUI;
+
+    /// <summary>
+    /// Converts from a selected list to a git branch.
+    /// </summary>
+    public class SelectedBranchFromListConverter : IBindingTypeConverter
+    {
+        /// <inheritdoc />
+        public int GetAffinityForObjects(Type fromType, Type toType)
+        {
+            if (toType != typeof(GitBranch))
+            {
+                return 0;
+            }
+
+            if (fromType != typeof(IList))
+            {
+                return 0;
+            }
+
+            return 100;
+        }
+
+        /// <inheritdoc />
+        public bool TryConvert(object from, Type toType, object conversionHint, out object result)
+        {
+            if (from == null)
+            {
+                result = null;
+                return false;
+            }
+
+            IList list = from as IList;
+
+            if (list == null)
+            {
+                result = null;
+                return false;
+            }
+
+            if (list.Count == 0)
+            {
+                result = null;
+                return true;
+            }
+
+            BranchLeaf leaf = list[0] as BranchLeaf;
+
+            result = leaf?.Branch;
+            return true;
+        }
+    }
+}
