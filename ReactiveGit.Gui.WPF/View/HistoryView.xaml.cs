@@ -2,6 +2,7 @@
 {
     using AutoDependencyPropertyMarker;
 
+    using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.ViewModel.CommitHistory;
 
     using ReactiveUI;
@@ -9,7 +10,7 @@
     /// <summary>
     /// Interaction logic for HistoryView.xaml
     /// </summary>
-    public partial class HistoryView : IViewFor<ICommitHistoryViewModel>
+    public partial class HistoryView 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryView"/> class.
@@ -22,26 +23,26 @@
                 d =>
                     {
                         d(this.OneWayBind(this.ViewModel, vm => vm.CommitHistory, view => view.CommitDataGrid.ItemsSource));
-                        d(this.Bind(this.ViewModel, vm => vm.SelectedGitObject, view => view.CommitDataGrid.SelectedItem));
+                        d(this.Bind(this.ViewModel, vm => vm.SelectedGitObject, view => view.CommitDataGrid.SelectedItem, VmToViewConvert, ViewToVmConvert));
                     });
         }
 
-        /// <inheritdoc />
-        object IViewFor.ViewModel
+        private static object VmToViewConvert(IGitIdObject gitObject)
         {
-            get
+            GitCommit gitCommit = gitObject as GitCommit;
+
+            if (gitCommit == null)
             {
-                return this.ViewModel;
+                return null;
             }
 
-            set
-            {
-                this.ViewModel = (ICommitHistoryViewModel)value;
-            }
+            return new CommitHistoryItemViewModel(gitCommit);
         }
 
-        /// <inheritdoc />
-        [AutoDependencyProperty]
-        public ICommitHistoryViewModel ViewModel { get; set; }
+        private static IGitIdObject ViewToVmConvert(object value)
+        {
+            var commitItem = value as CommitHistoryItemViewModel;
+            return commitItem == null ? null : commitItem.GitCommit;
+        }
     }
 }

@@ -21,6 +21,11 @@
         string FriendlyName { get; }
 
         /// <summary>
+        /// Gets the path to the repository.
+        /// </summary>
+        string RepositoryPath { get; }
+
+        /// <summary>
         /// Gets the git object manager.
         /// </summary>
         IGitObjectManager GitObjectManager { get; }

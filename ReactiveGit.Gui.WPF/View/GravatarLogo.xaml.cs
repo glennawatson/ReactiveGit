@@ -14,7 +14,7 @@
     /// <summary>
     /// Interaction logic for GravatarLogo.xaml
     /// </summary>
-    public partial class GravatarLogo : IViewFor<GravatarViewModel>
+    public partial class GravatarLogo 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GravatarLogo"/> class.
@@ -29,23 +29,5 @@
                         d(this.WhenAnyValue(view => view.ViewModel.GravatarBitmap).Where(x => x != null).SubscribeOn(RxApp.MainThreadScheduler).Select(x => x.ToNative()).BindTo(this, view => view.LogoImage.Source));
                     });
         }
-
-        /// <inheritdoc />
-        object IViewFor.ViewModel
-        {
-            get
-            {
-                return this.ViewModel;
-            }
-
-            set
-            {
-                this.ViewModel = (GravatarViewModel)value;
-            }
-        }
-
-        /// <inheritdoc />
-        [AutoDependencyProperty]
-        public GravatarViewModel ViewModel { get; set; }
     }
 }

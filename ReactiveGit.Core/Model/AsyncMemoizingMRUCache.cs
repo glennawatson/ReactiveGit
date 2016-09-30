@@ -108,6 +108,7 @@
         /// Ensure that the next time this key is queried, the calculation
         /// function will be called.
         /// </summary>
+        /// <param name="key">The key to invalidate.</param>
         public void Invalidate(TParam key)
         {
             Contract.Requires(key != null);

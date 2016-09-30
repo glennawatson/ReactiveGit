@@ -9,7 +9,7 @@
     /// <summary>
     /// Interaction logic for RefLogView.xaml
     /// </summary>
-    public partial class RefLogView : IViewFor<IRefLogViewModel>
+    public partial class RefLogView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RefLogView"/> class.
@@ -25,23 +25,5 @@
             this.BindCommand(this.ViewModel, viewModel => viewModel.ResetMixed, view => view.ResetMixedMenuItem, this.WhenAnyValue(x => x.ViewModel.SelectedGitObject));
             this.BindCommand(this.ViewModel, viewModel => viewModel.ResetSoft, view => view.ResetSoftMenuItem, this.WhenAnyValue(x => x.ViewModel.SelectedGitObject));
         }
-
-        /// <inheritdoc />
-        object IViewFor.ViewModel
-        {
-            get
-            {
-                return this.ViewModel;
-            }
-
-            set
-            {
-                this.ViewModel = (IRefLogViewModel)value;
-            }
-        }
-
-        /// <inheritdoc />
-        [AutoDependencyProperty]
-        public IRefLogViewModel ViewModel { get; set; }
     }
 }

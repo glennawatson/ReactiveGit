@@ -1,9 +1,5 @@
 ﻿namespace ReactiveGit.Gui.WPF.View
 {
-    using System.Windows.Controls;
-
-    using AutoDependencyPropertyMarker;
-
     using ReactiveGit.Gui.Core.ViewModel.Repository;
 
     using ReactiveUI;
@@ -26,23 +22,5 @@
                         d(this.OneWayBind(this.ViewModel, vm => vm.CommitHistoryViewModel, view => view.HistoryView.ViewModel));
                     });
         }
-
-        /// <inheritdoc />
-        object IViewFor.ViewModel
-        {
-            get
-            {
-                return this.ViewModel;
-            }
-
-            set
-            {
-                this.ViewModel = (IRepositoryDocumentViewModel)value;
-            }
-        }
-
-        /// <inheritdoc />
-        [AutoDependencyProperty]
-        public IRepositoryDocumentViewModel ViewModel { get; set; }
     }
 }

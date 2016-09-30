@@ -58,7 +58,7 @@
         {
             return Observable.Create<string>(async (observer, token) =>
                 {
-                    var gitArguments = string.Join(" ", gitArgumentsEnumerable);
+                    string gitArguments = string.Join(" ", gitArgumentsEnumerable);
                     if (includeStandardArguments)
                     {
                         gitArguments = $"--no-pager -c color.branch=false -c color.diff=false -c color.status=false -c diff.mnemonicprefix=false -c core.quotepath=false {gitArguments}";
@@ -111,7 +111,7 @@
 
                         if (returnValue != 0)
                         {
-                            observer.OnError(new GitProcessException(string.Join(" ", gitArgumentsEnumerable), errorOutput.ToString()));
+                            observer.OnError(new GitProcessException(gitArguments, errorOutput.ToString()));
                         }
 
                         observer.OnCompleted();

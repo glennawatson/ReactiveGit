@@ -12,7 +12,7 @@
     /// <summary>
     /// Interaction logic for MainView
     /// </summary>
-    public partial class MainView : IViewFor<IMainViewModel>
+    public partial class MainView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MainView"/> class.
@@ -32,24 +32,6 @@
                     d(this.OneWayBind(this.ViewModel, vm => vm.VisibleSupportViewModels, view => view.DockManager.AnchorablesSource));
                 });
         }
-
-        /// <inheritdoc />
-        object IViewFor.ViewModel
-        {
-            get
-            {
-                return this.ViewModel;
-            }
-
-            set
-            {
-                this.ViewModel = (IMainViewModel)value;
-            }
-        }
-
-        /// <inheritdoc />
-        [AutoDependencyProperty]
-        public IMainViewModel ViewModel { get; set; }
 
         /// <summary>
         /// Handles the folder prompt.

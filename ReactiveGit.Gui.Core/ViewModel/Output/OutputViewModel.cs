@@ -34,6 +34,7 @@
         public string FriendlyName => "Output";
 
         /// <inheritdoc />
+        [Reactive]
         public IRepositoryDetails RepositoryDetails { get; set; }
 
         /// <inheritdoc />

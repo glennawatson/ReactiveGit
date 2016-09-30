@@ -5,7 +5,7 @@
     /// <summary>
     /// Interaction logic for CommitDetailsView
     /// </summary>
-    public partial class CommitDetailsView : UserControl
+    public partial class CommitDetailsView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CommitDetailsView"/> class.

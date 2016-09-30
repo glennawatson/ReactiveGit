@@ -1,11 +1,12 @@
-﻿<UserControl x:Class="ReactiveGit.Gui.WPF.View.HistoryView"
+﻿<reactiveUi:ReactiveUserControl x:TypeArguments="viewModel:ICommitHistoryViewModel" x:Class="ReactiveGit.Gui.WPF.View.HistoryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:ReactiveGit.Gui.WPF.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ReactiveGit.Gui.WPF.View"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             x:Name="HistoryViewWindow"
+             xmlns:reactiveUi="http://reactiveui.net"
+             xmlns:viewModel="clr-namespace:ReactiveGit.Gui.Core.ViewModel.CommitHistory;assembly=ReactiveGit.Gui.Core"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
@@ -40,4 +41,4 @@
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
-</UserControl>
+</reactiveUi:ReactiveUserControl>

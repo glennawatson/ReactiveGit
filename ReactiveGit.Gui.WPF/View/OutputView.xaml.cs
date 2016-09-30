@@ -9,7 +9,7 @@
     /// <summary>
     /// Interaction logic for OutputView.xaml
     /// </summary>
-    public partial class OutputView : IViewFor<IOutputViewModel>
+    public partial class OutputView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputView"/> class.
@@ -20,23 +20,5 @@
 
             this.OneWayBind(this.ViewModel, vm => vm.Output, view => view.OutputTextBox.Text);
         }
-
-        /// <inheritdoc />
-        object IViewFor.ViewModel
-        {
-            get
-            {
-                return this.ViewModel;
-            }
-
-            set
-            {
-                this.ViewModel = (IOutputViewModel)value;
-            }
-        }
-
-        /// <inheritdoc />
-        [AutoDependencyProperty]
-        public IOutputViewModel ViewModel { get; set; }
     }
 }
