@@ -8,7 +8,7 @@
     public class GitRefLog : IGitIdObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GitRefLog"/> class.
+        /// Initializes a new instance of the <see cref="GitRefLog" /> class.
         /// </summary>
         /// <param name="sha">The full length SHA.</param>
         /// <param name="shortSha">The short SHA id of the ref log item.</param>
@@ -25,26 +25,26 @@
         }
 
         /// <summary>
-        /// Gets the short SHA id of the ref log item.
-        /// </summary>
-        public string ShaShort { get; }
-
-        /// <inheritdoc />
-        public string Sha { get; }
-
-        /// <summary>
         /// Gets the action of the ref log item.
         /// </summary>
         public string Action { get; }
+
+        /// <summary>
+        /// Gets the date time when the ref log item happened.
+        /// </summary>
+        public DateTime DateTime { get; }
 
         /// <summary>
         /// Gets the short message of the ref log item.
         /// </summary>
         public string MessageShort { get; }
 
+        /// <inheritdoc />
+        public string Sha { get; }
+
         /// <summary>
-        /// Gets the date time when the ref log item happened.
+        /// Gets the short SHA id of the ref log item.
         /// </summary>
-        public DateTime DateTime { get; }
+        public string ShaShort { get; }
     }
 }

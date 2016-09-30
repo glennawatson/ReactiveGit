@@ -1,9 +1,5 @@
 ﻿namespace ReactiveGit.Gui.WPF.View
 {
-    using AutoDependencyPropertyMarker;
-
-    using ReactiveGit.Gui.Core.ViewModel.Output;
-
     using ReactiveUI;
 
     /// <summary>
@@ -12,7 +8,7 @@
     public partial class OutputView
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OutputView"/> class.
+        /// Initializes a new instance of the <see cref="OutputView" /> class.
         /// </summary>
         public OutputView()
         {

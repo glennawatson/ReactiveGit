@@ -1,10 +1,7 @@
 ﻿namespace ReactiveGit.Gui.WPF.View
 {
-    using AutoDependencyPropertyMarker;
-
     using Microsoft.WindowsAPICodePack.Dialogs;
 
-    using ReactiveGit.Gui.Core.ViewModel;
     using ReactiveGit.Gui.WPF.Converters;
 
     using ReactiveUI;
@@ -15,7 +12,7 @@
     public partial class MainView
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainView"/> class.
+        /// Initializes a new instance of the <see cref="MainView" /> class.
         /// </summary>
         public MainView()
         {
@@ -23,19 +20,30 @@
 
             this.WhenActivated(
                 d =>
-                {
-                    d(this.ViewModel.SelectFolder.RegisterHandler(context => this.HandleFolderPrompt(context)));
-                    d(this.BindCommand(this.ViewModel, vm => vm.NewRepository, view => view.NewMenuItem));
-                    d(this.BindCommand(this.ViewModel, vm => vm.SelectRepository, view => view.OpenMenuItem));
-                    d(this.OneWayBind(this.ViewModel, vm => vm.RepositoryViewModels, view => view.DockManager.DocumentsSource));
-                    d(this.Bind(this.ViewModel, vm => vm.SelectedRepositoryViewModel, view => view.DockManager.ActiveContent, viewToVMConverterOverride: new DocumentTypeConverter()));
-                    d(this.OneWayBind(this.ViewModel, vm => vm.VisibleSupportViewModels, view => view.DockManager.AnchorablesSource));
-                });
+                    {
+                        d(this.ViewModel.SelectFolder.RegisterHandler(context => this.HandleFolderPrompt(context)));
+                        d(this.BindCommand(this.ViewModel, vm => vm.NewRepository, view => view.NewMenuItem));
+                        d(this.BindCommand(this.ViewModel, vm => vm.SelectRepository, view => view.OpenMenuItem));
+                        d(
+                            this.OneWayBind(
+                                this.ViewModel,
+                                vm => vm.RepositoryViewModels,
+                                view => view.DockManager.DocumentsSource));
+                        d(
+                            this.Bind(
+                                this.ViewModel,
+                                vm => vm.SelectedRepositoryViewModel,
+                                view => view.DockManager.ActiveContent,
+                                viewToVMConverterOverride: new DocumentTypeConverter()));
+                        d(
+                            this.OneWayBind(
+                                this.ViewModel,
+                                vm => vm.VisibleSupportViewModels,
+                                view => view.DockManager.AnchorablesSource));
+                    });
         }
 
-        /// <summary>
-        /// Handles the folder prompt.
-        /// </summary>
+        /// <summary>Handles the folder prompt.</summary>
         /// <param name="context">The context of the interaction.</param>
         private void HandleFolderPrompt(InteractionContext<string, string> context)
         {

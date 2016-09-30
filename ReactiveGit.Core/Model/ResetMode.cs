@@ -6,7 +6,7 @@
     public enum ResetMode
     {
         /// <summary>
-        /// Soft commit will not change the index/working directory, only the head. 
+        /// Soft commit will not change the index/working directory, only the head.
         /// </summary>
         Soft,
 
@@ -18,6 +18,6 @@
         /// <summary>
         /// Resets the head, index and working directory.
         /// </summary>
-        Hard,
+        Hard
     }
 }

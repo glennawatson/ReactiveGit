@@ -2,10 +2,6 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.Model.Branches;
@@ -42,7 +38,7 @@
                 return false;
             }
 
-            IList list = from as IList;
+            var list = from as IList;
 
             if (list == null)
             {
@@ -56,7 +52,7 @@
                 return true;
             }
 
-            BranchLeaf leaf = list[0] as BranchLeaf;
+            var leaf = list[0] as BranchLeaf;
 
             result = leaf?.Branch;
             return true;

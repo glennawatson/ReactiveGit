@@ -16,7 +16,7 @@
     /// due to memory consumption or fetch latency.
     /// </summary>
     /// <remarks>
-    /// The IList implmentation is not fully complete, but should be sufficient for use as read only collection 
+    /// The IList implmentation is not fully complete, but should be sufficient for use as read only collection
     /// data bound to a suitable ItemsControl.
     /// </remarks>
     public class VirtualizingList : IList<GitCommit>
@@ -30,7 +30,7 @@
         private readonly Dictionary<int, DateTime> pageTouchTimes = new Dictionary<int, DateTime>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtualizingList"/> class.
+        /// Initializes a new instance of the <see cref="VirtualizingList" /> class.
         /// </summary>
         /// <param name="branchManager">The items provider.</param>
         /// <param name="branchName">The name of the branch.</param>
@@ -79,13 +79,13 @@
                 this.RequestPage(pageIndex);
 
                 // if accessing upper 50% then request next page
-                if (pageOffset > this.PageSize / 2 && pageIndex < this.Count / this.PageSize)
+                if ((pageOffset > this.PageSize / 2) && (pageIndex < this.Count / this.PageSize))
                 {
                     this.RequestPage(pageIndex + 1);
                 }
 
                 // if accessing lower 50% then request prev page
-                if (pageOffset < this.PageSize / 2 && pageIndex > 0)
+                if ((pageOffset < this.PageSize / 2) && (pageIndex > 0))
                 {
                     this.RequestPage(pageIndex - 1);
                 }
@@ -130,7 +130,7 @@
         /// <inheritdoc />
         public IEnumerator<GitCommit> GetEnumerator()
         {
-            for (int i = 0; i < this.Count; i++)
+            for (var i = 0; i < this.Count; i++)
             {
                 yield return this[i];
             }
@@ -172,7 +172,7 @@
             foreach (int key in keys)
             {
                 // page 0 is a special case, since WPF ItemsControl access the first item frequently
-                if (key == 0 || (DateTime.Now - this.pageTouchTimes[key]) <= this.PageTimeout)
+                if ((key == 0) || (DateTime.Now - this.pageTouchTimes[key] <= this.PageTimeout))
                 {
                     continue;
                 }
@@ -186,7 +186,7 @@
         {
             int index = pageIndex * this.PageSize;
 
-            var pageContents =
+            IList<GitCommit> pageContents =
                 this.branchManager.GetCommitsForBranch(this.branchName, index, this.PageSize, GitLogOptions.None).ToList
                     ().Wait();
 

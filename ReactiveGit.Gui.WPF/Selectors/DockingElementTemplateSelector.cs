@@ -4,8 +4,6 @@
     using System.Windows.Controls;
 
     using ReactiveGit.Gui.Core.ViewModel;
-    using ReactiveGit.Gui.Core.ViewModel.Branches;
-    using ReactiveGit.Gui.Core.ViewModel.RefLog;
     using ReactiveGit.Gui.Core.ViewModel.Repository;
 
     /// <summary>

@@ -23,7 +23,7 @@
         {
             while (true)
             {
-                if (seqType == null || seqType == typeof(string))
+                if ((seqType == null) || (seqType == typeof(string)))
                 {
                     return null;
                 }
@@ -58,7 +58,7 @@
                     }
                 }
 
-                if (seqType.BaseType == null || seqType.BaseType == typeof(object))
+                if ((seqType.BaseType == null) || (seqType.BaseType == typeof(object)))
                 {
                     return null;
                 }

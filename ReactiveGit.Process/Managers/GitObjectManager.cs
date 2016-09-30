@@ -15,7 +15,7 @@
         private readonly IGitProcessManager gitProcessManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GitObjectManager"/> class.
+        /// Initializes a new instance of the <see cref="GitObjectManager" /> class.
         /// </summary>
         /// <param name="gitProcessManager">The git process to use.</param>
         public GitObjectManager(IGitProcessManager gitProcessManager)

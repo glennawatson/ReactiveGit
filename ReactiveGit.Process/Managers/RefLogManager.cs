@@ -15,7 +15,7 @@
         private readonly IGitProcessManager gitProcessManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RefLogManager"/> class.
+        /// Initializes a new instance of the <see cref="RefLogManager" /> class.
         /// </summary>
         /// <param name="gitProcessManager">The git process to use.</param>
         public RefLogManager(IGitProcessManager gitProcessManager)

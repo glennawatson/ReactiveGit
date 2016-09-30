@@ -5,6 +5,7 @@
     using System.Windows.Input;
 
     using ReactiveGit.Gui.Core.Model;
+    using ReactiveGit.Gui.Core.ViewModel.Content;
 
     using ReactiveUI;
     using ReactiveUI.Fody.Helpers;
@@ -12,7 +13,7 @@
     /// <summary>
     /// View model for the output.
     /// </summary>
-    public class OutputViewModel : IOutputViewModel
+    public class OutputViewModel : ContentViewModelBase, IOutputViewModel
     {
         private readonly ReactiveCommand<Unit, Unit> clear;
 
@@ -31,7 +32,7 @@
         }
 
         /// <inheritdoc />
-        public string FriendlyName => "Output";
+        public override string FriendlyName => "Output";
 
         /// <inheritdoc />
         [Reactive]

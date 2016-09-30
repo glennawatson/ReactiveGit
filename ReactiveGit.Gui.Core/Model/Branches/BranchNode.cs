@@ -8,7 +8,7 @@
     public abstract class BranchNode : IEquatable<BranchNode>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BranchNode"/> class.
+        /// Initializes a new instance of the <see cref="BranchNode" /> class.
         /// </summary>
         /// <param name="name">The name of the node.</param>
         /// <param name="fullName">The full name of the node.</param>
@@ -80,7 +80,7 @@
             }
 
             var other = obj as BranchNode;
-            return other != null && this.Equals(other);
+            return (other != null) && this.Equals(other);
         }
 
         /// <inheritdoc />

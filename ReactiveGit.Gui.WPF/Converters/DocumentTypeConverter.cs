@@ -8,7 +8,7 @@
 
     /// <summary>
     /// Converts from avalon dock to the view model selected document property.
-    /// Will make repository documents set appropriately, and ignore child repository documents. 
+    /// Will make repository documents set appropriately, and ignore child repository documents.
     /// </summary>
     public class DocumentTypeConverter : IBindingTypeConverter
     {

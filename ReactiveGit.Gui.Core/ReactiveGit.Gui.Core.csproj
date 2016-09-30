@@ -59,6 +59,8 @@
     <Compile Include="ViewModel\CommitHistory\CommitHistoryItemViewModel.cs" />
     <Compile Include="ViewModel\CommitHistory\CommitHistoryViewModel.cs" />
     <Compile Include="ViewModel\CommitHistory\ICommitHistoryViewModel.cs" />
+    <Compile Include="ViewModel\Content\ContentViewModelBase.cs" />
+    <Compile Include="ViewModel\Content\IContentViewModelBase.cs" />
     <Compile Include="ViewModel\Factories\DefaultRepositoryViewModelFactory.cs" />
     <Compile Include="ViewModel\Factories\IRepositoryViewModelFactory.cs" />
     <Compile Include="ViewModel\GitObject\GitObjectViewModelBase.cs" />

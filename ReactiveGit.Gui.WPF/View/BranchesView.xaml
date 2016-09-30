@@ -9,10 +9,10 @@
                                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                 xmlns:reactiveUi="http://reactiveui.net"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 d:DesignHeight="300"
                                 d:DesignWidth="300"
-                                VerticalAlignment="Stretch"
-                                HorizontalAlignment="Stretch"
                                 x:TypeArguments="branches:IBranchViewModel"
                                 mc:Ignorable="d">
     <Grid>

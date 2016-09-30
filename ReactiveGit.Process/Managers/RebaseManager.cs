@@ -23,7 +23,7 @@
         private readonly IGitProcessManager gitProcess;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RebaseManager"/> class.
+        /// Initializes a new instance of the <see cref="RebaseManager" /> class.
         /// </summary>
         /// <param name="processManager">The process manager which invokes GIT commands.</param>
         /// <param name="branchManager">The branch manager which will get's GIT branch information.</param>
@@ -47,7 +47,7 @@
             try
             {
                 var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                var location = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
+                string location = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
 
                 if (File.Exists(location) == false)
                 {
@@ -88,6 +88,45 @@
         }
 
         /// <inheritdoc />
+        public IObservable<string> Abort()
+        {
+            return this.gitProcess.RunGit(new[] { "rebase --abort" });
+        }
+
+        /// <inheritdoc />
+        public IObservable<string> Continue(string commitMessage)
+        {
+            return Observable.Create<string>(
+                observer =>
+                    {
+                        string rewriterName;
+                        string commentWriterName;
+                        if (GetWritersName(out rewriterName, out commentWriterName) == false)
+                        {
+                            observer.OnError(new GitProcessException("Cannot get valid paths to GIT parameters"));
+                        }
+
+                        string fileName = Path.GetTempFileName();
+                        File.WriteAllText(fileName, commitMessage);
+
+                        IList<string> gitArguments = new List<string>
+                                                         {
+                                                             $"-c \"core.editor=\'{commentWriterName}\'\"",
+                                                             "rebase --continue"
+                                                         };
+
+                        var environmentVariables = new Dictionary<string, string> { { "COMMENT_FILE_NAME", fileName } };
+
+                        IDisposable running =
+                            this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(
+                                observer.OnNext,
+                                observer.OnCompleted);
+
+                        return Disposable.Create(() => running?.Dispose());
+                    });
+        }
+
+        /// <inheritdoc />
         public Task<bool> HasConflicts(CancellationToken token)
         {
             return this.branchManager.IsMergeConflict(token);
@@ -102,84 +141,65 @@
         }
 
         /// <inheritdoc />
-        public IObservable<string> Squash(string newCommitMessage, GitCommit startCommit)
-        {
-            return Observable.Create<string>(async (observer, token) =>
-                {
-                    if (await this.branchManager.IsWorkingDirectoryDirty(token))
-                    {
-                        observer.OnError(new GitProcessException("The working directory is dirty. There are uncommited files."));
-                    }
-
-                    string rewriterName;
-                    string commentWriterName;
-                    if (GetWritersName(out rewriterName, out commentWriterName) == false)
-                    {
-                        observer.OnError(new GitProcessException("Cannot get valid paths to GIT parameters"));
-                    }
-
-                    string fileName = Path.GetTempFileName();
-                    File.WriteAllText(fileName, newCommitMessage);
-
-                    var environmentVariables = new Dictionary<string, string> { { "COMMENT_FILE_NAME", fileName } };
-
-                    IList<string> gitArguments = new List<string> { $"-c \"sequence.editor=\'{rewriterName}\'\"", $"-c \"core.editor=\'{commentWriterName}\'\"", $"rebase -i  {startCommit.Sha}" };
-
-                    this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(observer.OnNext, observer.OnCompleted, token);
-                });
-        }
-
-        /// <inheritdoc />
         public IObservable<string> Rebase(GitBranch parentBranch)
         {
-            return Observable.Create<string>(async (observer, token) =>
-                {
-                    if (await this.branchManager.IsWorkingDirectoryDirty(token))
+            return Observable.Create<string>(
+                async (observer, token) =>
                     {
-                        observer.OnError(new GitProcessException("The working directory is dirty. There are uncommited files."));
-                    }
+                        if (await this.branchManager.IsWorkingDirectoryDirty(token))
+                        {
+                            observer.OnError(
+                                new GitProcessException("The working directory is dirty. There are uncommited files."));
+                        }
 
-                    IList<string> gitArguments = new List<string> { $"rebase -i  {parentBranch.FriendlyName}" };
+                        IList<string> gitArguments = new List<string> { $"rebase -i  {parentBranch.FriendlyName}" };
 
-                    this.gitProcess.RunGit(gitArguments).Subscribe(observer.OnNext, observer.OnCompleted, token);
-                });
-        }
-
-        /// <inheritdoc />
-        public IObservable<string> Abort()
-        {
-            return this.gitProcess.RunGit(new[] { "rebase --abort" });
-        }
-
-        /// <inheritdoc />
-        public IObservable<string> Continue(string commitMessage)
-        {
-            return Observable.Create<string>((observer) =>
-                {
-                    string rewriterName;
-                    string commentWriterName;
-                    if (GetWritersName(out rewriterName, out commentWriterName) == false)
-                    {
-                        observer.OnError(new GitProcessException("Cannot get valid paths to GIT parameters"));
-                    }
-
-                    string fileName = Path.GetTempFileName();
-                    File.WriteAllText(fileName, commitMessage);
-
-                    IList<string> gitArguments = new List<string> { $"-c \"core.editor=\'{commentWriterName}\'\"", "rebase --continue" };
-
-                    var environmentVariables = new Dictionary<string, string> { { "COMMENT_FILE_NAME", fileName } };
-
-                    var running = this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(observer.OnNext, observer.OnCompleted);
-
-                    return Disposable.Create(() => running?.Dispose());
-                });
+                        this.gitProcess.RunGit(gitArguments).Subscribe(observer.OnNext, observer.OnCompleted, token);
+                    });
         }
 
         /// <inheritdoc />
         public IObservable<string> Skip()
         {
             return this.gitProcess.RunGit(new[] { "rebase --skip" });
+        }
+
+        /// <inheritdoc />
+        public IObservable<string> Squash(string newCommitMessage, GitCommit startCommit)
+        {
+            return Observable.Create<string>(
+                async (observer, token) =>
+                    {
+                        if (await this.branchManager.IsWorkingDirectoryDirty(token))
+                        {
+                            observer.OnError(
+                                new GitProcessException("The working directory is dirty. There are uncommited files."));
+                        }
+
+                        string rewriterName;
+                        string commentWriterName;
+                        if (GetWritersName(out rewriterName, out commentWriterName) == false)
+                        {
+                            observer.OnError(new GitProcessException("Cannot get valid paths to GIT parameters"));
+                        }
+
+                        string fileName = Path.GetTempFileName();
+                        File.WriteAllText(fileName, newCommitMessage);
+
+                        var environmentVariables = new Dictionary<string, string> { { "COMMENT_FILE_NAME", fileName } };
+
+                        IList<string> gitArguments = new List<string>
+                                                         {
+                                                             $"-c \"sequence.editor=\'{rewriterName}\'\"",
+                                                             $"-c \"core.editor=\'{commentWriterName}\'\"",
+                                                             $"rebase -i  {startCommit.Sha}"
+                                                         };
+
+                        this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(
+                            observer.OnNext,
+                            observer.OnCompleted,
+                            token);
+                    });
         }
     }
 }

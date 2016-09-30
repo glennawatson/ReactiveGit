@@ -11,15 +11,15 @@
     public class DefaultRepositoryFactory : IRepositoryFactory
     {
         /// <inheritdoc />
-        public IRepositoryDetails CreateRepositoryDetails(string repositoryDirectory)
-        {
-            return new RepositoryDetails(repositoryDirectory);
-        }
-
-        /// <inheritdoc />
         public IRepositoryCreator CreateRepositoryCreator()
         {
             return new RepositoryCreator(x => new GitProcessManager(x));
+        }
+
+        /// <inheritdoc />
+        public IRepositoryDetails CreateRepositoryDetails(string repositoryDirectory)
+        {
+            return new RepositoryDetails(repositoryDirectory);
         }
     }
 }

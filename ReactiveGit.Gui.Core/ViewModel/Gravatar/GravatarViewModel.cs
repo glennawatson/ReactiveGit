@@ -1,9 +1,8 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel
+﻿namespace ReactiveGit.Gui.Core.ViewModel.Gravatar
 {
     using System;
     using System.IO;
     using System.Net.Http;
-    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
     using System.Threading.Tasks;
 

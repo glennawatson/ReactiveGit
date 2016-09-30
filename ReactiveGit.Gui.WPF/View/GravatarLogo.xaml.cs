@@ -1,11 +1,6 @@
 ﻿namespace ReactiveGit.Gui.WPF.View
 {
-    using System;
     using System.Reactive.Linq;
-
-    using AutoDependencyPropertyMarker;
-
-    using ReactiveGit.Gui.Core.ViewModel;
 
     using ReactiveUI;
 
@@ -14,10 +9,10 @@
     /// <summary>
     /// Interaction logic for GravatarLogo.xaml
     /// </summary>
-    public partial class GravatarLogo 
+    public partial class GravatarLogo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GravatarLogo"/> class.
+        /// Initializes a new instance of the <see cref="GravatarLogo" /> class.
         /// </summary>
         public GravatarLogo()
         {
@@ -26,7 +21,11 @@
             this.WhenActivated(
                 d =>
                     {
-                        d(this.WhenAnyValue(view => view.ViewModel.GravatarBitmap).Where(x => x != null).SubscribeOn(RxApp.MainThreadScheduler).Select(x => x.ToNative()).BindTo(this, view => view.LogoImage.Source));
+                        d(
+                            this.WhenAnyValue(view => view.ViewModel.GravatarBitmap).Where(x => x != null).SubscribeOn(
+                                RxApp.MainThreadScheduler).Select(x => x.ToNative()).BindTo(
+                                this,
+                                view => view.LogoImage.Source));
                     });
         }
     }

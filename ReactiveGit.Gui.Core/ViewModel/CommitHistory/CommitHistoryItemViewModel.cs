@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
 
     using ReactiveGit.Core.Model;
+    using ReactiveGit.Gui.Core.ViewModel.Gravatar;
 
     using ReactiveUI;
 

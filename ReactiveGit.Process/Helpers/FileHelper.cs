@@ -27,7 +27,7 @@
             FileInfo[] files = directory.GetFiles();
             DirectoryInfo[] subdirs = directory.GetDirectories();
 
-            return files.Length == 0 && subdirs.Length == 0;
+            return (files.Length == 0) && (subdirs.Length == 0);
         }
     }
 }

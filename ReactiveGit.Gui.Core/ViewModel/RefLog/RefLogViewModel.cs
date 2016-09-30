@@ -9,6 +9,7 @@
     using ReactiveGit.Core.ExtensionMethods;
     using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.ExtensionMethods;
+    using ReactiveGit.Gui.Core.ViewModel.GitObject;
 
     using ReactiveUI;
     using ReactiveUI.Fody.Helpers;

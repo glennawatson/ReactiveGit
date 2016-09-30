@@ -1,4 +1,4 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel
+﻿namespace ReactiveGit.Gui.Core.ViewModel.GitObject
 {
     using System.Reactive;
     using System.Reactive.Linq;
@@ -6,6 +6,7 @@
 
     using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.Model;
+    using ReactiveGit.Gui.Core.ViewModel.Content;
 
     using ReactiveUI;
     using ReactiveUI.Fody.Helpers;
@@ -13,7 +14,7 @@
     /// <summary>
     /// Base class for classes handling git objects. 
     /// </summary>
-    public abstract class GitObjectViewModelBase : ReactiveObject, IGitObjectViewModel
+    public abstract class GitObjectViewModelBase : ContentViewModelBase, IGitObjectViewModel
     {
         private readonly ReactiveCommand<IGitIdObject, Unit> resetHard;
 
@@ -42,9 +43,6 @@
                     x => this.RepositoryDetails.GitObjectManager.Reset(x, ResetMode.Mixed),
                     canReset);
         }
-
-        /// <inheritdoc />
-        public abstract string FriendlyName { get; }
 
         /// <inheritdoc />
         public abstract ICommand Refresh { get; }

@@ -9,7 +9,7 @@
     public class BranchParent : BranchNode
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BranchParent"/> class.
+        /// Initializes a new instance of the <see cref="BranchParent" /> class.
         /// </summary>
         /// <param name="name">The name of the parent.</param>
         /// <param name="fullName">The full name of the parent.</param>

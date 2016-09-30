@@ -7,7 +7,7 @@
     using ReactiveGit.Gui.Core.ViewModel.Repository;
 
     /// <summary>
-    /// The default factory for generating repository view models.  
+    /// The default factory for generating repository view models.
     /// </summary>
     public class DefaultRepositoryViewModelFactory : IRepositoryViewModelFactory
     {

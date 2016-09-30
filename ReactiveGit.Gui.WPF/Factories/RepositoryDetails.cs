@@ -16,9 +16,7 @@
     /// </summary>
     public class RepositoryDetails : ReactiveObject, IRepositoryDetails
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RepositoryDetails"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="RepositoryDetails"/> class.</summary>
         /// <param name="repositoryPath">The path to the repository.</param>
         public RepositoryDetails(string repositoryPath)
         {
@@ -42,6 +40,12 @@
         public IBranchManager BranchManager { get; }
 
         /// <inheritdoc />
+        public string FriendlyName { get; }
+
+        /// <inheritdoc />
+        public IGitObjectManager GitObjectManager { get; }
+
+        /// <inheritdoc />
         public IRebaseManager RebaseManager { get; }
 
         /// <inheritdoc />
@@ -49,12 +53,6 @@
 
         /// <inheritdoc />
         public IGitRepositoryManager RepositoryManager { get; }
-
-        /// <inheritdoc />
-        public IGitObjectManager GitObjectManager { get; }
-
-        /// <inheritdoc />
-        public string FriendlyName { get; }
 
         /// <inheritdoc />
         public string RepositoryPath { get; }

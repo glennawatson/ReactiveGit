@@ -17,7 +17,7 @@
         private readonly Func<string, IGitProcessManager> processManagerFunc;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RepositoryCreator"/> class.
+        /// Initializes a new instance of the <see cref="RepositoryCreator" /> class.
         /// </summary>
         /// <param name="processManagerFunc">Function to creating a git process.</param>
         public RepositoryCreator(Func<string, IGitProcessManager> processManagerFunc)
@@ -32,27 +32,31 @@
         /// <returns>An observable monitoring the action.</returns>
         public IObservable<Unit> CreateRepository(string directoryPath)
         {
-            return Observable.Create<Unit>(observer =>
-                {
-                    if (Directory.Exists(directoryPath) == false)
+            return Observable.Create<Unit>(
+                observer =>
                     {
-                        throw new GitProcessException("Cannot find directory");
-                    }
-
-                    if (FileHelper.IsDirectoryEmpty(directoryPath) == false)
-                    {
-                        throw new GitProcessException("The directory is not empty.");
-                    }
-
-                    IGitProcessManager gitProcess = this.processManagerFunc(directoryPath);
-                    IDisposable disposable = gitProcess.RunGit(new[] { "init" }).Subscribe(_ => { }, observer.OnError, () =>
+                        if (Directory.Exists(directoryPath) == false)
                         {
-                            observer.OnNext(Unit.Default);
-                            observer.OnCompleted();
-                        });
+                            throw new GitProcessException("Cannot find directory");
+                        }
 
-                    return disposable;
-                });
+                        if (FileHelper.IsDirectoryEmpty(directoryPath) == false)
+                        {
+                            throw new GitProcessException("The directory is not empty.");
+                        }
+
+                        IGitProcessManager gitProcess = this.processManagerFunc(directoryPath);
+                        IDisposable disposable = gitProcess.RunGit(new[] { "init" }).Subscribe(
+                            _ => { },
+                            observer.OnError,
+                            () =>
+                                {
+                                    observer.OnNext(Unit.Default);
+                                    observer.OnCompleted();
+                                });
+
+                        return disposable;
+                    });
         }
     }
 }

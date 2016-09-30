@@ -18,22 +18,12 @@
         IObservable<GitBranch> CurrentBranch { get; }
 
         /// <summary>
-        /// Gets a list of local branches.
+        /// Checks out the specified branch.
         /// </summary>
-        /// <returns>The local branches.</returns>
-        IObservable<GitBranch> GetLocalBranches();
-
-        /// <summary>
-        /// Gets a list of remote branches.
-        /// </summary>
-        /// <returns>The remote branches.</returns>
-        IObservable<GitBranch> GetRemoteBranches();
-
-        /// <summary>
-        /// Get a list of both the local and remote branches.
-        /// </summary>
-        /// <returns>The local and remote branches.</returns>
-        IObservable<GitBranch> GetLocalAndRemoteBranches();
+        /// <param name="branch">The branch to check out.</param>
+        /// <param name="force">If to force the branch change.</param>
+        /// <returns>The observable.</returns>
+        IObservable<Unit> CheckoutBranch(GitBranch branch, bool force = false);
 
         /// <summary>
         /// Gets the number of commits for a branch.
@@ -41,6 +31,20 @@
         /// <param name="branchName">The name of the branch.</param>
         /// <returns>The number of commits.</returns>
         int GetCommitCount(GitBranch branchName);
+
+        /// <summary>
+        /// Gets the commit message for a commit.
+        /// </summary>
+        /// <param name="commit">The commit to get the message for.</param>
+        /// <returns>The message of the commit.</returns>
+        string GetCommitMessageLong(GitCommit commit);
+
+        /// <summary>
+        /// Gets the command messages after the specified parent object.
+        /// </summary>
+        /// <param name="parent">The parent to get the commit messages for.</param>
+        /// <returns>The commit messages</returns>
+        IObservable<string> GetCommitMessagesAfterParent(GitCommit parent);
 
         /// <summary>
         /// Gets the commits for the specified branch.
@@ -53,19 +57,16 @@
         IObservable<GitCommit> GetCommitsForBranch(GitBranch branch, int skip, int limit, GitLogOptions logOptions);
 
         /// <summary>
-        /// Gets the command messages after the specified parent object.
+        /// Get a list of both the local and remote branches.
         /// </summary>
-        /// <param name="parent">The parent to get the commit messages for.</param>
-        /// <returns>The commit messages</returns>
-        IObservable<string> GetCommitMessagesAfterParent(GitCommit parent);
+        /// <returns>The local and remote branches.</returns>
+        IObservable<GitBranch> GetLocalAndRemoteBranches();
 
         /// <summary>
-        /// Checks out the specified branch.
+        /// Gets a list of local branches.
         /// </summary>
-        /// <param name="branch">The branch to check out.</param>
-        /// <param name="force">If to force the branch change.</param>
-        /// <returns>The observable.</returns>
-        IObservable<Unit> CheckoutBranch(GitBranch branch, bool force = false);
+        /// <returns>The local branches.</returns>
+        IObservable<GitBranch> GetLocalBranches();
 
         /// <summary>
         /// Gets a remote branch of the specified branch.
@@ -76,11 +77,10 @@
         Task<GitBranch> GetRemoteBranch(GitBranch branch, CancellationToken token);
 
         /// <summary>
-        /// Determines if there are any changes in the working directory.
+        /// Gets a list of remote branches.
         /// </summary>
-        /// <param name="token">A cancellation token to stop the process.</param>
-        /// <returns>If there are changes in the working directory.</returns>
-        Task<bool> IsWorkingDirectoryDirty(CancellationToken token);
+        /// <returns>The remote branches.</returns>
+        IObservable<GitBranch> GetRemoteBranches();
 
         /// <summary>
         /// Determines if there are any merge conflicts.
@@ -90,10 +90,10 @@
         Task<bool> IsMergeConflict(CancellationToken token);
 
         /// <summary>
-        /// Gets the commit message for a commit.
+        /// Determines if there are any changes in the working directory.
         /// </summary>
-        /// <param name="commit">The commit to get the message for.</param>
-        /// <returns>The message of the commit.</returns>
-        string GetCommitMessageLong(GitCommit commit);
+        /// <param name="token">A cancellation token to stop the process.</param>
+        /// <returns>If there are changes in the working directory.</returns>
+        Task<bool> IsWorkingDirectoryDirty(CancellationToken token);
     }
 }

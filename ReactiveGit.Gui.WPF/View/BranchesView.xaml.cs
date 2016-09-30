@@ -1,18 +1,14 @@
 ﻿namespace ReactiveGit.Gui.WPF.View
 {
-    using AutoDependencyPropertyMarker;
-
-    using ReactiveGit.Gui.Core.ViewModel.Branches;
-
     using ReactiveUI;
 
     /// <summary>
     /// Interaction logic for BranchesView.xaml
     /// </summary>
-    public partial class BranchesView 
+    public partial class BranchesView
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BranchesView"/> class.
+        /// Initializes a new instance of the <see cref="BranchesView" /> class.
         /// </summary>
         public BranchesView()
         {

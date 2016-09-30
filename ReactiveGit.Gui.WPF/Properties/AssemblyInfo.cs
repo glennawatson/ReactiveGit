@@ -1,6 +1,11 @@
-﻿// <copyright file="AssemblyInfo.cs" company="Glenn Watson">
-// Copyright (c) Glenn Watson. All rights reserved.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="AssemblyInfo.cs" company="">
+//   
 // </copyright>
+// <summary>
+//   AssemblyInfo.cs
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;

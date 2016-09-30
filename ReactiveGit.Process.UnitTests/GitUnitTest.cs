@@ -25,55 +25,6 @@ namespace Git.VisualStudio.UnitTests
     public class GitUnitTest
     {
         /// <summary>
-        /// Test getting the history from a freshly formed GIT repository and
-        /// getting the history for the current branch only.
-        /// </summary>
-        [Fact]
-        public void TestGitHistoryBranchOnly()
-        {
-            IGitProcessManager local;
-            string tempDirectory = GenerateGitRepository(out local);
-
-            int numberCommits = 10;
-            this.GenerateCommits(numberCommits, tempDirectory, local, "master");
-
-            BranchManager branchManager = new BranchManager(local);
-
-            IList<GitCommit> commits = branchManager.GetCommitsForBranch(new GitBranch("master", false, false), 0, 0, GitLogOptions.BranchOnlyAndParent).ToList().Wait();
-            commits.Count.Should().Be(numberCommits, $"We have done {numberCommits} commits");
-
-            using (Repository repository = new Repository(tempDirectory))
-            {
-                Branch branch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "master");
-                branch.Should().NotBeNull();
-
-                if (branch != null)
-                {
-                    CheckCommits(branch.Commits.ToList(), commits);
-                }
-            }
-
-            commits.Should().BeInDescendingOrder(x => x.DateTime);
-
-            this.GenerateCommits(numberCommits, tempDirectory, local, "test1");
-
-            commits = branchManager.GetCommitsForBranch(new GitBranch("test1", false, false), 0, 0, GitLogOptions.BranchOnlyAndParent).ToList().Wait();
-
-            commits.Count.Should().Be(numberCommits + 1, $"We have done {numberCommits + 1} commits");
-
-            using (Repository repository = new Repository(tempDirectory))
-            {
-                var branch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "test1");
-                branch.Should().NotBeNull();
-
-                if (branch != null)
-                {
-                    CheckCommits(branch.Commits.Take(11).ToList(), commits);
-                }
-            }
-        }
-
-        /// <summary>
         /// Test creating several branches and making sure that the full history comes back.
         /// </summary>
         [Fact]
@@ -82,11 +33,16 @@ namespace Git.VisualStudio.UnitTests
             IGitProcessManager local;
             string tempDirectory = GenerateGitRepository(out local);
 
-            int numberCommits = 10;
+            var numberCommits = 10;
             this.GenerateCommits(numberCommits, tempDirectory, local, "master");
-            BranchManager branchManager = new BranchManager(local);
+            var branchManager = new BranchManager(local);
 
-            var commits = branchManager.GetCommitsForBranch(new GitBranch("master", false, false), 0, 0, GitLogOptions.BranchOnlyAndParent).ToList().Wait();
+            IList<GitCommit> commits =
+                branchManager.GetCommitsForBranch(
+                    new GitBranch("master", false, false),
+                    0,
+                    0,
+                    GitLogOptions.BranchOnlyAndParent).ToList().Wait();
 
             commits.Count.Should().Be(numberCommits, $"We have done {numberCommits} commits");
 
@@ -97,7 +53,9 @@ namespace Git.VisualStudio.UnitTests
 
             this.GenerateCommits(numberCommits, tempDirectory, local, "master");
 
-            commits = branchManager.GetCommitsForBranch(new GitBranch("test1", false, false), 0, 0, GitLogOptions.None).ToList().Wait();
+            commits =
+                branchManager.GetCommitsForBranch(new GitBranch("test1", false, false), 0, 0, GitLogOptions.None).ToList
+                    ().Wait();
 
             commits.Count.Should().Be(numberCommits * 2, $"We have done {numberCommits + 1} commits");
         }
@@ -113,29 +71,77 @@ namespace Git.VisualStudio.UnitTests
             string tempDirectory = GenerateGitRepository(out local);
 
             IList<string> commitNames = new List<string>();
-            int numberCommits = 10;
+            var numberCommits = 10;
             this.GenerateCommits(numberCommits, tempDirectory, local, "master", commitNames);
 
-            BranchManager branchManager = new BranchManager(local);
-            var commits = branchManager.GetCommitsForBranch(new GitBranch("test1", false, false), 0, 0, GitLogOptions.TopologicalOrder).ToList().Wait();
+            var branchManager = new BranchManager(local);
+            IList<GitCommit> commits =
+                branchManager.GetCommitsForBranch(
+                    new GitBranch("test1", false, false),
+                    0,
+                    0,
+                    GitLogOptions.TopologicalOrder).ToList().Wait();
 
             commits.Select(x => x.MessageLong).Should().BeEquivalentTo(commitNames.Reverse());
         }
 
         /// <summary>
-        /// Generates a GIT repository with the specified process manager.
+        /// Test getting the history from a freshly formed GIT repository and
+        /// getting the history for the current branch only.
         /// </summary>
-        /// <param name="local">The process manager to use.</param>
-        /// <returns>The location of the GIT repository.</returns>
-        private static string GenerateGitRepository(out IGitProcessManager local)
+        [Fact]
+        public void TestGitHistoryBranchOnly()
         {
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
-            Directory.CreateDirectory(tempDirectory);
+            IGitProcessManager local;
+            string tempDirectory = GenerateGitRepository(out local);
 
-            local = new GitProcessManager(tempDirectory);
+            var numberCommits = 10;
+            this.GenerateCommits(numberCommits, tempDirectory, local, "master");
 
-            local.RunGit(new[] { "init" }).Wait();
-            return tempDirectory;
+            var branchManager = new BranchManager(local);
+
+            IList<GitCommit> commits =
+                branchManager.GetCommitsForBranch(
+                    new GitBranch("master", false, false),
+                    0,
+                    0,
+                    GitLogOptions.BranchOnlyAndParent).ToList().Wait();
+            commits.Count.Should().Be(numberCommits, $"We have done {numberCommits} commits");
+
+            using (var repository = new Repository(tempDirectory))
+            {
+                Branch branch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "master");
+                branch.Should().NotBeNull();
+
+                if (branch != null)
+                {
+                    CheckCommits(branch.Commits.ToList(), commits);
+                }
+            }
+
+            commits.Should().BeInDescendingOrder(x => x.DateTime);
+
+            this.GenerateCommits(numberCommits, tempDirectory, local, "test1");
+
+            commits =
+                branchManager.GetCommitsForBranch(
+                    new GitBranch("test1", false, false),
+                    0,
+                    0,
+                    GitLogOptions.BranchOnlyAndParent).ToList().Wait();
+
+            commits.Count.Should().Be(numberCommits + 1, $"We have done {numberCommits + 1} commits");
+
+            using (var repository = new Repository(tempDirectory))
+            {
+                Branch branch = repository.Branches.FirstOrDefault(x => x.FriendlyName == "test1");
+                branch.Should().NotBeNull();
+
+                if (branch != null)
+                {
+                    CheckCommits(branch.Commits.Take(11).ToList(), commits);
+                }
+            }
         }
 
         /// <summary>
@@ -150,6 +156,24 @@ namespace Git.VisualStudio.UnitTests
         }
 
         /// <summary>
+        /// Generates a GIT repository with the specified process manager.
+        /// </summary>
+        /// <param name="local">The process manager to use.</param>
+        /// <returns>The location of the GIT repository.</returns>
+        private static string GenerateGitRepository(out IGitProcessManager local)
+        {
+            string tempDirectory = Path.Combine(
+                Path.GetTempPath(),
+                Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
+            Directory.CreateDirectory(tempDirectory);
+
+            local = new GitProcessManager(tempDirectory);
+
+            local.RunGit(new[] { "init" }).Wait();
+            return tempDirectory;
+        }
+
+        /// <summary>
         /// Generates a series of commits.
         /// </summary>
         /// <param name="numberCommits">The number of commits to generate.</param>
@@ -157,7 +181,12 @@ namespace Git.VisualStudio.UnitTests
         /// <param name="local">The repository manager for the repository.</param>
         /// <param name="branchName">The branch name to add the commits into.</param>
         /// <param name="commitMessages">A optional output list which is populated with the commit messages.</param>
-        private void GenerateCommits(int numberCommits, string directory, IGitProcessManager local, string branchName, IList<string> commitMessages = null)
+        private void GenerateCommits(
+            int numberCommits,
+            string directory,
+            IGitProcessManager local,
+            string branchName,
+            IList<string> commitMessages = null)
         {
             if (branchName != "master")
             {
@@ -173,7 +202,7 @@ namespace Git.VisualStudio.UnitTests
                 // Ignored
             }
 
-            for (int i = 0; i < numberCommits; ++i)
+            for (var i = 0; i < numberCommits; ++i)
             {
                 File.WriteAllText(Path.Combine(directory, Path.GetRandomFileName()), @"Hello World" + i);
                 local.RunGit(new[] { "add -A" }).FirstOrDefaultAsync().Wait();

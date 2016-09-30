@@ -10,7 +10,7 @@
     public partial class RepositoryView : IViewFor<IRepositoryDocumentViewModel>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RepositoryView"/> class.
+        /// Initializes a new instance of the <see cref="RepositoryView" /> class.
         /// </summary>
         public RepositoryView()
         {
@@ -19,7 +19,11 @@
             this.WhenActivated(
                 d =>
                     {
-                        d(this.OneWayBind(this.ViewModel, vm => vm.CommitHistoryViewModel, view => view.HistoryView.ViewModel));
+                        d(
+                            this.OneWayBind(
+                                this.ViewModel,
+                                vm => vm.CommitHistoryViewModel,
+                                view => view.HistoryView.ViewModel));
                     });
         }
     }

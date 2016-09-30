@@ -10,11 +10,6 @@
     public interface IViewModel
     {
         /// <summary>
-        /// Gets the name of the document view model.
-        /// </summary>
-        string FriendlyName { get; }
-
-        /// <summary>
         /// Gets or sets the repository details.
         /// </summary>
         IRepositoryDetails RepositoryDetails { get; set; }

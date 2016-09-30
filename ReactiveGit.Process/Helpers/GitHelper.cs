@@ -66,42 +66,12 @@ namespace ReactiveGit.Process.Helpers
 
             string[] allPaths = path.Split(';');
             string gitPath = allPaths.FirstOrDefault(p => p.ToLower().TrimEnd('\\').EndsWith("git\\cmd"));
-            if (gitPath != null && Directory.Exists(gitPath))
+            if ((gitPath != null) && Directory.Exists(gitPath))
             {
                 gitPath = Directory.GetParent(gitPath).FullName.TrimEnd('\\');
             }
 
             return gitPath;
-        }
-
-        /// <summary>
-        /// Attempt to get the installation path from the registry.
-        /// </summary>
-        /// <returns>The installation path or null if unable to be found.</returns>
-        public static string GetInstallPathFromRegistry()
-        {
-            // Check reg key for msysGit 2.6.1+
-            object installLocation = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\GitForWindows", "InstallPath", null);
-            if (installLocation != null && Directory.Exists(installLocation.ToString().TrimEnd('\\')))
-            {
-                return installLocation.ToString().TrimEnd('\\');
-            }
-
-            // Check uninstall key for older versions
-            installLocation = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1", "InstallLocation", null);
-            if (installLocation != null && Directory.Exists(installLocation.ToString().TrimEnd('\\')))
-            {
-                return installLocation.ToString().TrimEnd('\\');
-            }
-
-            // try 32-bit OS
-            installLocation = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1", "InstallLocation", null);
-            if (installLocation != null && Directory.Exists(installLocation.ToString().TrimEnd('\\')))
-            {
-                return installLocation.ToString().TrimEnd('\\');
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -113,7 +83,11 @@ namespace ReactiveGit.Process.Helpers
             // If this is a 64bit OS, and the user installed 64bit git, then explictly search that folder.
             if (Environment.Is64BitOperatingSystem)
             {
-                object x64ProgramFiles = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion", "ProgramW6432Dir", null);
+                object x64ProgramFiles =
+                    Registry.GetValue(
+                        @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion",
+                        "ProgramW6432Dir",
+                        null);
                 if (x64ProgramFiles != null)
                 {
                     string gitPathX64 = Path.Combine(x64ProgramFiles.ToString(), "git");
@@ -127,6 +101,47 @@ namespace ReactiveGit.Process.Helpers
             // Else, this is a 64bit or a 32bit machine, and the user installed 32bit git
             string gitPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "git");
             return Directory.Exists(gitPath) ? gitPath.TrimEnd('\\') : null;
+        }
+
+        /// <summary>
+        /// Attempt to get the installation path from the registry.
+        /// </summary>
+        /// <returns>The installation path or null if unable to be found.</returns>
+        public static string GetInstallPathFromRegistry()
+        {
+            // Check reg key for msysGit 2.6.1+
+            object installLocation = Registry.GetValue(
+                @"HKEY_LOCAL_MACHINE\SOFTWARE\GitForWindows",
+                "InstallPath",
+                null);
+            if ((installLocation != null) && Directory.Exists(installLocation.ToString().TrimEnd('\\')))
+            {
+                return installLocation.ToString().TrimEnd('\\');
+            }
+
+            // Check uninstall key for older versions
+            installLocation =
+                Registry.GetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1",
+                    "InstallLocation",
+                    null);
+            if ((installLocation != null) && Directory.Exists(installLocation.ToString().TrimEnd('\\')))
+            {
+                return installLocation.ToString().TrimEnd('\\');
+            }
+
+            // try 32-bit OS
+            installLocation =
+                Registry.GetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1",
+                    "InstallLocation",
+                    null);
+            if ((installLocation != null) && Directory.Exists(installLocation.ToString().TrimEnd('\\')))
+            {
+                return installLocation.ToString().TrimEnd('\\');
+            }
+
+            return null;
         }
     }
 }

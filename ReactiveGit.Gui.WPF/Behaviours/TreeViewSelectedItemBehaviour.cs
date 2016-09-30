@@ -5,15 +5,18 @@
     using System.Windows.Interactivity;
 
     /// <summary>
-    /// Adds a behaviour so we can get the selected item from the tree view. 
+    /// Adds a behaviour so we can get the selected item from the tree view.
     /// </summary>
     public class TreeViewSelectedItemBehaviour : Behavior<TreeView>
     {
         /// <summary>
         /// Dependency property for the selected item.
         /// </summary>
-        public static readonly DependencyProperty SelectedItemProperty =
-            DependencyProperty.Register("SelectedItem", typeof(object), typeof(TreeViewSelectedItemBehaviour), new UIPropertyMetadata(null, OnSelectedItemChanged));
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
+            "SelectedItem",
+            typeof(object),
+            typeof(TreeViewSelectedItemBehaviour),
+            new UIPropertyMetadata(null, OnSelectedItemChanged));
 
         /// <summary>
         /// Gets or sets the selected item.
@@ -50,12 +53,18 @@
             }
         }
 
+        /// <summary>The on selected item changed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             var item = e.NewValue as TreeViewItem;
             item?.SetValue(TreeViewItem.IsSelectedProperty, true);
         }
 
+        /// <summary>The on tree view selected item changed.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             this.SelectedItem = e.NewValue;

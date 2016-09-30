@@ -3,6 +3,7 @@
     using ReactiveGit.Gui.Core.Model;
     using ReactiveGit.Gui.Core.Model.Branches;
     using ReactiveGit.Gui.Core.ViewModel.CommitHistory;
+    using ReactiveGit.Gui.Core.ViewModel.Content;
     using ReactiveGit.Gui.Core.ViewModel.Factories;
 
     using ReactiveUI;
@@ -11,7 +12,7 @@
     /// <summary>
     /// View model associated with a repository document.
     /// </summary>
-    public class RepositoryDocumentViewModel : ReactiveObject, IRepositoryDocumentViewModel
+    public class RepositoryDocumentViewModel : ContentViewModelBase, IRepositoryDocumentViewModel
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryDocumentViewModel"/> class.
@@ -28,7 +29,7 @@
         public ICommitHistoryViewModel CommitHistoryViewModel { get; }
 
         /// <inheritdoc />
-        public string FriendlyName => this.RepositoryDetails.FriendlyName;
+        public override string FriendlyName => this.RepositoryDetails.FriendlyName;
 
         /// <inheritdoc />
         public string RepositoryPath => this.RepositoryDetails.RepositoryManager.RepositoryPath;

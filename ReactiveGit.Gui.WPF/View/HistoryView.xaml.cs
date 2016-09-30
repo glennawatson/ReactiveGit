@@ -1,7 +1,5 @@
 ﻿namespace ReactiveGit.Gui.WPF.View
 {
-    using AutoDependencyPropertyMarker;
-
     using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.ViewModel.CommitHistory;
 
@@ -10,10 +8,10 @@
     /// <summary>
     /// Interaction logic for HistoryView.xaml
     /// </summary>
-    public partial class HistoryView 
+    public partial class HistoryView
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HistoryView"/> class.
+        /// Initializes a new instance of the <see cref="HistoryView" /> class.
         /// </summary>
         public HistoryView()
         {
@@ -22,14 +20,36 @@
             this.WhenActivated(
                 d =>
                     {
-                        d(this.OneWayBind(this.ViewModel, vm => vm.CommitHistory, view => view.CommitDataGrid.ItemsSource));
-                        d(this.Bind(this.ViewModel, vm => vm.SelectedGitObject, view => view.CommitDataGrid.SelectedItem, VmToViewConvert, ViewToVmConvert));
+                        d(
+                            this.OneWayBind(
+                                this.ViewModel,
+                                vm => vm.CommitHistory,
+                                view => view.CommitDataGrid.ItemsSource));
+                        d(
+                            this.Bind(
+                                this.ViewModel,
+                                vm => vm.SelectedGitObject,
+                                view => view.CommitDataGrid.SelectedItem,
+                                VmToViewConvert,
+                                ViewToVmConvert));
                     });
         }
 
+        /// <summary>The view to vm convert.</summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The <see cref="IGitIdObject"/>.</returns>
+        private static IGitIdObject ViewToVmConvert(object value)
+        {
+            var commitItem = value as CommitHistoryItemViewModel;
+            return commitItem == null ? null : commitItem.GitCommit;
+        }
+
+        /// <summary>The vm to view convert.</summary>
+        /// <param name="gitObject">The git object.</param>
+        /// <returns>The <see cref="object"/>.</returns>
         private static object VmToViewConvert(IGitIdObject gitObject)
         {
-            GitCommit gitCommit = gitObject as GitCommit;
+            var gitCommit = gitObject as GitCommit;
 
             if (gitCommit == null)
             {
@@ -37,12 +57,6 @@
             }
 
             return new CommitHistoryItemViewModel(gitCommit);
-        }
-
-        private static IGitIdObject ViewToVmConvert(object value)
-        {
-            var commitItem = value as CommitHistoryItemViewModel;
-            return commitItem == null ? null : commitItem.GitCommit;
         }
     }
 }

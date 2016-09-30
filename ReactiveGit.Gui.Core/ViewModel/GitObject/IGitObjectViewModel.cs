@@ -1,4 +1,4 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel
+﻿namespace ReactiveGit.Gui.Core.ViewModel.GitObject
 {
     using System.Windows.Input;
 
