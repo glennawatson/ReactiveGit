@@ -28,14 +28,15 @@ namespace ReactiveGit.Gui.Core.ViewModel
 
         private readonly IRepositoryFactory repositoryFactory;
 
-        private readonly ReactiveList<IRepositoryDocumentViewModel> repositoryViewModels = new ReactiveList<IRepositoryDocumentViewModel>();
+        private readonly ReactiveList<IRepositoryDocumentViewModel> repositoryViewModels =
+            new ReactiveList<IRepositoryDocumentViewModel>();
 
         private readonly ReactiveCommand<Unit, string> selectRepository;
 
         private readonly IRepositoryViewModelFactory viewModelFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainViewModel"/> class.
+        /// Initializes a new instance of the <see cref="MainViewModel" /> class.
         /// </summary>
         /// <param name="screen">The screen in which the view is shown.</param>
         /// <param name="repositoryFactory">Factory for creating the repository details.</param>
@@ -66,11 +67,17 @@ namespace ReactiveGit.Gui.Core.ViewModel
 
             this.SelectFolder = new Interaction<string, string>();
 
-            this.selectRepository = ReactiveCommand.CreateFromObservable(() => this.SelectFolder.Handle("Select folder for GIT repository"));
+            this.selectRepository =
+                ReactiveCommand.CreateFromObservable(() => this.SelectFolder.Handle("Select folder for GIT repository"));
             this.selectRepository.Subscribe(this.OpenRepository);
 
-            this.newRepository = ReactiveCommand.CreateFromObservable(() => this.SelectFolder.Handle("Select new folder for GIT repository"));
-            this.newRepository.Subscribe(x => repositoryFactory.CreateRepositoryCreator().CreateRepository(x).Subscribe(_ => { this.OpenRepository(x); }));
+            this.newRepository =
+                ReactiveCommand.CreateFromObservable(
+                    () => this.SelectFolder.Handle("Select new folder for GIT repository"));
+            this.newRepository.Subscribe(
+                x =>
+                    repositoryFactory.CreateRepositoryCreator().CreateRepository(x).Subscribe(
+                        _ => { this.OpenRepository(x); }));
 
             this.AllSupportViewModels = this.GetAllSupportViewModels();
 
@@ -117,7 +124,7 @@ namespace ReactiveGit.Gui.Core.ViewModel
                 typeof(ISupportViewModel).GetTypeInfo().Assembly.ExportedTypes.Where(
                     x =>
                         x.GetTypeInfo().ImplementedInterfaces.Contains(typeof(ISupportViewModel))
-                        && x.GetTypeInfo().IsAbstract == false);
+                        && (x.GetTypeInfo().IsAbstract == false));
 
             return supportViewModelTypes.Select(type => Activator.CreateInstance(type) as ISupportViewModel).ToList();
         }
@@ -144,7 +151,7 @@ namespace ReactiveGit.Gui.Core.ViewModel
             {
                 supportViewModel.RepositoryDetails = documentViewModel?.RepositoryDetails;
 
-                IRefreshableViewModel refreshableViewModel = supportViewModel as IRefreshableViewModel;
+                var refreshableViewModel = supportViewModel as IRefreshableViewModel;
                 refreshableViewModel?.Refresh.InvokeCommand();
             }
         }

@@ -8,7 +8,6 @@
 
     using ReactiveGit.Core.ExtensionMethods;
     using ReactiveGit.Core.Model;
-    using ReactiveGit.Gui.Core.ExtensionMethods;
     using ReactiveGit.Gui.Core.Model;
     using ReactiveGit.Gui.Core.Model.Branches;
 
@@ -27,7 +26,7 @@
         private readonly ReactiveCommand<Unit, GitBranch> getBranches;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BranchViewModel"/> class.
+        /// Initializes a new instance of the <see cref="BranchViewModel" /> class.
         /// </summary>
         public BranchViewModel()
         {
@@ -38,7 +37,7 @@
 
             IObservable<bool> isValidBranch =
                 this.WhenAnyValue(x => x.RepositoryDetails.SelectedBranch, x => x.RepositoryDetails).Select(
-                    x => x.Item1 != null && x.Item2 != null);
+                    x => (x.Item1 != null) && (x.Item2 != null));
 
             this.checkoutBranch =
                 ReactiveCommand.CreateFromObservable<GitBranch, Unit>(
@@ -70,10 +69,10 @@
             }
 
             string[] nodeNames = gitBranch.FriendlyName.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            var comparer = StringComparer.CurrentCultureIgnoreCase;
+            StringComparer comparer = StringComparer.CurrentCultureIgnoreCase;
 
             IList<BranchNode> currentLevel = this.branches;
-            for (int i = 0; i < nodeNames.Length; ++i)
+            for (var i = 0; i < nodeNames.Length; ++i)
             {
                 bool isLast = i == nodeNames.Length - 1;
 
@@ -84,7 +83,7 @@
                         (compareNode, name) => comparer.Compare(compareNode.Name, name),
                         currentNodeName);
 
-                if (index >= 0 && isLast)
+                if ((index >= 0) && isLast)
                 {
                     throw new Exception($"There is a duplicate leaf of name {gitBranch.FriendlyName}");
                 }
@@ -106,11 +105,11 @@
                     throw new Exception($"There is a leaf node with the same name as a parent {gitBranch.FriendlyName}");
                 }
 
-                BranchParent parent = node as BranchParent;
+                var parent = node as BranchParent;
 
                 if (parent == null)
                 {
-                    var fullName = string.Join("/", nodeNames, 0, i + 1);
+                    string fullName = string.Join("/", nodeNames, 0, i + 1);
 
                     parent = new BranchParent(currentNodeName, fullName);
 

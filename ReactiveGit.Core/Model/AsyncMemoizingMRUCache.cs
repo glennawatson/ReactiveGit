@@ -10,35 +10,48 @@
     /// This data structure is a representation of a memoizing cache - i.e. a
     /// class that will evaluate a function, but keep a cache of recently
     /// evaluated parameters.
-    ///
     /// Since this is a memoizing cache, it is important that this function be a
     /// "pure" function in the mathematical sense - that a key *always* maps to
     /// a corresponding return value.
     /// </summary>
     /// <typeparam name="TParam">The type of the parameter to the calculation function.</typeparam>
-    /// <typeparam name="TVal">The type of the value returned by the calculation
-    /// function.</typeparam>
+    /// <typeparam name="TVal">
+    /// The type of the value returned by the calculation
+    /// function.
+    /// </typeparam>
     public class AsyncMemoizingMRUCache<TParam, TVal>
     {
         private readonly Func<TParam, object, Task<TVal>> calculationFunction;
-        private readonly Action<TVal> releaseFunction;
+
         private readonly int maxCacheSize;
 
-        private LinkedList<TParam> cacheMRUList;
+        private readonly Action<TVal> releaseFunction;
+
         private Dictionary<TParam, Tuple<LinkedListNode<TParam>, TVal>> cacheEntries;
 
+        private LinkedList<TParam> cacheMRUList;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncMemoizingMRUCache{TParam, TVal}"/> class.
+        /// Initializes a new instance of the <see cref="AsyncMemoizingMRUCache{TParam, TVal}" /> class.
         /// </summary>
-        /// <param name="calculationFunc">The function whose results you want to cache,
+        /// <param name="calculationFunc">
+        /// The function whose results you want to cache,
         /// which is provided the key value, and an Tag object that is
-        /// user-defined</param>
-        /// <param name="maxSize">The size of the cache to maintain, after which old
-        /// items will start to be thrown out.</param>
-        /// <param name="onRelease">A function to call when a result gets
+        /// user-defined
+        /// </param>
+        /// <param name="maxSize">
+        /// The size of the cache to maintain, after which old
+        /// items will start to be thrown out.
+        /// </param>
+        /// <param name="onRelease">
+        /// A function to call when a result gets
         /// evicted from the cache (i.e. because Invalidate was called or the
-        /// cache is full)</param>
-        public AsyncMemoizingMRUCache(Func<TParam, object, Task<TVal>> calculationFunc, int maxSize, Action<TVal> onRelease = null)
+        /// cache is full)
+        /// </param>
+        public AsyncMemoizingMRUCache(
+            Func<TParam, object, Task<TVal>> calculationFunc,
+            int maxSize,
+            Action<TVal> onRelease = null)
         {
             Contract.Requires(calculationFunc != null);
             Contract.Requires(maxSize > 0);
@@ -47,6 +60,15 @@
             this.releaseFunction = onRelease;
             this.maxCacheSize = maxSize;
             this.InvalidateAll();
+        }
+
+        /// <summary>
+        /// Returns all values currently in the cache
+        /// </summary>
+        /// <returns>The cached values.</returns>
+        public IEnumerable<TVal> CachedValues()
+        {
+            return this.cacheEntries.Select(x => x.Value.Item2);
         }
 
         /// <summary>
@@ -68,7 +90,7 @@
                 return found.Item2;
             }
 
-            var result = await this.calculationFunction(key, context);
+            TVal result = await this.calculationFunction(key, context);
 
             var node = new LinkedListNode<TParam>(key);
             this.cacheMRUList.AddFirst(node);
@@ -76,32 +98,6 @@
             this.MaintainCache();
 
             return result;
-        }
-
-        /// <summary>
-        /// Try to get a value.
-        /// </summary>
-        /// <param name="key">The key to get.</param>
-        /// <param name="result">The result value.</param>
-        /// <returns>If the value can be found for the value.</returns>
-        public bool TryGet(TParam key, out TVal result)
-        {
-            Contract.Requires(key != null);
-
-            Tuple<LinkedListNode<TParam>, TVal> output;
-            var ret = this.cacheEntries.TryGetValue(key, out output);
-            if (ret && output != null)
-            {
-                this.cacheMRUList.Remove(output.Item1);
-                this.cacheMRUList.AddFirst(output.Item1);
-                result = output.Item2;
-            }
-            else
-            {
-                result = default(TVal);
-            }
-
-            return ret;
         }
 
         /// <summary>
@@ -131,7 +127,7 @@
         /// </summary>
         public void InvalidateAll()
         {
-            if (this.releaseFunction == null || this.cacheEntries == null)
+            if ((this.releaseFunction == null) || (this.cacheEntries == null))
             {
                 this.cacheMRUList = new LinkedList<TParam>();
                 this.cacheEntries = new Dictionary<TParam, Tuple<LinkedListNode<TParam>, TVal>>();
@@ -146,31 +142,36 @@
             /*             We have to remove them one-by-one to call the release function
              * We ToArray() this so we don't get a "modifying collection while
              * enumerating" exception. */
-            foreach (var v in this.cacheEntries.Keys.ToArray())
+            foreach (TParam v in this.cacheEntries.Keys.ToArray())
             {
                 this.Invalidate(v);
             }
         }
 
         /// <summary>
-        /// Returns all values currently in the cache
+        /// Try to get a value.
         /// </summary>
-        /// <returns>The cached values.</returns>
-        public IEnumerable<TVal> CachedValues()
+        /// <param name="key">The key to get.</param>
+        /// <param name="result">The result value.</param>
+        /// <returns>If the value can be found for the value.</returns>
+        public bool TryGet(TParam key, out TVal result)
         {
-            return this.cacheEntries.Select(x => x.Value.Item2);
-        }
+            Contract.Requires(key != null);
 
-        private void MaintainCache()
-        {
-            while (this.cacheMRUList.Count > this.maxCacheSize)
+            Tuple<LinkedListNode<TParam>, TVal> output;
+            bool ret = this.cacheEntries.TryGetValue(key, out output);
+            if (ret && (output != null))
             {
-                var to_remove = this.cacheMRUList.Last.Value;
-                this.releaseFunction?.Invoke(this.cacheEntries[to_remove].Item2);
-
-                this.cacheEntries.Remove(this.cacheMRUList.Last.Value);
-                this.cacheMRUList.RemoveLast();
+                this.cacheMRUList.Remove(output.Item1);
+                this.cacheMRUList.AddFirst(output.Item1);
+                result = output.Item2;
             }
+            else
+            {
+                result = default(TVal);
+            }
+
+            return ret;
         }
 
         [ContractInvariantMethod]
@@ -178,6 +179,18 @@
         {
             Contract.Invariant(this.cacheEntries.Count == this.cacheMRUList.Count);
             Contract.Invariant(this.cacheEntries.Count <= this.maxCacheSize);
+        }
+
+        private void MaintainCache()
+        {
+            while (this.cacheMRUList.Count > this.maxCacheSize)
+            {
+                TParam to_remove = this.cacheMRUList.Last.Value;
+                this.releaseFunction?.Invoke(this.cacheEntries[to_remove].Item2);
+
+                this.cacheEntries.Remove(this.cacheMRUList.Last.Value);
+                this.cacheMRUList.RemoveLast();
+            }
         }
     }
 }

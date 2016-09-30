@@ -49,13 +49,14 @@
             {
                 ParameterExpression funcParameter = Expression.Parameter(typeof(IDependencyResolver));
 
-                var concreteType = typeof(TConcrete);
+                Type concreteType = typeof(TConcrete);
 
                 // Must be a single constructor
-                var constructor =
+                ConstructorInfo constructor =
                     concreteType.GetTypeInfo().DeclaredConstructors.Single(x => x.GetParameters().Length > 0);
 
-                var getServiceMethodInfo = typeof(IDependencyResolver).GetTypeInfo().GetDeclaredMethod("GetService");
+                MethodInfo getServiceMethodInfo =
+                    typeof(IDependencyResolver).GetTypeInfo().GetDeclaredMethod("GetService");
 
                 IList<Expression> parameterExpressions =
                     constructor.GetParameters().Select(

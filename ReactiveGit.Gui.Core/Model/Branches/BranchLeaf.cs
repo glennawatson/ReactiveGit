@@ -10,7 +10,7 @@
     public class BranchLeaf : BranchNode
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BranchLeaf"/> class.
+        /// Initializes a new instance of the <see cref="BranchLeaf" /> class.
         /// </summary>
         /// <param name="branch">The branch that the lead represents.</param>
         public BranchLeaf(GitBranch branch)

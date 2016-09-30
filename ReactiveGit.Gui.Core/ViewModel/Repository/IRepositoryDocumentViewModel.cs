@@ -1,7 +1,6 @@
 ﻿namespace ReactiveGit.Gui.Core.ViewModel.Repository
 {
     using ReactiveGit.Gui.Core.Model;
-    using ReactiveGit.Gui.Core.Model.Branches;
     using ReactiveGit.Gui.Core.ViewModel.CommitHistory;
 
     /// <summary>
@@ -20,13 +19,13 @@
         string FriendlyName { get; }
 
         /// <summary>
-        /// Gets the path to the repository.
-        /// </summary>
-        string RepositoryPath { get; }
-
-        /// <summary>
         /// Gets the details about the repository.
         /// </summary>
         IRepositoryDetails RepositoryDetails { get; }
+
+        /// <summary>
+        /// Gets the path to the repository.
+        /// </summary>
+        string RepositoryPath { get; }
     }
 }

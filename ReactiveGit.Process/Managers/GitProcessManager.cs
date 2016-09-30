@@ -23,18 +23,17 @@
     {
         private static readonly SemaphoreSlim RepoLimiterSemaphore = new SemaphoreSlim(1, 1);
 
-        private readonly string repoDirectory;
-
         private readonly Subject<string> gitOutput = new Subject<string>();
+
         private readonly Subject<Unit> gitUpdated = new Subject<Unit>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GitProcessManager"/> class.
+        /// Initializes a new instance of the <see cref="GitProcessManager" /> class.
         /// </summary>
         /// <param name="repoDirectory">The location of the GIT repository.</param>
         public GitProcessManager(string repoDirectory)
         {
-            this.repoDirectory = repoDirectory;
+            this.RepositoryPath = repoDirectory;
         }
 
         /// <inheritdoc />
@@ -44,7 +43,7 @@
         public IObservable<Unit> GitUpdated => this.gitUpdated;
 
         /// <inheritdoc />
-        public string RepositoryPath => this.repoDirectory;
+        public string RepositoryPath { get; }
 
         /// <summary>
         /// Runs a new instance of GIT.
@@ -54,78 +53,100 @@
         /// <param name="callerMemberName">The member calling the process.</param>
         /// <param name="includeStandardArguments">If to include standard arguments useful in a script environment.</param>
         /// <returns>A task which will return the response from the GIT process.</returns>
-        public IObservable<string> RunGit(IEnumerable<string> gitArgumentsEnumerable, IDictionary<string, string> extraEnvironmentVariables = null, [CallerMemberName] string callerMemberName = null, bool includeStandardArguments = true)
+        public IObservable<string> RunGit(
+            IEnumerable<string> gitArgumentsEnumerable,
+            IDictionary<string, string> extraEnvironmentVariables = null,
+            [CallerMemberName] string callerMemberName = null,
+            bool includeStandardArguments = true)
         {
-            return Observable.Create<string>(async (observer, token) =>
-                {
-                    string gitArguments = string.Join(" ", gitArgumentsEnumerable);
-                    if (includeStandardArguments)
+            return Observable.Create<string>(
+                async (observer, token) =>
                     {
-                        gitArguments = $"--no-pager -c color.branch=false -c color.diff=false -c color.status=false -c diff.mnemonicprefix=false -c core.quotepath=false {gitArguments}";
-                    }
-
-                    this.gitOutput.OnNext($"execute: git {gitArguments}");
-
-                    using (Process process = CreateGitProcess(gitArguments, this.repoDirectory))
-                    {
-                        if (extraEnvironmentVariables != null)
+                        string gitArguments = string.Join(" ", gitArgumentsEnumerable);
+                        if (includeStandardArguments)
                         {
-                            foreach (KeyValuePair<string, string> kvp in extraEnvironmentVariables)
+                            gitArguments =
+                                $"--no-pager -c color.branch=false -c color.diff=false -c color.status=false -c diff.mnemonicprefix=false -c core.quotepath=false {gitArguments}";
+                        }
+
+                        this.gitOutput.OnNext($"execute: git {gitArguments}");
+
+                        using (Process process = CreateGitProcess(gitArguments, this.RepositoryPath))
+                        {
+                            if (extraEnvironmentVariables != null)
                             {
-                                process.StartInfo.EnvironmentVariables.Add(kvp.Key, kvp.Value);
+                                foreach (KeyValuePair<string, string> kvp in extraEnvironmentVariables)
+                                {
+                                    process.StartInfo.EnvironmentVariables.Add(kvp.Key, kvp.Value);
+                                }
                             }
-                        }
 
-                        StringBuilder errorOutput = new StringBuilder();
-                        process.ErrorDataReceived += (sender, e) =>
-                            {
-                                if (e.Data == null)
+                            var errorOutput = new StringBuilder();
+                            process.ErrorDataReceived += (sender, e) =>
                                 {
-                                    return;
-                                }
+                                    if (e.Data == null)
+                                    {
+                                        return;
+                                    }
 
-                                this.gitOutput.OnNext(e.Data);
-                                errorOutput.AppendLine(e.Data);
-                                observer.OnNext(e.Data);
-                            };
+                                    this.gitOutput.OnNext(e.Data);
+                                    errorOutput.AppendLine(e.Data);
+                                    observer.OnNext(e.Data);
+                                };
 
-                        process.OutputDataReceived += (sender, e) =>
-                            {
-                                if (e.Data == null)
+                            process.OutputDataReceived += (sender, e) =>
                                 {
-                                    return;
-                                }
+                                    if (e.Data == null)
+                                    {
+                                        return;
+                                    }
 
-                                this.gitOutput.OnNext(e.Data);
-                                errorOutput.AppendLine(e.Data);
-                                observer.OnNext(e.Data);
-                            };
+                                    this.gitOutput.OnNext(e.Data);
+                                    errorOutput.AppendLine(e.Data);
+                                    observer.OnNext(e.Data);
+                                };
 
-                        if (token.IsCancellationRequested)
-                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                observer.OnCompleted();
+                                return;
+                            }
+
+                            int returnValue = await RunProcessAsync(process, token);
+
+                            if (returnValue != 0)
+                            {
+                                observer.OnError(new GitProcessException(gitArguments, errorOutput.ToString()));
+                            }
+
                             observer.OnCompleted();
-                            return;
+
+                            this.gitUpdated.OnNext(Unit.Default);
                         }
-
-                        int returnValue = await RunProcessAsync(process, token);
-
-                        if (returnValue != 0)
-                        {
-                            observer.OnError(new GitProcessException(gitArguments, errorOutput.ToString()));
-                        }
-
-                        observer.OnCompleted();
-
-                        this.gitUpdated.OnNext(Unit.Default);
-                    }
-                });
+                    });
         }
 
         private static Process CreateGitProcess(string arguments, string repoDirectory)
         {
             string gitInstallationPath = GitHelper.GetGitInstallationPath();
             string pathToGit = Path.Combine(Path.Combine(gitInstallationPath, @"bin\git.exe"));
-            return new Process { StartInfo = { CreateNoWindow = true, UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true, FileName = pathToGit, Arguments = arguments, WorkingDirectory = repoDirectory, StandardErrorEncoding = Encoding.UTF8, StandardOutputEncoding = Encoding.UTF8 }, EnableRaisingEvents = true };
+            return new Process
+                       {
+                           StartInfo =
+                               {
+                                   CreateNoWindow = true,
+                                   UseShellExecute = false,
+                                   RedirectStandardInput = true,
+                                   RedirectStandardOutput = true,
+                                   RedirectStandardError = true,
+                                   FileName = pathToGit,
+                                   Arguments = arguments,
+                                   WorkingDirectory = repoDirectory,
+                                   StandardErrorEncoding = Encoding.UTF8,
+                                   StandardOutputEncoding = Encoding.UTF8
+                               },
+                           EnableRaisingEvents = true
+                       };
         }
 
         private static async Task<int> RunProcessAsync(Process process, CancellationToken token)
@@ -146,11 +167,12 @@
                 process.BeginErrorReadLine();
 
                 return await Task.Run(
-                    () =>
-                           {
-                               process.WaitForExit();
-                               return process.ExitCode;
-                           }, token);
+                           () =>
+                               {
+                                   process.WaitForExit();
+                                   return process.ExitCode;
+                               },
+                           token);
             }
             finally
             {

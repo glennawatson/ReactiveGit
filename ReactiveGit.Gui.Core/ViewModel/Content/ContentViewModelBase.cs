@@ -12,7 +12,7 @@
         private readonly Lazy<string> contentId;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContentViewModelBase"/> class.
+        /// Initializes a new instance of the <see cref="ContentViewModelBase" /> class.
         /// </summary>
         protected ContentViewModelBase()
         {

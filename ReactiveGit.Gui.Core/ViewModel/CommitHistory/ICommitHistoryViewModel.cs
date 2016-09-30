@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.ViewModel.GitObject;
 
     /// <summary>

@@ -12,19 +12,19 @@
     using ReactiveGit.Gui.Core.ViewModel.GitObject;
 
     using ReactiveUI;
-    using ReactiveUI.Fody.Helpers;
 
     /// <summary>
     /// A view model related to a repository.
     /// </summary>
     public class CommitHistoryViewModel : GitObjectViewModelBase, ICommitHistoryViewModel
     {
+        private readonly ReactiveList<CommitHistoryItemViewModel> commitHistory =
+            new ReactiveList<CommitHistoryItemViewModel>();
+
         private readonly ReactiveCommand<Unit, GitCommit> refresh;
 
-        private readonly ReactiveList<CommitHistoryItemViewModel> commitHistory = new ReactiveList<CommitHistoryItemViewModel>();
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommitHistoryViewModel"/> class.
+        /// Initializes a new instance of the <see cref="CommitHistoryViewModel" /> class.
         /// </summary>
         /// <param name="repositoryDetails">The details of the repository.</param>
         /// <exception cref="ArgumentException">If the repository does not exist.</exception>
@@ -36,9 +36,13 @@
             }
 
             this.RepositoryDetails = repositoryDetails;
-            IObservable<bool> isCurrentBranchObservable = this.WhenAnyValue(x => x.RepositoryDetails.SelectedBranch).Select(x => x != null);
+            IObservable<bool> isCurrentBranchObservable =
+                this.WhenAnyValue(x => x.RepositoryDetails.SelectedBranch).Select(x => x != null);
 
-            this.refresh = ReactiveCommand.CreateFromObservable(() => this.GetCommitsImpl(this.RepositoryDetails.SelectedBranch), isCurrentBranchObservable);
+            this.refresh =
+                ReactiveCommand.CreateFromObservable(
+                    () => this.GetCommitsImpl(this.RepositoryDetails.SelectedBranch),
+                    isCurrentBranchObservable);
             this.refresh.Subscribe(x => this.commitHistory.Add(new CommitHistoryItemViewModel(x)));
 
             isCurrentBranchObservable.Subscribe(x => this.Refresh.InvokeCommand());

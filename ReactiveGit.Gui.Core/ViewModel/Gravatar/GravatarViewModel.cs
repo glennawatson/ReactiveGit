@@ -15,7 +15,7 @@
     using Splat;
 
     /// <summary>
-    /// A view model for loading a gravatar image. 
+    /// A view model for loading a gravatar image.
     /// </summary>
     public class GravatarViewModel : ReactiveObject
     {
@@ -23,15 +23,16 @@
 
         static GravatarViewModel()
         {
-            Cache = new AsyncMemoizingMRUCache<string, IBitmap>(GetBitmap, 100);   
+            Cache = new AsyncMemoizingMRUCache<string, IBitmap>(GetBitmap, 100);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GravatarViewModel"/> class.
+        /// Initializes a new instance of the <see cref="GravatarViewModel" /> class.
         /// </summary>
         public GravatarViewModel()
         {
-            var loadGravatar = ReactiveCommand.CreateFromTask<string, IBitmap>(x => Cache.Get(x));
+            ReactiveCommand<string, IBitmap> loadGravatar =
+                ReactiveCommand.CreateFromTask<string, IBitmap>(x => Cache.Get(x));
             loadGravatar.Subscribe(x => this.GravatarBitmap = x);
 
             this.WhenAnyValue(x => x.EmailAddress).Where(x => x != null).InvokeCommand(loadGravatar);
@@ -44,7 +45,7 @@
         public string EmailAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the Gravatar bitmap. 
+        /// Gets or sets the Gravatar bitmap.
         /// </summary>
         [Reactive]
         public IBitmap GravatarBitmap { get; set; }
@@ -53,11 +54,11 @@
         {
             using (var wc = new HttpClient())
             {
-                byte[] imageByteArray = await wc.GetByteArrayAsync($"http://gravatar.com/avatar/{emailAddress.Md5Encode()}?d=retro&s=60");
+                byte[] imageByteArray =
+                    await wc.GetByteArrayAsync($"http://gravatar.com/avatar/{emailAddress.Md5Encode()}?d=retro&s=60");
 
-                using (MemoryStream ms = new MemoryStream(imageByteArray))
+                using (var ms = new MemoryStream(imageByteArray))
                 {
-
                     // IBitmap is a type that provides basic image information such as dimensions
                     IBitmap profileImage =
                         await

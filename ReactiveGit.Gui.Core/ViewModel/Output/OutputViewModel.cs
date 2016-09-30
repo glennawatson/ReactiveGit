@@ -18,32 +18,29 @@
         private readonly ReactiveCommand<Unit, Unit> clear;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OutputViewModel"/> class.
+        /// Initializes a new instance of the <see cref="OutputViewModel" /> class.
         /// </summary>
         public OutputViewModel()
         {
             this.clear = ReactiveCommand.Create(this.ClearOutputImpl);
 
             this.WhenAnyObservable(x => x.RepositoryDetails.RepositoryManager.GitOutput).Subscribe(
-                x =>
-                {
-                    this.Output = this.Output + "\r\n" + x;
-                });
+                x => { this.Output = this.Output + "\r\n" + x; });
         }
+
+        /// <inheritdoc />
+        public ICommand Clear => this.clear;
 
         /// <inheritdoc />
         public override string FriendlyName => "Output";
 
         /// <inheritdoc />
         [Reactive]
-        public IRepositoryDetails RepositoryDetails { get; set; }
-
-        /// <inheritdoc />
-        [Reactive]
         public string Output { get; set; }
 
         /// <inheritdoc />
-        public ICommand Clear => this.clear;
+        [Reactive]
+        public IRepositoryDetails RepositoryDetails { get; set; }
 
         private void ClearOutputImpl()
         {

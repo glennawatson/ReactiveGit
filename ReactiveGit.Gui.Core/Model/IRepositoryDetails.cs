@@ -21,11 +21,6 @@
         string FriendlyName { get; }
 
         /// <summary>
-        /// Gets the path to the repository.
-        /// </summary>
-        string RepositoryPath { get; }
-
-        /// <summary>
         /// Gets the git object manager.
         /// </summary>
         IGitObjectManager GitObjectManager { get; }
@@ -44,6 +39,11 @@
         /// Gets the repository manager.
         /// </summary>
         IGitRepositoryManager RepositoryManager { get; }
+
+        /// <summary>
+        /// Gets the path to the repository.
+        /// </summary>
+        string RepositoryPath { get; }
 
         /// <summary>
         /// Gets or sets the selected branch.

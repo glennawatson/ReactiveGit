@@ -1,12 +1,10 @@
 ﻿namespace ReactiveGit.Gui.Core.ViewModel.Repository
 {
     using ReactiveGit.Gui.Core.Model;
-    using ReactiveGit.Gui.Core.Model.Branches;
     using ReactiveGit.Gui.Core.ViewModel.CommitHistory;
     using ReactiveGit.Gui.Core.ViewModel.Content;
     using ReactiveGit.Gui.Core.ViewModel.Factories;
 
-    using ReactiveUI;
     using ReactiveUI.Fody.Helpers;
 
     /// <summary>
@@ -15,7 +13,7 @@
     public class RepositoryDocumentViewModel : ContentViewModelBase, IRepositoryDocumentViewModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RepositoryDocumentViewModel"/> class.
+        /// Initializes a new instance of the <see cref="RepositoryDocumentViewModel" /> class.
         /// </summary>
         /// <param name="factory">A factory for creating the children.</param>
         /// <param name="repositoryDetails">The details about the repositories.</param>
@@ -32,10 +30,10 @@
         public override string FriendlyName => this.RepositoryDetails.FriendlyName;
 
         /// <inheritdoc />
-        public string RepositoryPath => this.RepositoryDetails.RepositoryManager.RepositoryPath;
-
-        /// <inheritdoc />
         [Reactive]
         public IRepositoryDetails RepositoryDetails { get; set; }
+
+        /// <inheritdoc />
+        public string RepositoryPath => this.RepositoryDetails.RepositoryManager.RepositoryPath;
     }
 }

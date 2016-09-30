@@ -1,7 +1,5 @@
 ﻿namespace ReactiveGit.Gui.Core.ViewModel
 {
-    using System.Windows.Input;
-
     using ReactiveGit.Gui.Core.Model;
 
     /// <summary>

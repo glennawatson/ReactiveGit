@@ -1,5 +1,6 @@
 ﻿namespace ReactiveGit.Gui.Core.ViewModel.GitObject
 {
+    using System;
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Windows.Input;
@@ -12,7 +13,7 @@
     using ReactiveUI.Fody.Helpers;
 
     /// <summary>
-    /// Base class for classes handling git objects. 
+    /// Base class for classes handling git objects.
     /// </summary>
     public abstract class GitObjectViewModelBase : ContentViewModelBase, IGitObjectViewModel
     {
@@ -23,13 +24,13 @@
         private readonly ReactiveCommand<IGitIdObject, Unit> resetSoft;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GitObjectViewModelBase"/> class.
+        /// Initializes a new instance of the <see cref="GitObjectViewModelBase" /> class.
         /// </summary>
         protected GitObjectViewModelBase()
         {
-            var canReset =
+            IObservable<bool> canReset =
                 this.WhenAnyValue(x => x.RepositoryDetails, x => x.RepositoryDetails.SelectedBranch).Select(
-                    x => x.Item1 != null && x.Item2 != null);
+                    x => (x.Item1 != null) && (x.Item2 != null));
             this.resetHard =
                 ReactiveCommand.CreateFromObservable<IGitIdObject, Unit>(
                     x => this.RepositoryDetails.GitObjectManager.Reset(x, ResetMode.Hard),

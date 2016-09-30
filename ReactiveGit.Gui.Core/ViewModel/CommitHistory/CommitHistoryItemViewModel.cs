@@ -1,10 +1,6 @@
 ﻿namespace ReactiveGit.Gui.Core.ViewModel.CommitHistory
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.ViewModel.Gravatar;
@@ -17,7 +13,7 @@
     public class CommitHistoryItemViewModel : ReactiveObject, IEquatable<CommitHistoryItemViewModel>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommitHistoryItemViewModel"/> class.
+        /// Initializes a new instance of the <see cref="CommitHistoryItemViewModel" /> class.
         /// </summary>
         /// <param name="commit">The commit the view model is related to.</param>
         public CommitHistoryItemViewModel(GitCommit commit)
@@ -28,19 +24,24 @@
         }
 
         /// <summary>
-        /// Gets the git commit.
+        /// Gets the commit date and time.
         /// </summary>
-        public GitCommit GitCommit { get; }
-
-        /// <summary>
-        /// Gets the gravatar logo. 
-        /// </summary>
-        public GravatarViewModel Gravatar { get; }
+        public DateTime CommitDateTime => this.GitCommit.DateTime;
 
         /// <summary>
         /// Gets the name of the committer.
         /// </summary>
         public string CommiterName => this.GitCommit.Committer;
+
+        /// <summary>
+        /// Gets the git commit.
+        /// </summary>
+        public GitCommit GitCommit { get; }
+
+        /// <summary>
+        /// Gets the gravatar logo.
+        /// </summary>
+        public GravatarViewModel Gravatar { get; }
 
         /// <summary>
         /// Gets the short message.
@@ -51,11 +52,6 @@
         /// Gets the abbreviated SHA id.
         /// </summary>
         public string ShaShort => this.GitCommit.ShaShort;
-
-        /// <summary>
-        /// Gets the commit date and time.
-        /// </summary>
-        public DateTime CommitDateTime => this.GitCommit.DateTime;
 
         /// <summary>
         /// Compares the two sides, and returns if they are equal.
@@ -109,7 +105,7 @@
             }
 
             var other = obj as CommitHistoryItemViewModel;
-            return other != null && this.Equals(other);
+            return (other != null) && this.Equals(other);
         }
 
         /// <inheritdoc />
