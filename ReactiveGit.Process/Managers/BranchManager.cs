@@ -7,8 +7,6 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     using ReactiveGit.Core.ExtensionMethods;
     using ReactiveGit.Core.Managers;
@@ -123,9 +121,9 @@
         }
 
         /// <inheritdoc />
-        public Task<GitBranch> GetRemoteBranch(GitBranch branch, CancellationToken token)
+        public IObservable<GitBranch> GetRemoteBranch(GitBranch branch)
         {
-            return Task.FromResult<GitBranch>(null);
+            return Observable.Return<GitBranch>(null);
         }
 
         /// <inheritdoc />
@@ -146,17 +144,17 @@
         }
 
         /// <inheritdoc />
-        public async Task<bool> IsMergeConflict(CancellationToken token)
+        public IObservable<bool> IsMergeConflict()
         {
-            return await this.gitProcessManager.RunGit(new[] { "ls-files", "-u" }).Any();
+            return this.gitProcessManager.RunGit(new[] { "ls-files", "-u" }).Any();
         }
 
         /// <inheritdoc />
-        public async Task<bool> IsWorkingDirectoryDirty(CancellationToken token)
+        public IObservable<bool> IsWorkingDirectoryDirty()
         {
             string[] arguments = { "status", "--porcelain", "--ignore-submodules=dirty", "--untracked-files=all" };
 
-            return await this.gitProcessManager.RunGit(arguments).Any();
+            return this.gitProcessManager.RunGit(arguments).Any();
         }
 
         private static void GenerateFormat(IList<string> arguments)

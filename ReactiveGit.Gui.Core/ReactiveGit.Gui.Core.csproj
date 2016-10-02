@@ -46,6 +46,7 @@
     <Compile Include="ExtensionMethods\CommandExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\SplatExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\StringExtensionMethods.cs" />
+    <Compile Include="Interactions\CommonInteractions.cs" />
     <Compile Include="Model\Branches\BranchLeaf.cs" />
     <Compile Include="Model\Branches\BranchNode.cs" />
     <Compile Include="Model\Branches\BranchParent.cs" />

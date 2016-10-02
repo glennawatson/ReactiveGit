@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="5C9D37AD-1C8E-416B-93E4-F372D117CB3B" Name="ReactiveGit" Language="1033" Version="1.0.0.0" Manufacturer="Unbelievable Computer Services Pty Ltd" UpgradeCode="237dbecb-9dfe-4c0e-8e19-b9480fd67f7f">
+    <Package InstallerVersion="300" Compressed="yes" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Media Id='1' Cabinet='reactivegit.cab' EmbedCab='yes' />
+
+    <UIRef Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR">INSTALLFOLDER</Property>
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="ReactiveGit"/>
+      </Directory>
+      <!-- Step 1: Define the directory structure -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="ReactiveGit"/>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="reactivegit.exe" Guid="{2AE66A5A-EBDC-4F6C-BA64-D3E966F84D63}">
+        <File Id="reactivegit.exe" Source="$(var.ReactiveGit.Gui.WPF.TargetPath)" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="reactivegit.exe.config" Guid="{4E1751A1-B9B8-4FB4-812D-BBF64DB355CC}">
+        <File Id="reactivegit.exe.config" Source="$(var.ReactiveGit.Gui.WPF.TargetPath).config" KeyPath="yes" Checksum="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Step 2: Add the shortcut to your installer package -->
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="ECFAE190-7231-402F-A541-6638513CF960">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+             Name="ReactiveGit"
+           Description="Git Client"
+            Target="[!reactivegit.exe]"
+                  WorkingDirectory="INSTALLFOLDER"/>
+        <RemoveFolder Id="RemoveApplicationProgramsFolder" Directory="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\ReactiveGit" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED" />
+    <Condition Message="ReactiveGit requires .NET Framework 4.6.1 or higher.">
+      <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED]]>
+    </Condition>
+    
+    <Feature Id="ProductFeature" Title="Main Application" Level="1">
+      <ComponentGroupRef Id="HeatGenerated"/>
+      <ComponentRef Id="reactivegit.exe" />
+      <ComponentRef Id="reactivegit.exe.config" />
+      <!-- Step 3: Tell WiX to install the shortcut -->
+      <ComponentRef Id="ApplicationShortcut" />
+    </Feature>
+  </Product>
+</Wix>

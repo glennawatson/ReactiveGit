@@ -2,6 +2,10 @@
 {
     using System;
 
+    using MahApps.Metro.Controls.Dialogs;
+
+    using ReactiveGit.Gui.Core.Interactions;
+
     /// <summary>
     /// Interaction logic for MainWindow.
     /// </summary>
@@ -17,6 +21,19 @@
                     {
                         this.AppBootstrapper = new AppBootstrapper();
                         this.DataContext = this.AppBootstrapper;
+                    });
+
+            CommonInteractions.CheckToProceed.RegisterHandler(
+                async interaction =>
+                    {
+                        MessageDialogResult shouldContinue =
+                            await
+                                this.ShowMessageAsync(
+                                    "Please confirm",
+                                    interaction.Input,
+                                    MessageDialogStyle.AffirmativeAndNegative);
+
+                        interaction.SetOutput(shouldContinue == MessageDialogResult.Affirmative);
                     });
         }
 

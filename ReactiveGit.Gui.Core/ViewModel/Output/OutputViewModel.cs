@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reactive;
+    using System.Text;
     using System.Windows.Input;
 
     using ReactiveGit.Gui.Core.Model;
@@ -17,6 +18,8 @@
     {
         private readonly ReactiveCommand<Unit, Unit> clear;
 
+        private readonly StringBuilder outputText = new StringBuilder();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputViewModel" /> class.
         /// </summary>
@@ -24,8 +27,16 @@
         {
             this.clear = ReactiveCommand.Create(this.ClearOutputImpl);
 
-            this.WhenAnyObservable(x => x.RepositoryDetails.RepositoryManager.GitOutput).Subscribe(
-                x => { this.Output = this.Output + "\r\n" + x; });
+            var canOutput = this.WhenAnyValue(x => x.RepositoryDetails.ShowOutput);
+
+            ReactiveCommand<string, Unit> addOutput = ReactiveCommand.Create<string>(
+                x =>
+                    {
+                        this.outputText.AppendLine(x);
+                        this.RaisePropertyChanged(nameof(this.Output));
+                    }, canOutput);
+
+            this.WhenAnyObservable(x => x.RepositoryDetails.RepositoryManager.GitOutput).InvokeCommand(addOutput);
         }
 
         /// <inheritdoc />
@@ -35,8 +46,7 @@
         public override string FriendlyName => "Output";
 
         /// <inheritdoc />
-        [Reactive]
-        public string Output { get; set; }
+        public string Output => this.outputText?.ToString();
 
         /// <inheritdoc />
         [Reactive]
@@ -44,7 +54,7 @@
 
         private void ClearOutputImpl()
         {
-            this.Output = string.Empty;
+            this.outputText.Clear();
         }
     }
 }

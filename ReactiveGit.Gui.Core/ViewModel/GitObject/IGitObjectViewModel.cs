@@ -4,6 +4,8 @@
 
     using ReactiveGit.Core.Model;
 
+    using ReactiveUI;
+
     /// <summary>
     /// View model dealing with GIT objects.
     /// </summary>

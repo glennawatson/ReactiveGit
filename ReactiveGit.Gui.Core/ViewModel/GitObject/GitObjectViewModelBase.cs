@@ -5,7 +5,9 @@
     using System.Reactive.Linq;
     using System.Windows.Input;
 
+    using ReactiveGit.Core.ExtensionMethods;
     using ReactiveGit.Core.Model;
+    using ReactiveGit.Gui.Core.Interactions;
     using ReactiveGit.Gui.Core.Model;
     using ReactiveGit.Gui.Core.ViewModel.Content;
 
@@ -33,15 +35,15 @@
                     x => (x.Item1 != null) && (x.Item2 != null));
             this.resetHard =
                 ReactiveCommand.CreateFromObservable<IGitIdObject, Unit>(
-                    x => this.RepositoryDetails.GitObjectManager.Reset(x, ResetMode.Hard),
+                    x => this.ResetImpl(x, ResetMode.Hard),
                     canReset);
             this.resetSoft =
                 ReactiveCommand.CreateFromObservable<IGitIdObject, Unit>(
-                    x => this.RepositoryDetails.GitObjectManager.Reset(x, ResetMode.Soft),
+                    x => this.ResetImpl(x, ResetMode.Soft),
                     canReset);
             this.resetMixed =
                 ReactiveCommand.CreateFromObservable<IGitIdObject, Unit>(
-                    x => this.RepositoryDetails.GitObjectManager.Reset(x, ResetMode.Mixed),
+                    x => this.ResetImpl(x, ResetMode.Mixed),
                     canReset);
         }
 
@@ -66,5 +68,15 @@
         /// <inheritdoc />
         [Reactive]
         public IGitIdObject SelectedGitObject { get; set; }
+
+        private IObservable<Unit> ResetImpl(IGitIdObject gitIdObject, ResetMode resetMode)
+        {
+            var canCompleteObservable =
+                CommonInteractions.CheckToProceed.Handle(
+                    $"Do you really want to reset {gitIdObject.ShaShort} using {resetMode} reset?");
+
+            return canCompleteObservable.CompleteIfTrue(
+                    this.RepositoryDetails.GitObjectManager.Reset(gitIdObject, resetMode));
+        }
     }
 }

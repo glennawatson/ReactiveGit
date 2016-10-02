@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="ExtensionMethods\TypeExtensionMethods.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
+    <Compile Include="Managers\IGitProcessManager.cs" />
     <Compile Include="Managers\BranchManager.cs" />
     <Compile Include="Managers\GitObjectManager.cs" />
     <Compile Include="Managers\RefLogManager.cs" />

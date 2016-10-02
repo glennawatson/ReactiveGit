@@ -3,13 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Reactive;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     using ReactiveGit.Core.Exceptions;
+    using ReactiveGit.Core.ExtensionMethods;
     using ReactiveGit.Core.Managers;
     using ReactiveGit.Core.Model;
 
@@ -88,15 +88,15 @@
         }
 
         /// <inheritdoc />
-        public IObservable<string> Abort()
+        public IObservable<Unit> Abort()
         {
-            return this.gitProcess.RunGit(new[] { "rebase --abort" });
+            return this.gitProcess.RunGit(new[] { "rebase --abort" }).WhenDone();
         }
 
         /// <inheritdoc />
-        public IObservable<string> Continue(string commitMessage)
+        public IObservable<Unit> Continue(string commitMessage)
         {
-            return Observable.Create<string>(
+            return Observable.Create<Unit>(
                 observer =>
                     {
                         string rewriterName;
@@ -117,19 +117,23 @@
 
                         var environmentVariables = new Dictionary<string, string> { { "COMMENT_FILE_NAME", fileName } };
 
-                        IDisposable running =
-                            this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(
-                                observer.OnNext,
-                                observer.OnCompleted);
+                        IDisposable running = this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(
+                            _ => { },
+                            observer.OnError,
+                            () =>
+                            {
+                                observer.OnNext(Unit.Default);
+                                observer.OnCompleted();
+                            });
 
                         return Disposable.Create(() => running?.Dispose());
                     });
         }
 
         /// <inheritdoc />
-        public Task<bool> HasConflicts(CancellationToken token)
+        public IObservable<bool> HasConflicts()
         {
-            return this.branchManager.IsMergeConflict(token);
+            return this.branchManager.IsMergeConflict();
         }
 
         /// <inheritdoc />
@@ -141,12 +145,12 @@
         }
 
         /// <inheritdoc />
-        public IObservable<string> Rebase(GitBranch parentBranch)
+        public IObservable<Unit> Rebase(GitBranch parentBranch)
         {
-            return Observable.Create<string>(
+            return Observable.Create<Unit>(
                 async (observer, token) =>
                     {
-                        if (await this.branchManager.IsWorkingDirectoryDirty(token))
+                        if (await this.branchManager.IsWorkingDirectoryDirty())
                         {
                             observer.OnError(
                                 new GitProcessException("The working directory is dirty. There are uncommited files."));
@@ -154,23 +158,30 @@
 
                         IList<string> gitArguments = new List<string> { $"rebase -i  {parentBranch.FriendlyName}" };
 
-                        this.gitProcess.RunGit(gitArguments).Subscribe(observer.OnNext, observer.OnCompleted, token);
+                        this.gitProcess.RunGit(gitArguments).Subscribe(
+                            _ => { }, 
+                            observer.OnError,
+                            () =>
+                                {
+                                    observer.OnNext(Unit.Default);
+                                    observer.OnCompleted();
+                                }, token);
                     });
         }
 
         /// <inheritdoc />
-        public IObservable<string> Skip()
+        public IObservable<Unit> Skip()
         {
-            return this.gitProcess.RunGit(new[] { "rebase --skip" });
+            return this.gitProcess.RunGit(new[] { "rebase --skip" }).WhenDone();
         }
 
         /// <inheritdoc />
-        public IObservable<string> Squash(string newCommitMessage, GitCommit startCommit)
+        public IObservable<Unit> Squash(string newCommitMessage, GitCommit startCommit)
         {
-            return Observable.Create<string>(
+            return Observable.Create<Unit>(
                 async (observer, token) =>
                     {
-                        if (await this.branchManager.IsWorkingDirectoryDirty(token))
+                        if (await this.branchManager.IsWorkingDirectoryDirty())
                         {
                             observer.OnError(
                                 new GitProcessException("The working directory is dirty. There are uncommited files."));
@@ -196,9 +207,13 @@
                                                          };
 
                         this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(
-                            observer.OnNext,
-                            observer.OnCompleted,
-                            token);
+                            _ => { },
+                            observer.OnError,
+                            () =>
+                            {
+                                observer.OnNext(Unit.Default);
+                                observer.OnCompleted();
+                            }, token);
                     });
         }
     }

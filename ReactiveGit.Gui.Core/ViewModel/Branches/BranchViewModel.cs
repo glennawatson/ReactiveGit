@@ -10,6 +10,7 @@
     using ReactiveGit.Core.Model;
     using ReactiveGit.Gui.Core.Model;
     using ReactiveGit.Gui.Core.Model.Branches;
+    using ReactiveGit.Gui.Core.ViewModel.Content;
 
     using ReactiveUI;
     using ReactiveUI.Fody.Helpers;
@@ -17,7 +18,7 @@
     /// <summary>
     /// View model dealing with branch related issues.
     /// </summary>
-    public class BranchViewModel : ReactiveObject, IBranchViewModel
+    public class BranchViewModel : ContentViewModelBase, IBranchViewModel
     {
         private readonly IReactiveList<BranchNode> branches = new ReactiveList<BranchNode>();
 
@@ -52,7 +53,7 @@
         public ICommand CheckoutBranch => this.checkoutBranch;
 
         /// <inheritdoc />
-        public string FriendlyName => "Branches";
+        public override string FriendlyName => "Branches";
 
         /// <inheritdoc />
         public ICommand Refresh => this.getBranches;

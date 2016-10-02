@@ -1,0 +1,21 @@
+﻿namespace ReactiveGit.Gui.Core.Interactions
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using ReactiveUI;
+
+    /// <summary>
+    /// Common interactions that can be used throughout the application.
+    /// </summary>
+    public static class CommonInteractions
+    {
+        /// <summary>
+        /// A interaction which will determine if you can proceed with a action.
+        /// </summary>
+        public static readonly Interaction<string, bool> CheckToProceed = new Interaction<string, bool>();
+    }
+}

@@ -55,7 +55,7 @@
                     <selectors:DockingElementStyleSelector.SupportPaneStyle>
                         <Style TargetType="{x:Type xcad:LayoutAnchorableItem}">
                             <Setter Property="Title" Value="{Binding Model.FriendlyName, Mode=OneWay}" />
-
+                            <Setter Property="ContentId" Value="{Binding Model.ContentId, Mode=OneWay}" />
                         </Style>
                     </selectors:DockingElementStyleSelector.SupportPaneStyle>
                 </selectors:DockingElementStyleSelector>

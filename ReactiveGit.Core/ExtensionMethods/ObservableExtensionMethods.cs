@@ -30,5 +30,35 @@
                                 });
                     });
         }
+
+        /// <summary>
+        /// Completes a observable, only if the first observable
+        /// returns a true value.
+        /// </summary>
+        /// <param name="canCompleteObservable">The observable to do the sanity check against.</param>
+        /// <param name="toCompleteObservable">The observable to complete if the first observable returns true.</param>
+        /// <returns>The observable to monitor the progress of the process.</returns>
+        public static IObservable<Unit> CompleteIfTrue(
+            this IObservable<bool> canCompleteObservable,
+            IObservable<Unit> toCompleteObservable)
+        {
+            return Observable.Create<Unit>(
+                async (observer, token) =>
+                    {
+                        bool proceed = await canCompleteObservable;
+                        if (proceed)
+                        {
+                            toCompleteObservable.Subscribe(
+                                        _ => { },
+                                        observer.OnError,
+                                        () =>
+                                {
+                                    observer.OnNext(Unit.Default);
+                                    observer.OnCompleted();
+                                },
+                                        token);
+                        }
+                    });
+        }
     }
 }

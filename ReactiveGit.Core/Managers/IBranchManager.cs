@@ -72,9 +72,8 @@
         /// Gets a remote branch of the specified branch.
         /// </summary>
         /// <param name="branch">The branch to get the </param>
-        /// <param name="token">A cancellation token to stop the process.</param>
         /// <returns>The commit messages</returns>
-        Task<GitBranch> GetRemoteBranch(GitBranch branch, CancellationToken token);
+        IObservable<GitBranch> GetRemoteBranch(GitBranch branch);
 
         /// <summary>
         /// Gets a list of remote branches.
@@ -85,15 +84,13 @@
         /// <summary>
         /// Determines if there are any merge conflicts.
         /// </summary>
-        /// <param name="token">A cancellation token to stop the process.</param>
         /// <returns>If there are any merge conflicts.</returns>
-        Task<bool> IsMergeConflict(CancellationToken token);
+        IObservable<bool> IsMergeConflict();
 
         /// <summary>
         /// Determines if there are any changes in the working directory.
         /// </summary>
-        /// <param name="token">A cancellation token to stop the process.</param>
         /// <returns>If there are changes in the working directory.</returns>
-        Task<bool> IsWorkingDirectoryDirty(CancellationToken token);
+        IObservable<bool> IsWorkingDirectoryDirty();
     }
 }

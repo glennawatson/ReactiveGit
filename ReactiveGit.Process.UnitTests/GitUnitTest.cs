@@ -54,8 +54,7 @@ namespace Git.VisualStudio.UnitTests
             this.GenerateCommits(numberCommits, tempDirectory, local, "master");
 
             commits =
-                branchManager.GetCommitsForBranch(new GitBranch("test1", false, false), 0, 0, GitLogOptions.None).ToList
-                    ().Wait();
+                branchManager.GetCommitsForBranch(new GitBranch("test1", false, false), 0, 0, GitLogOptions.None).ToList().Wait();
 
             commits.Count.Should().Be(numberCommits * 2, $"We have done {numberCommits + 1} commits");
         }
