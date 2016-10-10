@@ -35,7 +35,7 @@
         {
             string[] arguments = { "reset", $"--{resetMode.ToString().ToLowerInvariant()}", gitObject.Sha };
 
-            return this.gitProcessManager.RunGit(arguments, scheduler: scheduler).WhenDone();
+            return this.gitProcessManager.RunGit(arguments, showInOutput: true, scheduler: scheduler).WhenDone();
         }
 
         /// <inheritdoc />
@@ -52,7 +52,7 @@
 
             arguments.Add(gitObject.Sha);
 
-            return this.gitProcessManager.RunGit(arguments, scheduler: scheduler).WhenDone();
+            return this.gitProcessManager.RunGit(arguments, showInOutput: true, scheduler: scheduler).WhenDone();
         }
     }
 }

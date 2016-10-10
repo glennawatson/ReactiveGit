@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reactive;
+    using System.Reactive.Linq;
     using System.Text;
     using System.Windows.Input;
 
@@ -27,7 +28,7 @@
         {
             this.clear = ReactiveCommand.Create(this.ClearOutputImpl);
 
-            var canOutput = this.WhenAnyValue(x => x.RepositoryDetails.ShowOutput);
+            var canOutput = this.WhenAnyValue(x => x.RepositoryDetails).Select(x => x != null);
 
             ReactiveCommand<string, Unit> addOutput = ReactiveCommand.Create<string>(
                 x =>

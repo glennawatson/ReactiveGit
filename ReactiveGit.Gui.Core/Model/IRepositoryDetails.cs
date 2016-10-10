@@ -54,10 +54,5 @@
         /// Gets or sets the selected branch.
         /// </summary>
         GitBranch SelectedBranch { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether we should show GIT output.
-        /// </summary>
-        bool ShowOutput { get; set; }
     }
 }

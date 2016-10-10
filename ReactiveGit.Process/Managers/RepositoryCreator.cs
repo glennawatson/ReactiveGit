@@ -47,7 +47,7 @@
                         }
 
                         IGitProcessManager gitProcess = this.processManagerFunc(directoryPath);
-                        IDisposable disposable = gitProcess.RunGit(new[] { "init" }, scheduler: scheduler).Subscribe(
+                        IDisposable disposable = gitProcess.RunGit(new[] { "init" }, showInOutput: true, scheduler: scheduler).Subscribe(
                             _ => { },
                             observer.OnError,
                             () =>

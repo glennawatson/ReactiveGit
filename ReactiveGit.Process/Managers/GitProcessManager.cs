@@ -53,6 +53,7 @@
             IDictionary<string, string> extraEnvironmentVariables = null,
             [CallerMemberName] string callerMemberName = null,
             bool includeStandardArguments = true,
+            bool showInOutput = false,
             IScheduler scheduler = null)
         {
             scheduler = scheduler ?? TaskPoolScheduler.Default;
@@ -71,7 +72,10 @@
                                             $"--no-pager -c color.branch=false -c color.diff=false -c color.status=false -c diff.mnemonicprefix=false -c core.quotepath=false {gitArguments}";
                                     }
 
-                                    this.gitOutput.OnNext($"execute: git {gitArguments}");
+                                    if (showInOutput)
+                                    {
+                                        this.gitOutput.OnNext($"execute: git {gitArguments}");
+                                    }
 
                                     using (Process process = CreateGitProcess(gitArguments, this.RepositoryPath))
                                     {
@@ -91,7 +95,11 @@
                                                     return;
                                                 }
 
-                                                this.gitOutput.OnNext(e.Data);
+                                                if (showInOutput)
+                                                {
+                                                    this.gitOutput.OnNext(e.Data);
+                                                }
+
                                                 errorOutput.AppendLine(e.Data);
                                                 observer.OnNext(e.Data);
                                             };
@@ -103,7 +111,11 @@
                                                     return;
                                                 }
 
-                                                this.gitOutput.OnNext(e.Data);
+                                                if (showInOutput)
+                                                {
+                                                    this.gitOutput.OnNext(e.Data);
+                                                }
+
                                                 errorOutput.AppendLine(e.Data);
                                                 observer.OnNext(e.Data);
                                             };
@@ -118,8 +130,7 @@
 
                                         if (returnValue != 0)
                                         {
-                                            observer.OnError(
-                                                new GitProcessException(gitArguments, errorOutput.ToString()));
+                                            observer.OnError(new GitProcessException(gitArguments, errorOutput.ToString()));
                                         }
 
                                         observer.OnCompleted();
@@ -129,9 +140,9 @@
                                         return Disposable.Empty;
                                     }
                                 });
+
                         d.Add(schedule);
                         return d;
-
                     });
         }
 
@@ -140,8 +151,8 @@
             string gitInstallationPath = GitHelper.GetGitInstallationPath();
             string pathToGit = Path.Combine(Path.Combine(gitInstallationPath, @"bin\git.exe"));
             return new Process
-                       {
-                           StartInfo =
+            {
+                StartInfo =
                                {
                                    CreateNoWindow = true,
                                    UseShellExecute = false,
@@ -154,8 +165,8 @@
                                    StandardErrorEncoding = Encoding.UTF8,
                                    StandardOutputEncoding = Encoding.UTF8
                                },
-                           EnableRaisingEvents = true
-                       };
+                EnableRaisingEvents = true
+            };
         }
 
         private static async Task<int> RunProcessAsync(Process process, CancellationToken token)

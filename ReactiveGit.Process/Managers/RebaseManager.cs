@@ -91,7 +91,7 @@
         /// <inheritdoc />
         public IObservable<Unit> Abort(IScheduler scheduler = null)
         {
-            return this.gitProcess.RunGit(new[] { "rebase --abort" }, scheduler: scheduler).WhenDone();
+            return this.gitProcess.RunGit(new[] { "rebase --abort" }, showInOutput: true, scheduler: scheduler).WhenDone();
         }
 
         /// <inheritdoc />
@@ -118,7 +118,7 @@
 
                         var environmentVariables = new Dictionary<string, string> { { "COMMENT_FILE_NAME", fileName } };
 
-                        IDisposable running = this.gitProcess.RunGit(gitArguments, environmentVariables, scheduler: scheduler).Subscribe(
+                        IDisposable running = this.gitProcess.RunGit(gitArguments, environmentVariables, showInOutput: true, scheduler: scheduler).Subscribe(
                             _ => { },
                             observer.OnError,
                             () =>
@@ -159,7 +159,7 @@
 
                         IList<string> gitArguments = new List<string> { $"rebase -i  {parentBranch.FriendlyName}" };
 
-                        this.gitProcess.RunGit(gitArguments, scheduler: scheduler).Subscribe(
+                        this.gitProcess.RunGit(gitArguments, showInOutput: true, scheduler: scheduler).Subscribe(
                             _ => { }, 
                             observer.OnError,
                             () =>
@@ -173,7 +173,7 @@
         /// <inheritdoc />
         public IObservable<Unit> Skip(IScheduler scheduler = null)
         {
-            return this.gitProcess.RunGit(new[] { "rebase --skip" }, scheduler: scheduler).WhenDone();
+            return this.gitProcess.RunGit(new[] { "rebase --skip" }, showInOutput: true, scheduler: scheduler).WhenDone();
         }
 
         /// <inheritdoc />
@@ -207,7 +207,7 @@
                                                              $"rebase -i  {startCommit.Sha}"
                                                          };
 
-                        this.gitProcess.RunGit(gitArguments, environmentVariables, scheduler: scheduler).Subscribe(
+                        this.gitProcess.RunGit(gitArguments, environmentVariables, showInOutput: true, scheduler: scheduler).Subscribe(
                             _ => { },
                             observer.OnError,
                             () =>

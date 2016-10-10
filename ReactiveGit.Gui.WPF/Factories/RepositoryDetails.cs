@@ -64,9 +64,5 @@
         /// <inheritdoc />
         [Reactive]
         public GitBranch SelectedBranch { get; set; }
-
-        /// <inheritdoc />
-        [Reactive]
-        public bool ShowOutput { get; set; }
     }
 }

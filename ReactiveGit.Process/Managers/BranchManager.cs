@@ -51,7 +51,7 @@
                 arguments.Add("-f");
             }
 
-            IObservable<Unit> observable = this.gitProcessManager.RunGit(arguments, scheduler: scheduler).WhenDone();
+            IObservable<Unit> observable = this.gitProcessManager.RunGit(arguments, showInOutput: true, scheduler: scheduler).WhenDone();
             return observable.Finally(() => this.currentBranch.OnNext(branch));
         }
 
