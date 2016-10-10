@@ -187,8 +187,7 @@
             int index = pageIndex * this.PageSize;
 
             IList<GitCommit> pageContents =
-                this.branchManager.GetCommitsForBranch(this.branchName, index, this.PageSize, GitLogOptions.None).ToList
-                    ().Wait();
+                this.branchManager.GetCommitsForBranch(this.branchName, index, this.PageSize, GitLogOptions.None).ToList().Wait();
 
             this.PopulatePage(pageIndex, pageContents);
         }

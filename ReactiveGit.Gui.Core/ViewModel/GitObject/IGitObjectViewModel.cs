@@ -1,5 +1,6 @@
 ﻿namespace ReactiveGit.Gui.Core.ViewModel.GitObject
 {
+    using System.Collections.Generic;
     using System.Windows.Input;
 
     using ReactiveGit.Core.Model;
@@ -12,21 +13,11 @@
     public interface IGitObjectViewModel : IRefreshableViewModel
     {
         /// <summary>
-        /// Gets a command which will reset hard to the specified ref log.
+        /// Gets a collection of actions that can be performed on the git object.
         /// </summary>
-        ICommand ResetHard { get; }
+        IReadOnlyList<IGitObjectAction> Actions { get; }
 
-        /// <summary>
-        /// Gets a command which will reset soft to the specified ref log.
-        /// </summary>
-        ICommand ResetMixed { get; }
-
-        /// <summary>
-        /// Gets a command which will reset soft to the specified ref log.
-        /// </summary>
-        ICommand ResetSoft { get; }
-
-        /// <summary>
+            /// <summary>
         /// Gets or sets the selected GIT object.
         /// </summary>
         IGitIdObject SelectedGitObject { get; set; }

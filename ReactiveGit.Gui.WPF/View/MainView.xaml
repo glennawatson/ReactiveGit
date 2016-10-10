@@ -22,6 +22,11 @@
                           Header="_Open Repository"
                           InputGestureText="Ctrl+O" />
             </MenuItem>
+            <MenuItem Header="Window">
+                <MenuItem x:Name="SaveWindowLayout" Header="Save Window Layout" />
+                <MenuItem x:Name="LoadWindowLayout" Header="Load Window Layout" />
+                <MenuItem x:Name="ResetWindowLayout" Header="Reset Window Layout" />
+            </MenuItem>
         </Menu>
         <xcad:DockingManager x:Name="DockManager">
             <!--<xcad:DockingManager.Theme>

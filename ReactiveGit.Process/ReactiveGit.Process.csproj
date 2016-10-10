@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\ReactiveGit.Process.xml</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>git.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\git.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -76,6 +76,7 @@
     <Compile Include="Managers\RepositoryCreator.cs" />
     <Compile Include="Helpers\GitHelper.cs" />
     <Compile Include="Managers\GitProcessManager.cs" />
+    <Compile Include="Managers\TagManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

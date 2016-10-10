@@ -41,6 +41,11 @@
         IGitRepositoryManager RepositoryManager { get; }
 
         /// <summary>
+        /// Gets the tag manager.
+        /// </summary>
+        ITagManager TagManager { get; }
+
+        /// <summary>
         /// Gets the path to the repository.
         /// </summary>
         string RepositoryPath { get; }

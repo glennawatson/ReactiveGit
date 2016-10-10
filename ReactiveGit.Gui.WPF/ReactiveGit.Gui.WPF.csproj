@@ -41,13 +41,9 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\ReactiveGit.Gui.WPF.XML</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\ReactiveGit.Process\git.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\git.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoDependencyPropertyMarker, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoDependencyProperty.Fody.1.2.2.0\lib\net40\AutoDependencyPropertyMarker.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonEdit.5.0.3\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
       <Private>True</Private>
@@ -177,15 +173,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="ViewModel\AppBootstrapper.cs" />
     <Compile Include="Behaviours\TreeViewSelectedItemBehaviour.cs" />
     <Compile Include="Converters\BranchNodeToGitBranchConverter.cs" />
     <Compile Include="Converters\SelectedBranchFromListConverter.cs" />
+    <Compile Include="Factories\DispatcherActivationForViewFetcher.cs" />
     <Compile Include="Factories\DefaultRepositoryFactory.cs" />
     <Compile Include="Factories\RepositoryDetails.cs" />
     <Compile Include="Selectors\DockingElementStyleSelector.cs" />
     <Compile Include="Selectors\DockingElementTemplateSelector.cs" />
     <Compile Include="Converters\DocumentTypeConverter.cs" />
+    <Compile Include="ViewModel\ILayoutViewModel.cs" />
+    <Compile Include="ViewModel\IWindowLayoutViewModel.cs" />
+    <Compile Include="ViewModel\LayoutViewModel.cs" />
+    <Compile Include="ViewModel\WindowLayoutViewModel.cs" />
     <Compile Include="View\BranchesView.xaml.cs">
       <DependentUpon>BranchesView.xaml</DependentUpon>
     </Compile>
@@ -209,6 +210,9 @@
     </Compile>
     <Compile Include="View\RepositoryView.xaml.cs">
       <DependentUpon>RepositoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TagView.xaml.cs">
+      <DependentUpon>TagView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -251,6 +255,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\RepositoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TagView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -311,7 +319,9 @@
   <ItemGroup>
     <Resource Include="Images\git-branch.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\DefaultLayout.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

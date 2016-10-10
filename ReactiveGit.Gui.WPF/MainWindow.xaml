@@ -6,6 +6,7 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:reactiveUi="http://reactiveui.net"
         x:Name="ReactiveGitMainWindow"
+                      Closing="OnWindowClosing"
         Title="Reactive GIT"
         Width="525"
         Height="350"

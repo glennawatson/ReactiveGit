@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reactive.Concurrency;
     using System.Runtime.CompilerServices;
 
     /// <summary>
@@ -16,11 +17,13 @@
         /// <param name="extraEnvironmentVariables">Environment variables to pass.</param>
         /// <param name="callerMemberName">The caller of the process.</param>
         /// <param name="includeStandardArguments">Include standard git arguments to make it work nicer with this tool.</param>
+        /// <param name="scheduler">The scheduler to run the GIT process on.</param>
         /// <returns>A task which will return the exit code from GIT.</returns>
         IObservable<string> RunGit(
             IEnumerable<string> gitArguments,
             IDictionary<string, string> extraEnvironmentVariables = null,
             [CallerMemberName] string callerMemberName = null,
-            bool includeStandardArguments = true);
+            bool includeStandardArguments = true,
+            IScheduler scheduler = null);
     }
 }

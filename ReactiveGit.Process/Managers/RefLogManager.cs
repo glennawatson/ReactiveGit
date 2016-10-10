@@ -1,6 +1,7 @@
 ﻿namespace ReactiveGit.Process.Managers
 {
     using System;
+    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
 
     using ReactiveGit.Core.Exceptions;
@@ -24,11 +25,11 @@
         }
 
         /// <inheritdoc />
-        public IObservable<GitRefLog> GetRefLog(GitBranch branch)
+        public IObservable<GitRefLog> GetRefLog(GitBranch branch, IScheduler scheduler = null)
         {
             string[] arguments = { "reflog", "--format=\"%H\u001f%h\u001f%gd\u001f%gs\u001f%ci\"", branch.FriendlyName };
 
-            return this.gitProcessManager.RunGit(arguments).Select(StringToRefLog);
+            return this.gitProcessManager.RunGit(arguments, scheduler: scheduler).Select(StringToRefLog);
         }
 
         private static GitRefLog StringToRefLog(string line)

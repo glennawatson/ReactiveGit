@@ -30,12 +30,14 @@
                                     Header="Date Time" />
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Reset">
-                        <MenuItem x:Name="ResetHardMenuItem" Header="Hard - Delete Changes" />
-                        <MenuItem x:Name="ResetSoftMenuItem" Header="Soft - Keep Changes" />
-                        <MenuItem x:Name="ResetMixedMenuItem" Header="Mixed - Reset Index/Keep Working Directory" />
-                    </MenuItem>
+                <ContextMenu x:Name="DataItemContextMenu">
+                    <ContextMenu.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Command" Value="{Binding ExecuteAction}" />
+                            <Setter Property="Header" Value="{Binding Name}" />
+                            <Setter Property="ItemsSource" Value="{Binding ChildActions}" />
+                        </Style>
+                    </ContextMenu.ItemContainerStyle>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>

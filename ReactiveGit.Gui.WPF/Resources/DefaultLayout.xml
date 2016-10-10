@@ -1,0 +1,30 @@
+﻿<?xml version="1.0"?>
+<LayoutRoot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <RootPanel Orientation="Vertical">
+    <LayoutPanel Orientation="Horizontal">
+      <LayoutDocumentPane />
+      <LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="150">
+        <LayoutAnchorablePaneGroup Orientation="Horizontal" FloatingWidth="150" FloatingHeight="290" FloatingLeft="580" FloatingTop="382">
+          <LayoutAnchorablePane FloatingWidth="150" FloatingHeight="290" FloatingLeft="580" FloatingTop="382">
+            <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Branches" IsSelected="True" ContentId="BranchViewModel" FloatingLeft="580" FloatingTop="382" FloatingWidth="150" FloatingHeight="290" LastActivationTimeStamp="10/10/2016 11:23:51" PreviousContainerId="e15329fc-1f0f-4d97-8188-bebbb970a737" PreviousContainerIndex="3" />
+          </LayoutAnchorablePane>
+        </LayoutAnchorablePaneGroup>
+        <LayoutAnchorablePane Id="e15329fc-1f0f-4d97-8188-bebbb970a737" Name="ToolsPane" DockWidth="150">
+          <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Tags" IsSelected="True" ContentId="TagViewModel" LastActivationTimeStamp="10/10/2016 11:23:52" />
+          <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Undo Stack" ContentId="RefLogViewModel" />
+        </LayoutAnchorablePane>
+      </LayoutAnchorablePaneGroup>
+    </LayoutPanel>
+    <LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="145.19" FloatingWidth="150" FloatingHeight="290" FloatingLeft="392" FloatingTop="545">
+      <LayoutAnchorablePane DockHeight="145.19" FloatingWidth="150" FloatingHeight="290" FloatingLeft="392" FloatingTop="545">
+        <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Output" IsSelected="True" ContentId="OutputViewModel" FloatingLeft="392" FloatingTop="545" FloatingWidth="150" FloatingHeight="290" LastActivationTimeStamp="10/10/2016 11:23:58" PreviousContainerId="e15329fc-1f0f-4d97-8188-bebbb970a737" PreviousContainerIndex="1" />
+      </LayoutAnchorablePane>
+    </LayoutAnchorablePaneGroup>
+  </RootPanel>
+  <TopSide />
+  <RightSide />
+  <LeftSide />
+  <BottomSide />
+  <FloatingWindows />
+  <Hidden />
+</LayoutRoot>

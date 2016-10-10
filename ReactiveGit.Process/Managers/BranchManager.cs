@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive;
+    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Text;
@@ -41,7 +42,7 @@
         }
 
         /// <inheritdoc />
-        public IObservable<Unit> CheckoutBranch(GitBranch branch, bool force = false)
+        public IObservable<Unit> CheckoutBranch(GitBranch branch, bool force = false, IScheduler scheduler = null)
         {
             IList<string> arguments = new List<string> { $"checkout {branch.FriendlyName}" };
 
@@ -50,30 +51,29 @@
                 arguments.Add("-f");
             }
 
-            IObservable<Unit> observable = this.gitProcessManager.RunGit(arguments).WhenDone();
+            IObservable<Unit> observable = this.gitProcessManager.RunGit(arguments, scheduler: scheduler).WhenDone();
             return observable.Finally(() => this.currentBranch.OnNext(branch));
         }
 
         /// <inheritdoc />
-        public int GetCommitCount(GitBranch branchName)
+        public int GetCommitCount(GitBranch branchName, IScheduler scheduler = null)
         {
             return
                 Convert.ToInt32(
-                    this.gitProcessManager.RunGit(new[] { $"rev-list --count {branchName.FriendlyName}" }).ToList().Wait
-                        ().First());
+                    this.gitProcessManager.RunGit(new[] { $"rev-list --count {branchName.FriendlyName}" }, scheduler: scheduler).ToList().Wait().First());
         }
 
         /// <inheritdoc />
-        public string GetCommitMessageLong(GitCommit commit)
+        public string GetCommitMessageLong(GitCommit commit, IScheduler scheduler = null)
         {
             IList<string> result =
-                this.gitProcessManager.RunGit(new[] { "log", "--format=%B", "-n 1", commit.Sha }).Select(
+                this.gitProcessManager.RunGit(new[] { "log", "--format=%B", "-n 1", commit.Sha }, scheduler: scheduler).Select(
                     x => x.Trim().Trim('\r', '\n')).ToList().Wait();
             return string.Join("\r\n", result).Trim().Trim('\r', '\n', ' ');
         }
 
         /// <inheritdoc />
-        public IObservable<string> GetCommitMessagesAfterParent(GitCommit parent)
+        public IObservable<string> GetCommitMessagesAfterParent(GitCommit parent, IScheduler scheduler = null)
         {
             return Observable.Create<string>(
                 async (observer, token) =>
@@ -85,7 +85,7 @@
                                 0,
                                 GitLogOptions.None,
                                 $"{parent.Sha}..HEAD");
-                        this.gitProcessManager.RunGit(arguments).Select(
+                        this.gitProcessManager.RunGit(arguments, scheduler: scheduler).Select(
                             x => this.ConvertStringToGitCommit(x).MessageLong.Trim('\r', '\n')).Subscribe(
                             observer.OnNext,
                             observer.OnCompleted,
@@ -98,38 +98,39 @@
             GitBranch branch,
             int skip,
             int limit,
-            GitLogOptions logOptions)
+            GitLogOptions logOptions,
+            IScheduler scheduler = null)
         {
             string[] arguments =
                 new[] { "log" }.Concat(this.ExtractLogParameter(branch, skip, limit, logOptions, "HEAD")).ToArray();
 
-            return this.gitProcessManager.RunGit(arguments).Select(this.ConvertStringToGitCommit);
+            return this.gitProcessManager.RunGit(arguments, scheduler: scheduler).Select(this.ConvertStringToGitCommit);
         }
 
         /// <inheritdoc />
-        public IObservable<GitBranch> GetLocalAndRemoteBranches()
+        public IObservable<GitBranch> GetLocalAndRemoteBranches(IScheduler scheduler = null)
         {
-            return this.GetLocalBranches().Merge(this.GetRemoteBranches());
+            return this.GetLocalBranches(scheduler).Merge(this.GetRemoteBranches());
         }
 
         /// <inheritdoc />
-        public IObservable<GitBranch> GetLocalBranches()
+        public IObservable<GitBranch> GetLocalBranches(IScheduler scheduler = null)
         {
             return
-                this.gitProcessManager.RunGit(new[] { "branch" }).Select(
+                this.gitProcessManager.RunGit(new[] { "branch" }, scheduler: scheduler).Select(
                     line => new GitBranch(line.Substring(2), false, line[0] == '*'));
         }
 
         /// <inheritdoc />
-        public IObservable<GitBranch> GetRemoteBranch(GitBranch branch)
+        public IObservable<GitBranch> GetRemoteBranch(GitBranch branch, IScheduler scheduler = null)
         {
             return Observable.Return<GitBranch>(null);
         }
 
         /// <inheritdoc />
-        public IObservable<GitBranch> GetRemoteBranches()
+        public IObservable<GitBranch> GetRemoteBranches(IScheduler scheduler = null)
         {
-            return this.gitProcessManager.RunGit(new[] { "branch" }).Select(
+            return this.gitProcessManager.RunGit(new[] { "branch" }, scheduler: scheduler).Select(
                 line =>
                     {
                         int arrowPos = line.IndexOf(" -> ", StringComparison.InvariantCulture);
@@ -144,17 +145,17 @@
         }
 
         /// <inheritdoc />
-        public IObservable<bool> IsMergeConflict()
+        public IObservable<bool> IsMergeConflict(IScheduler scheduler = null)
         {
-            return this.gitProcessManager.RunGit(new[] { "ls-files", "-u" }).Any();
+            return this.gitProcessManager.RunGit(new[] { "ls-files", "-u" }, scheduler: scheduler).Any();
         }
 
         /// <inheritdoc />
-        public IObservable<bool> IsWorkingDirectoryDirty()
+        public IObservable<bool> IsWorkingDirectoryDirty(IScheduler scheduler = null)
         {
             string[] arguments = { "status", "--porcelain", "--ignore-submodules=dirty", "--untracked-files=all" };
 
-            return this.gitProcessManager.RunGit(arguments).Any();
+            return this.gitProcessManager.RunGit(arguments, scheduler: scheduler).Any();
         }
 
         private static void GenerateFormat(IList<string> arguments)

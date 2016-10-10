@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Reactive;
+    using System.Reactive.Concurrency;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reflection;
@@ -88,13 +89,13 @@
         }
 
         /// <inheritdoc />
-        public IObservable<Unit> Abort()
+        public IObservable<Unit> Abort(IScheduler scheduler = null)
         {
-            return this.gitProcess.RunGit(new[] { "rebase --abort" }).WhenDone();
+            return this.gitProcess.RunGit(new[] { "rebase --abort" }, scheduler: scheduler).WhenDone();
         }
 
         /// <inheritdoc />
-        public IObservable<Unit> Continue(string commitMessage)
+        public IObservable<Unit> Continue(string commitMessage, IScheduler scheduler = null)
         {
             return Observable.Create<Unit>(
                 observer =>
@@ -117,7 +118,7 @@
 
                         var environmentVariables = new Dictionary<string, string> { { "COMMENT_FILE_NAME", fileName } };
 
-                        IDisposable running = this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(
+                        IDisposable running = this.gitProcess.RunGit(gitArguments, environmentVariables, scheduler: scheduler).Subscribe(
                             _ => { },
                             observer.OnError,
                             () =>
@@ -131,9 +132,9 @@
         }
 
         /// <inheritdoc />
-        public IObservable<bool> HasConflicts()
+        public IObservable<bool> HasConflicts(IScheduler scheduler = null)
         {
-            return this.branchManager.IsMergeConflict();
+            return this.branchManager.IsMergeConflict(scheduler);
         }
 
         /// <inheritdoc />
@@ -145,7 +146,7 @@
         }
 
         /// <inheritdoc />
-        public IObservable<Unit> Rebase(GitBranch parentBranch)
+        public IObservable<Unit> Rebase(GitBranch parentBranch, IScheduler scheduler = null)
         {
             return Observable.Create<Unit>(
                 async (observer, token) =>
@@ -158,7 +159,7 @@
 
                         IList<string> gitArguments = new List<string> { $"rebase -i  {parentBranch.FriendlyName}" };
 
-                        this.gitProcess.RunGit(gitArguments).Subscribe(
+                        this.gitProcess.RunGit(gitArguments, scheduler: scheduler).Subscribe(
                             _ => { }, 
                             observer.OnError,
                             () =>
@@ -170,13 +171,13 @@
         }
 
         /// <inheritdoc />
-        public IObservable<Unit> Skip()
+        public IObservable<Unit> Skip(IScheduler scheduler = null)
         {
-            return this.gitProcess.RunGit(new[] { "rebase --skip" }).WhenDone();
+            return this.gitProcess.RunGit(new[] { "rebase --skip" }, scheduler: scheduler).WhenDone();
         }
 
         /// <inheritdoc />
-        public IObservable<Unit> Squash(string newCommitMessage, GitCommit startCommit)
+        public IObservable<Unit> Squash(string newCommitMessage, GitCommit startCommit, IScheduler scheduler = null)
         {
             return Observable.Create<Unit>(
                 async (observer, token) =>
@@ -206,7 +207,7 @@
                                                              $"rebase -i  {startCommit.Sha}"
                                                          };
 
-                        this.gitProcess.RunGit(gitArguments, environmentVariables).Subscribe(
+                        this.gitProcess.RunGit(gitArguments, environmentVariables, scheduler: scheduler).Subscribe(
                             _ => { },
                             observer.OnError,
                             () =>

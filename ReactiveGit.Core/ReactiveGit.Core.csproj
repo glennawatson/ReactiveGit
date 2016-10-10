@@ -36,6 +36,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\ReactiveGit.Core.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>..\git.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -60,11 +62,13 @@
     <Compile Include="Managers\IRebaseManager.cs" />
     <Compile Include="Managers\IRefLogManager.cs" />
     <Compile Include="Managers\IRepositoryCreator.cs" />
+    <Compile Include="Managers\ITagManager.cs" />
     <Compile Include="Model\AsyncMemoizingMRUCache.cs" />
     <Compile Include="Model\GitBranch.cs" />
     <Compile Include="Model\GitCommit.cs" />
     <Compile Include="Model\GitLogOptions.cs" />
     <Compile Include="Model\GitRefLog.cs" />
+    <Compile Include="Model\GitTag.cs" />
     <Compile Include="Model\IGitIdObject.cs" />
     <Compile Include="Model\ResetMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Reactive;
+    using System.Reactive.Concurrency;
     using System.Reactive.Linq;
 
     using ReactiveGit.Core.Exceptions;
@@ -30,7 +31,7 @@
         /// </summary>
         /// <param name="directoryPath">The path to the new repository.</param>
         /// <returns>An observable monitoring the action.</returns>
-        public IObservable<Unit> CreateRepository(string directoryPath)
+        public IObservable<Unit> CreateRepository(string directoryPath, IScheduler scheduler = null)
         {
             return Observable.Create<Unit>(
                 observer =>
@@ -46,7 +47,7 @@
                         }
 
                         IGitProcessManager gitProcess = this.processManagerFunc(directoryPath);
-                        IDisposable disposable = gitProcess.RunGit(new[] { "init" }).Subscribe(
+                        IDisposable disposable = gitProcess.RunGit(new[] { "init" }, scheduler: scheduler).Subscribe(
                             _ => { },
                             observer.OnError,
                             () =>

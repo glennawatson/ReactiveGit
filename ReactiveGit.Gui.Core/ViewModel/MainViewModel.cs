@@ -74,6 +74,7 @@ namespace ReactiveGit.Gui.Core.ViewModel
             this.newRepository =
                 ReactiveCommand.CreateFromObservable(
                     () => this.SelectFolder.Handle("Select new folder for GIT repository"));
+
             this.newRepository.Subscribe(
                 x =>
                     repositoryFactory.CreateRepositoryCreator().CreateRepository(x).Subscribe(

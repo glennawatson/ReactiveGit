@@ -37,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\ReactiveGit.Gui.Core.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>..\git.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
@@ -65,6 +66,9 @@
     <Compile Include="ViewModel\Factories\DefaultRepositoryViewModelFactory.cs" />
     <Compile Include="ViewModel\Factories\IRepositoryViewModelFactory.cs" />
     <Compile Include="ViewModel\GitObject\GitObjectViewModelBase.cs" />
+    <Compile Include="ViewModel\GitObject\IGitObjectAction.cs" />
+    <Compile Include="ViewModel\GitObject\InfoGitObjectAction.cs" />
+    <Compile Include="ViewModel\GitObject\ObservableGitObjectAction.cs" />
     <Compile Include="ViewModel\Gravatar\GravatarViewModel.cs" />
     <Compile Include="ViewModel\GitObject\IGitObjectViewModel.cs" />
     <Compile Include="ViewModel\IMainViewModel.cs" />
@@ -78,6 +82,8 @@
     <Compile Include="ViewModel\RefLog\RefLogViewModel.cs" />
     <Compile Include="ViewModel\Repository\IRepositoryDocumentViewModel.cs" />
     <Compile Include="ViewModel\Repository\RepositoryDocumentViewModel.cs" />
+    <Compile Include="ViewModel\Tag\ITagViewModel.cs" />
+    <Compile Include="ViewModel\Tag\TagViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

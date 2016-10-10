@@ -1,4 +1,4 @@
-﻿namespace ReactiveGit.Gui.WPF
+﻿namespace ReactiveGit.Gui.WPF.ViewModel
 {
     using System;
 
@@ -11,6 +11,7 @@
     using ReactiveGit.Gui.Core.ViewModel.Output;
     using ReactiveGit.Gui.Core.ViewModel.RefLog;
     using ReactiveGit.Gui.Core.ViewModel.Repository;
+    using ReactiveGit.Gui.Core.ViewModel.Tag;
     using ReactiveGit.Gui.WPF.Factories;
     using ReactiveGit.Gui.WPF.View;
 
@@ -46,18 +47,26 @@
         /// <param name="dependencyResolver">The dependency resolver.</param>
         private void RegisterParts(IMutableDependencyResolver dependencyResolver)
         {
+            // Make sure Splat and ReactiveUI are already configured in the locator
+            // so that our override runs last
+            Locator.CurrentMutable.InitializeSplat();
+            Locator.CurrentMutable.InitializeReactiveUI();
+
             dependencyResolver.RegisterConstant<IScreen>(this);
             dependencyResolver.RegisterConstant<IRepositoryViewModelFactory>(new DefaultRepositoryViewModelFactory());
             dependencyResolver.RegisterConstant<IRepositoryFactory>(new DefaultRepositoryFactory());
+            dependencyResolver.RegisterConstant<IWindowLayoutViewModel>(new WindowLayoutViewModel());
+            dependencyResolver.Register<ILayoutViewModel>(() => new LayoutViewModel());
 
             dependencyResolver.Register<MainViewModel, IMainViewModel>();
-
+            dependencyResolver.RegisterConstant<IActivationForViewFetcher>(new DispatcherActivationForViewFetcher());
             dependencyResolver.Register<IViewFor<MainViewModel>>(() => new MainView());
             dependencyResolver.Register<IViewFor<BranchViewModel>>(() => new BranchesView());
             dependencyResolver.Register<IViewFor<RefLogViewModel>>(() => new RefLogView());
             dependencyResolver.Register<IViewFor<CommitHistoryViewModel>>(() => new HistoryView());
             dependencyResolver.Register<IViewFor<OutputViewModel>>(() => new OutputView());
             dependencyResolver.Register<IViewFor<RepositoryDocumentViewModel>>(() => new RepositoryView());
+            dependencyResolver.Register<IViewFor<TagViewModel>>(() => new TagView());
         }
     }
 }

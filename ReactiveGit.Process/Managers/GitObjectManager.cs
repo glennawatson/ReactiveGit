@@ -1,7 +1,9 @@
 ﻿namespace ReactiveGit.Process.Managers
 {
     using System;
+    using System.Collections.Generic;
     using System.Reactive;
+    using System.Reactive.Concurrency;
 
     using ReactiveGit.Core.ExtensionMethods;
     using ReactiveGit.Core.Managers;
@@ -29,11 +31,28 @@
         }
 
         /// <inheritdoc />
-        public IObservable<Unit> Reset(IGitIdObject gitObject, ResetMode resetMode)
+        public IObservable<Unit> Reset(IGitIdObject gitObject, ResetMode resetMode, IScheduler scheduler = null)
         {
             string[] arguments = { "reset", $"--{resetMode.ToString().ToLowerInvariant()}", gitObject.Sha };
 
-            return this.gitProcessManager.RunGit(arguments).WhenDone();
+            return this.gitProcessManager.RunGit(arguments, scheduler: scheduler).WhenDone();
+        }
+
+        /// <inheritdoc />
+        public IObservable<Unit> Checkout(IGitIdObject gitObject, bool force, IScheduler scheduler = null)
+        {
+            IList<string> arguments = new List<string>();
+
+            arguments.Add("checkout");
+
+            if (force)
+            {
+                arguments.Add("--force");
+            }
+
+            arguments.Add(gitObject.Sha);
+
+            return this.gitProcessManager.RunGit(arguments, scheduler: scheduler).WhenDone();
         }
     }
 }

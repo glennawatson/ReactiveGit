@@ -1,6 +1,7 @@
 ﻿namespace ReactiveGit.Gui.Core.ViewModel.GitObject
 {
     using System;
+    using System.Collections.Generic;
     using System.Reactive;
     using System.Reactive.Linq;
     using System.Windows.Input;
@@ -19,32 +20,33 @@
     /// </summary>
     public abstract class GitObjectViewModelBase : ContentViewModelBase, IGitObjectViewModel
     {
-        private readonly ReactiveCommand<IGitIdObject, Unit> resetHard;
-
-        private readonly ReactiveCommand<IGitIdObject, Unit> resetMixed;
-
-        private readonly ReactiveCommand<IGitIdObject, Unit> resetSoft;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GitObjectViewModelBase" /> class.
         /// </summary>
-        protected GitObjectViewModelBase()
+        /// <param name="actions">Additional actions provided by the derived class</param>
+        protected GitObjectViewModelBase(IReadOnlyList<IGitObjectAction> actions = null)
         {
-            IObservable<bool> canReset =
-                this.WhenAnyValue(x => x.RepositoryDetails, x => x.RepositoryDetails.SelectedBranch).Select(
-                    x => (x.Item1 != null) && (x.Item2 != null));
-            this.resetHard =
-                ReactiveCommand.CreateFromObservable<IGitIdObject, Unit>(
-                    x => this.ResetImpl(x, ResetMode.Hard),
-                    canReset);
-            this.resetSoft =
-                ReactiveCommand.CreateFromObservable<IGitIdObject, Unit>(
-                    x => this.ResetImpl(x, ResetMode.Soft),
-                    canReset);
-            this.resetMixed =
-                ReactiveCommand.CreateFromObservable<IGitIdObject, Unit>(
-                    x => this.ResetImpl(x, ResetMode.Mixed),
-                    canReset);
+            var validGitObject = this.WhenAnyValue(x => x.SelectedGitObject).Select(x => x != null);
+
+            var gitObjectActions = new ReactiveList<IGitObjectAction>();
+            if (actions != null)
+            {
+                gitObjectActions.AddRange(actions);
+            }
+
+            var resetActions = new List<IGitObjectAction>()
+            {
+                new ObservableGitObjectAction("Hard - Delete Changes", ReactiveCommand.CreateFromObservable(() => this.ResetImpl(this.SelectedGitObject, ResetMode.Hard),  validGitObject)),
+                new ObservableGitObjectAction("Soft - Keep Changes", ReactiveCommand.CreateFromObservable(() => this.ResetImpl(this.SelectedGitObject, ResetMode.Soft),  validGitObject)),
+                new ObservableGitObjectAction("Mixed - Reset Index/Keep Working Directory", ReactiveCommand.CreateFromObservable(() => this.ResetImpl(this.SelectedGitObject, ResetMode.Mixed),  validGitObject)),
+            };
+
+            gitObjectActions.Add(new InfoGitObjectAction("Reset", resetActions));
+
+            gitObjectActions.Add(new ObservableGitObjectAction("Checkout", ReactiveCommand.CreateFromObservable(() => this.CheckoutImpl(this.SelectedGitObject, false), validGitObject)));
+            gitObjectActions.Add(new ObservableGitObjectAction("Checkout (force)", ReactiveCommand.CreateFromObservable(() => this.CheckoutImpl(this.SelectedGitObject, true), validGitObject)));
+
+            this.Actions = gitObjectActions;
         }
 
         /// <inheritdoc />
@@ -57,13 +59,7 @@
         public IRepositoryDetails RepositoryDetails { get; set; }
 
         /// <inheritdoc />
-        public ICommand ResetHard => this.resetHard;
-
-        /// <inheritdoc />
-        public ICommand ResetMixed => this.resetMixed;
-
-        /// <inheritdoc />
-        public ICommand ResetSoft => this.resetSoft;
+        public IReadOnlyList<IGitObjectAction> Actions { get; }
 
         /// <inheritdoc />
         [Reactive]
@@ -77,6 +73,11 @@
 
             return canCompleteObservable.CompleteIfTrue(
                     this.RepositoryDetails.GitObjectManager.Reset(gitIdObject, resetMode));
+        }
+
+        private IObservable<Unit> CheckoutImpl(IGitIdObject gitObject, bool force)
+        {
+            return this.RepositoryDetails.GitObjectManager.Checkout(gitObject, force);
         }
     }
 }

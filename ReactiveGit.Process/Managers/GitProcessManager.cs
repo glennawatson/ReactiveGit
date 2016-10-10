@@ -5,6 +5,8 @@
     using System.Diagnostics;
     using System.IO;
     using System.Reactive;
+    using System.Reactive.Concurrency;
+    using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Runtime.CompilerServices;
@@ -45,84 +47,91 @@
         /// <inheritdoc />
         public string RepositoryPath { get; }
 
-        /// <summary>
-        /// Runs a new instance of GIT.
-        /// </summary>
-        /// <param name="gitArgumentsEnumerable">The arguments to pass to GIT.</param>
-        /// <param name="extraEnvironmentVariables">Any environment variables to pass for the process.</param>
-        /// <param name="callerMemberName">The member calling the process.</param>
-        /// <param name="includeStandardArguments">If to include standard arguments useful in a script environment.</param>
-        /// <returns>A task which will return the response from the GIT process.</returns>
+        /// <inheritdoc />
         public IObservable<string> RunGit(
             IEnumerable<string> gitArgumentsEnumerable,
             IDictionary<string, string> extraEnvironmentVariables = null,
             [CallerMemberName] string callerMemberName = null,
-            bool includeStandardArguments = true)
+            bool includeStandardArguments = true,
+            IScheduler scheduler = null)
         {
+            scheduler = scheduler ?? TaskPoolScheduler.Default;
             return Observable.Create<string>(
-                async (observer, token) =>
+                (observer) =>
                     {
-                        string gitArguments = string.Join(" ", gitArgumentsEnumerable);
-                        if (includeStandardArguments)
-                        {
-                            gitArguments =
-                                $"--no-pager -c color.branch=false -c color.diff=false -c color.status=false -c diff.mnemonicprefix=false -c core.quotepath=false {gitArguments}";
-                        }
+                        var d = new CompositeDisposable();
 
-                        this.gitOutput.OnNext($"execute: git {gitArguments}");
-
-                        using (Process process = CreateGitProcess(gitArguments, this.RepositoryPath))
-                        {
-                            if (extraEnvironmentVariables != null)
-                            {
-                                foreach (KeyValuePair<string, string> kvp in extraEnvironmentVariables)
+                        IDisposable schedule = scheduler.ScheduleAsync(
+                            async (ctrl, token) =>
                                 {
-                                    process.StartInfo.EnvironmentVariables.Add(kvp.Key, kvp.Value);
-                                }
-                            }
-
-                            var errorOutput = new StringBuilder();
-                            process.ErrorDataReceived += (sender, e) =>
-                                {
-                                    if (e.Data == null)
+                                    string gitArguments = string.Join(" ", gitArgumentsEnumerable);
+                                    if (includeStandardArguments)
                                     {
-                                        return;
+                                        gitArguments =
+                                            $"--no-pager -c color.branch=false -c color.diff=false -c color.status=false -c diff.mnemonicprefix=false -c core.quotepath=false {gitArguments}";
                                     }
 
-                                    this.gitOutput.OnNext(e.Data);
-                                    errorOutput.AppendLine(e.Data);
-                                    observer.OnNext(e.Data);
-                                };
+                                    this.gitOutput.OnNext($"execute: git {gitArguments}");
 
-                            process.OutputDataReceived += (sender, e) =>
-                                {
-                                    if (e.Data == null)
+                                    using (Process process = CreateGitProcess(gitArguments, this.RepositoryPath))
                                     {
-                                        return;
+                                        if (extraEnvironmentVariables != null)
+                                        {
+                                            foreach (KeyValuePair<string, string> kvp in extraEnvironmentVariables)
+                                            {
+                                                process.StartInfo.EnvironmentVariables.Add(kvp.Key, kvp.Value);
+                                            }
+                                        }
+
+                                        var errorOutput = new StringBuilder();
+                                        process.ErrorDataReceived += (sender, e) =>
+                                            {
+                                                if (e.Data == null)
+                                                {
+                                                    return;
+                                                }
+
+                                                this.gitOutput.OnNext(e.Data);
+                                                errorOutput.AppendLine(e.Data);
+                                                observer.OnNext(e.Data);
+                                            };
+
+                                        process.OutputDataReceived += (sender, e) =>
+                                            {
+                                                if (e.Data == null)
+                                                {
+                                                    return;
+                                                }
+
+                                                this.gitOutput.OnNext(e.Data);
+                                                errorOutput.AppendLine(e.Data);
+                                                observer.OnNext(e.Data);
+                                            };
+
+                                        if (token.IsCancellationRequested)
+                                        {
+                                            observer.OnCompleted();
+                                            return Disposable.Empty;
+                                        }
+
+                                        int returnValue = await RunProcessAsync(process, token);
+
+                                        if (returnValue != 0)
+                                        {
+                                            observer.OnError(
+                                                new GitProcessException(gitArguments, errorOutput.ToString()));
+                                        }
+
+                                        observer.OnCompleted();
+
+                                        this.gitUpdated.OnNext(Unit.Default);
+
+                                        return Disposable.Empty;
                                     }
+                                });
+                        d.Add(schedule);
+                        return d;
 
-                                    this.gitOutput.OnNext(e.Data);
-                                    errorOutput.AppendLine(e.Data);
-                                    observer.OnNext(e.Data);
-                                };
-
-                            if (token.IsCancellationRequested)
-                            {
-                                observer.OnCompleted();
-                                return;
-                            }
-
-                            int returnValue = await RunProcessAsync(process, token);
-
-                            if (returnValue != 0)
-                            {
-                                observer.OnError(new GitProcessException(gitArguments, errorOutput.ToString()));
-                            }
-
-                            observer.OnCompleted();
-
-                            this.gitUpdated.OnNext(Unit.Default);
-                        }
                     });
         }
 
