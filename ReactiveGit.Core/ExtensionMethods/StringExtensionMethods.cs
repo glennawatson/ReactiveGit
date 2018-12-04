@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Core.ExtensionMethods
+﻿// <copyright file="StringExtensionMethods.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Core.ExtensionMethods
 {
     using System;
 
@@ -16,7 +21,7 @@
         {
             if (str == null)
             {
-                return new string[0];
+                return Array.Empty<string>();
             }
 
             return str.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -29,8 +34,7 @@
         /// <returns>The string minus any new lines.</returns>
         public static string TrimEmptyLines(this string input)
         {
-            input = input.Trim('\r', '\n');
-            input = input.Trim();
+            input = input.Trim('\r', '\n').Trim();
 
             return input;
         }

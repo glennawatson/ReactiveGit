@@ -1,4 +1,11 @@
-﻿namespace ReactiveGit.Core.Model
+﻿// <copyright file="GitBranch.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using System.Globalization;
+
+namespace ReactiveGit.Core.Model
 {
     using System;
     using System.Diagnostics;
@@ -71,7 +78,7 @@
                 return false;
             }
 
-            return ReferenceEquals(this, other) || string.Equals(this.FriendlyName, other.FriendlyName);
+            return ReferenceEquals(this, other) || string.Equals(this.FriendlyName, other.FriendlyName, StringComparison.InvariantCulture);
         }
 
         /// <inheritdoc />

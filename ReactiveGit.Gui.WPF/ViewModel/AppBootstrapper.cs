@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Gui.WPF.ViewModel
+﻿// <copyright file="AppBootstrapper.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Gui.WPF.ViewModel
 {
     using System;
 
@@ -60,13 +65,13 @@
 
             dependencyResolver.Register<MainViewModel, IMainViewModel>();
             dependencyResolver.RegisterConstant<IActivationForViewFetcher>(new DispatcherActivationForViewFetcher());
-            dependencyResolver.Register<IViewFor<MainViewModel>>(() => new MainView());
-            dependencyResolver.Register<IViewFor<BranchViewModel>>(() => new BranchesView());
-            dependencyResolver.Register<IViewFor<RefLogViewModel>>(() => new RefLogView());
-            dependencyResolver.Register<IViewFor<CommitHistoryViewModel>>(() => new HistoryView());
-            dependencyResolver.Register<IViewFor<OutputViewModel>>(() => new OutputView());
-            dependencyResolver.Register<IViewFor<RepositoryDocumentViewModel>>(() => new RepositoryView());
-            dependencyResolver.Register<IViewFor<TagViewModel>>(() => new TagView());
+            dependencyResolver.Register<IViewFor<IMainViewModel>>(() => new MainView());
+            dependencyResolver.Register<IViewFor<IBranchViewModel>>(() => new BranchesView());
+            dependencyResolver.Register<IViewFor<IRefLogViewModel>>(() => new RefLogView());
+            dependencyResolver.Register<IViewFor<ICommitHistoryViewModel>>(() => new HistoryView());
+            dependencyResolver.Register<IViewFor<IOutputViewModel>>(() => new OutputView());
+            dependencyResolver.Register<IViewFor<IRepositoryDocumentViewModel>>(() => new RepositoryView());
+            dependencyResolver.Register<IViewFor<ITagViewModel>>(() => new TagView());
         }
     }
 }

@@ -1,3 +1,8 @@
+// <copyright file="IContentViewModelBase.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
 namespace ReactiveGit.Gui.Core.ViewModel.Content
 {
     using System.ComponentModel;

@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Process.Managers
+﻿// <copyright file="RepositoryCreator.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Process.Managers
 {
     using System;
     using System.IO;
@@ -30,6 +35,7 @@
         /// Creates a repository.
         /// </summary>
         /// <param name="directoryPath">The path to the new repository.</param>
+        /// <param name="scheduler">The scheduler to use when creating the repository.</param>
         /// <returns>An observable monitoring the action.</returns>
         public IObservable<Unit> CreateRepository(string directoryPath, IScheduler scheduler = null)
         {

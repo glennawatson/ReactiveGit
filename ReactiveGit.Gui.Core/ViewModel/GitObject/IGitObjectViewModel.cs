@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel.GitObject
+﻿// <copyright file="IGitObjectViewModel.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Gui.Core.ViewModel.GitObject
 {
     using System.Collections.Generic;
     using System.Windows.Input;

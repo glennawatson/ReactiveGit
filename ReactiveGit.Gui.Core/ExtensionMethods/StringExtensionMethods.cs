@@ -1,4 +1,11 @@
-﻿namespace ReactiveGit.Gui.Core.ExtensionMethods
+﻿// <copyright file="StringExtensionMethods.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using System.Globalization;
+
+namespace ReactiveGit.Gui.Core.ExtensionMethods
 {
     using System.Text;
 
@@ -24,10 +31,10 @@
             var sb = new StringBuilder();
             foreach (byte character in hash)
             {
-                sb.Append(character.ToString("X2"));
+                sb.Append(character.ToString("X2", CultureInfo.InvariantCulture));
             }
 
-            return sb.ToString().ToLowerInvariant();
+            return sb.ToString().ToUpperInvariant();
         }
     }
 }

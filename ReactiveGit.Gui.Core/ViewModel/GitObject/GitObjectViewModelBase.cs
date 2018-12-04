@@ -1,4 +1,11 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel.GitObject
+﻿// <copyright file="GitObjectViewModelBase.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using DynamicData.Binding;
+
+namespace ReactiveGit.Gui.Core.ViewModel.GitObject
 {
     using System;
     using System.Collections.Generic;
@@ -23,12 +30,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="GitObjectViewModelBase" /> class.
         /// </summary>
-        /// <param name="actions">Additional actions provided by the derived class</param>
+        /// <param name="actions">Additional actions provided by the derived class.</param>
         protected GitObjectViewModelBase(IReadOnlyList<IGitObjectAction> actions = null)
         {
             var validGitObject = this.WhenAnyValue(x => x.SelectedGitObject).Select(x => x != null);
 
-            var gitObjectActions = new ReactiveList<IGitObjectAction>();
+            var gitObjectActions = new ObservableCollectionExtended<IGitObjectAction>();
             if (actions != null)
             {
                 gitObjectActions.AddRange(actions);

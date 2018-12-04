@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel.Gravatar
+﻿// <copyright file="GravatarViewModel.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Gui.Core.ViewModel.Gravatar
 {
     using System;
     using System.IO;
@@ -19,12 +24,7 @@
     /// </summary>
     public class GravatarViewModel : ReactiveObject
     {
-        private static readonly AsyncMemoizingMRUCache<string, IBitmap> Cache;
-
-        static GravatarViewModel()
-        {
-            Cache = new AsyncMemoizingMRUCache<string, IBitmap>(GetBitmap, 100);
-        }
+        private static readonly AsyncMemoizingMRUCache<string, IBitmap> Cache = new AsyncMemoizingMRUCache<string, IBitmap>(GetBitmapAsync, RxApp.BigCacheLimit);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GravatarViewModel" /> class.
@@ -50,20 +50,17 @@
         [Reactive]
         public IBitmap GravatarBitmap { get; set; }
 
-        private static async Task<IBitmap> GetBitmap(string emailAddress, object ignore)
+        private static async Task<IBitmap> GetBitmapAsync(string emailAddress, object ignore)
         {
             using (var wc = new HttpClient())
             {
                 byte[] imageByteArray =
-                    await wc.GetByteArrayAsync($"http://gravatar.com/avatar/{emailAddress.Md5Encode()}?d=retro&s=60");
+                    await wc.GetByteArrayAsync($"http://gravatar.com/avatar/{emailAddress.Md5Encode()}?d=retro&s=60").ConfigureAwait(true);
 
                 using (var ms = new MemoryStream(imageByteArray))
                 {
                     // IBitmap is a type that provides basic image information such as dimensions
-                    IBitmap profileImage =
-                        await
-                            BitmapLoader.Current.Load(ms, null /* Use original width */, null /* Use original height */);
-                    return profileImage;
+                    return await BitmapLoader.Current.Load(ms, null /* Use original width */, null /* Use original height */).ConfigureAwait(false);
                 }
             }
         }

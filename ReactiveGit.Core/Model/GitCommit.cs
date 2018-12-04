@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Core.Model
+﻿// <copyright file="GitCommit.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Core.Model
 {
     using System;
     using System.Collections.Generic;
@@ -139,7 +144,7 @@
                 return false;
             }
 
-            return ReferenceEquals(this, other) || string.Equals(this.Sha, other.Sha);
+            return ReferenceEquals(this, other) || string.Equals(this.Sha, other.Sha, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc />

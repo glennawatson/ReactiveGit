@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Gui.WPF.View
+﻿// <copyright file="MainView.xaml.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Gui.WPF.View
 {
     using System;
     using System.Reactive.Disposables;
@@ -14,9 +19,9 @@
     using Splat;
 
     /// <summary>
-    /// Interaction logic for MainView
+    /// Interaction logic for MainView.
     /// </summary>
-    public partial class MainView 
+    public partial class MainView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MainView" /> class.

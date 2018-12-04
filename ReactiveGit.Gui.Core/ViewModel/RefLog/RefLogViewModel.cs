@@ -1,4 +1,14 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel.RefLog
+﻿// <copyright file="RefLogViewModel.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using System.Collections.ObjectModel;
+
+using DynamicData;
+using DynamicData.Binding;
+
+namespace ReactiveGit.Gui.Core.ViewModel.RefLog
 {
     using System;
     using System.Collections.Generic;
@@ -20,6 +30,8 @@
     {
         private readonly ReactiveCommand<Unit, GitRefLog> refresh;
 
+        private readonly ReadOnlyObservableCollection<GitRefLog> refLogs;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RefLogViewModel" /> class.
         /// </summary>
@@ -31,6 +43,12 @@
 
             this.refresh = ReactiveCommand.CreateFromObservable(this.RefreshImpl, isCurrentBranchObservable);
 
+            this.refresh.ToObservableChangeSet()
+                .Sort(SortExpressionComparer<GitRefLog>.Descending(p => p.DateTime), SortOptions.UseBinarySearch)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out this.refLogs)
+                .Subscribe();
+
             this.WhenAnyValue(x => x.RepositoryDetails.SelectedBranch).Where(x => x != null).Subscribe(
                 _ => this.Refresh.InvokeCommand());
         }
@@ -39,16 +57,13 @@
         public override string FriendlyName => "Undo Stack";
 
         /// <inheritdoc />
-        [Reactive]
-        public IEnumerable<GitRefLog> RefLog { get; set; }
+        public IEnumerable<GitRefLog> RefLog => this.refLogs;
 
         /// <inheritdoc />
         public override ICommand Refresh => this.refresh;
 
         private IObservable<GitRefLog> RefreshImpl()
         {
-            this.RefLog = this.refresh.CreateCollection();
-
             return this.RepositoryDetails.RefLogManager.GetRefLog(this.RepositoryDetails.SelectedBranch);
         }
     }

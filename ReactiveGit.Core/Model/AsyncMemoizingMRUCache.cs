@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Core.Model
+﻿// <copyright file="AsyncMemoizingMRUCache.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Core.Model
 {
     using System;
     using System.Collections.Generic;
@@ -37,7 +42,7 @@
         /// <param name="calculationFunc">
         /// The function whose results you want to cache,
         /// which is provided the key value, and an Tag object that is
-        /// user-defined
+        /// user-defined.
         /// </param>
         /// <param name="maxSize">
         /// The size of the cache to maintain, after which old
@@ -46,7 +51,7 @@
         /// <param name="onRelease">
         /// A function to call when a result gets
         /// evicted from the cache (i.e. because Invalidate was called or the
-        /// cache is full)
+        /// cache is full).
         /// </param>
         public AsyncMemoizingMRUCache(
             Func<TParam, object, Task<TVal>> calculationFunc,
@@ -63,7 +68,7 @@
         }
 
         /// <summary>
-        /// Returns all values currently in the cache
+        /// Returns all values currently in the cache.
         /// </summary>
         /// <returns>The cached values.</returns>
         public IEnumerable<TVal> CachedValues()
@@ -72,7 +77,7 @@
         }
 
         /// <summary>
-        /// Evaluates the function provided, returning the cached value if possible
+        /// Evaluates the function provided, returning the cached value if possible.
         /// </summary>
         /// <param name="key">The value to pass to the calculation function.</param>
         /// <param name="context">An additional optional user-specific parameter.</param>
@@ -90,7 +95,7 @@
                 return found.Item2;
             }
 
-            TVal result = await this.calculationFunction(key, context);
+            TVal result = await this.calculationFunction(key, context).ConfigureAwait(true);
 
             var node = new LinkedListNode<TParam>(key);
             this.cacheMRUList.AddFirst(node);
@@ -123,7 +128,7 @@
         }
 
         /// <summary>
-        /// Invalidate all items in the cache
+        /// Invalidate all items in the cache.
         /// </summary>
         public void InvalidateAll()
         {

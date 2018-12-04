@@ -1,4 +1,14 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel.Tag
+﻿// <copyright file="TagViewModel.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using System.Collections.ObjectModel;
+
+using DynamicData;
+using DynamicData.Binding;
+
+namespace ReactiveGit.Gui.Core.ViewModel.Tag
 {
     using System;
     using System.Collections.Generic;
@@ -21,6 +31,8 @@
 
         private readonly ObservableAsPropertyHelper<GitTag> selectedGitTag;
 
+        private readonly ReadOnlyObservableCollection<GitTag> tags;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TagViewModel"/> class.
         /// </summary>
@@ -30,6 +42,12 @@
 
             this.refresh = ReactiveCommand.CreateFromObservable(this.RefreshImpl, isValidRepository);
 
+            this.refresh.ToObservableChangeSet()
+                .Sort(SortExpressionComparer<GitTag>.Descending(p => p.DateTime), SortOptions.UseBinarySearch)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out this.tags)
+                .Subscribe();
+
             this.selectedGitTag = this.WhenAnyValue(x => x.SelectedGitObject).Select(x => x as GitTag).ToProperty(this, x => x.SelectedTag, out this.selectedGitTag);
         }
 
@@ -37,8 +55,7 @@
         public override string FriendlyName => "Tags";
 
         /// <inheritdoc />
-        [Reactive]
-        public IEnumerable<GitTag> Tags { get; set; }
+        public IEnumerable<GitTag> Tags => this.tags;
 
         /// <inheritdoc />
         public override ICommand Refresh => this.refresh;
@@ -48,8 +65,6 @@
 
         private IObservable<GitTag> RefreshImpl()
         {
-            this.Tags = this.refresh.CreateCollection();
-
             return this.RepositoryDetails.TagManager.GetTags();
         }
     }

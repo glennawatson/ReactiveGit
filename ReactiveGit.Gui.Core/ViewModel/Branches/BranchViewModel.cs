@@ -1,4 +1,11 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel.Branches
+﻿// <copyright file="BranchViewModel.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using DynamicData.Binding;
+
+namespace ReactiveGit.Gui.Core.ViewModel.Branches
 {
     using System;
     using System.Collections.Generic;
@@ -20,7 +27,7 @@
     /// </summary>
     public class BranchViewModel : ContentViewModelBase, IBranchViewModel
     {
-        private readonly IReactiveList<BranchNode> branches = new ReactiveList<BranchNode>();
+        private readonly ObservableCollectionExtended<BranchNode> branches = new ObservableCollectionExtended<BranchNode>();
 
         private readonly ReactiveCommand<GitBranch, Unit> checkoutBranch;
 

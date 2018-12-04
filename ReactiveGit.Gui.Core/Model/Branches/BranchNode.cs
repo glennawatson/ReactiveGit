@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Gui.Core.Model.Branches
+﻿// <copyright file="BranchNode.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Gui.Core.Model.Branches
 {
     using System;
 
@@ -63,7 +68,7 @@
                 return true;
             }
 
-            return string.Equals(this.FullName, other.FullName);
+            return string.Equals(this.FullName, other.FullName, StringComparison.InvariantCulture);
         }
 
         /// <inheritdoc />

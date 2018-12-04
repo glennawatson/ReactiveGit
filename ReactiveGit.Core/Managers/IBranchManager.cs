@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Core.Managers
+﻿// <copyright file="IBranchManager.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Core.Managers
 {
     using System;
     using System.Reactive;
@@ -11,7 +16,7 @@
     /// <summary>
     /// Manages and handling getting branch information.
     /// </summary>
-    public interface IBranchManager
+    public interface IBranchManager : IDisposable
     {
         /// <summary>
         /// Gets a observable to the current branch.
@@ -48,7 +53,7 @@
         /// </summary>
         /// <param name="parent">The parent to get the commit messages for.</param>
         /// <param name="scheduler">The scheduler to schedule the task on.</param>
-        /// <returns>The commit messages</returns>
+        /// <returns>The commit messages.</returns>
         IObservable<string> GetCommitMessagesAfterParent(GitCommit parent, IScheduler scheduler = null);
 
         /// <summary>
@@ -79,9 +84,9 @@
         /// <summary>
         /// Gets a remote branch of the specified branch.
         /// </summary>
-        /// <param name="branch">The branch to get the </param>
+        /// <param name="branch">The branch to get.</param>
         /// <param name="scheduler">The scheduler to schedule the task on.</param>
-        /// <returns>The commit messages</returns>
+        /// <returns>The commit messages.</returns>
         IObservable<GitBranch> GetRemoteBranch(GitBranch branch, IScheduler scheduler = null);
 
         /// <summary>

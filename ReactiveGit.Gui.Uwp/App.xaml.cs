@@ -11,7 +11,7 @@
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    internal sealed partial class App
+    public sealed partial class App
     {
         /// <summary>Initializes a new instance of the <see cref="App"/> class. 
         /// Initializes the singleton application object.  This is the first line of authored code

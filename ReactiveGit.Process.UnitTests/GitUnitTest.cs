@@ -1,6 +1,8 @@
 ﻿// <copyright file="GitUnitTest.cs" company="Glenn Watson">
-// Copyright (c) Glenn Watson. All rights reserved.
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
 // </copyright>
+
 namespace Git.VisualStudio.UnitTests
 {
     using System.Collections.Generic;
@@ -34,7 +36,7 @@ namespace Git.VisualStudio.UnitTests
             string tempDirectory = GenerateGitRepository(out local);
 
             var numberCommits = 10;
-            this.GenerateCommits(numberCommits, tempDirectory, local, "master");
+            GenerateCommits(numberCommits, tempDirectory, local, "master");
             var branchManager = new BranchManager(local);
 
             IList<GitCommit> commits =
@@ -51,7 +53,7 @@ namespace Git.VisualStudio.UnitTests
             local.RunGit(new[] { "branch test1" }).FirstOrDefaultAsync().Wait();
             local.RunGit(new[] { "checkout test1" }).FirstOrDefaultAsync().Wait();
 
-            this.GenerateCommits(numberCommits, tempDirectory, local, "master");
+            GenerateCommits(numberCommits, tempDirectory, local, "master");
 
             commits =
                 branchManager.GetCommitsForBranch(new GitBranch("test1", false, false), 0, 0, GitLogOptions.None).ToList().Wait();
@@ -71,7 +73,7 @@ namespace Git.VisualStudio.UnitTests
 
             IList<string> commitNames = new List<string>();
             var numberCommits = 10;
-            this.GenerateCommits(numberCommits, tempDirectory, local, "master", commitNames);
+            GenerateCommits(numberCommits, tempDirectory, local, "master", commitNames);
 
             var branchManager = new BranchManager(local);
             IList<GitCommit> commits =
@@ -95,7 +97,7 @@ namespace Git.VisualStudio.UnitTests
             string tempDirectory = GenerateGitRepository(out local);
 
             var numberCommits = 10;
-            this.GenerateCommits(numberCommits, tempDirectory, local, "master");
+            GenerateCommits(numberCommits, tempDirectory, local, "master");
 
             var branchManager = new BranchManager(local);
 
@@ -120,7 +122,7 @@ namespace Git.VisualStudio.UnitTests
 
             commits.Should().BeInDescendingOrder(x => x.DateTime);
 
-            this.GenerateCommits(numberCommits, tempDirectory, local, "test1");
+            GenerateCommits(numberCommits, tempDirectory, local, "test1");
 
             commits =
                 branchManager.GetCommitsForBranch(
@@ -150,8 +152,8 @@ namespace Git.VisualStudio.UnitTests
         /// <param name="commits">The commits coming from the GIT command line BranchManager.</param>
         private static void CheckCommits(IList<Commit> repoCommits, IList<GitCommit> commits)
         {
-            repoCommits.Select(x => x.Sha).ShouldAllBeEquivalentTo(commits.Select(x => x.Sha));
-            repoCommits.Select(x => x.MessageShort).ShouldAllBeEquivalentTo(commits.Select(x => x.MessageShort));
+            repoCommits.Select(x => x.Sha).Should().BeEquivalentTo(commits.Select(x => x.Sha));
+            repoCommits.Select(x => x.MessageShort).Should().BeEquivalentTo(commits.Select(x => x.MessageShort));
         }
 
         /// <summary>
@@ -180,7 +182,7 @@ namespace Git.VisualStudio.UnitTests
         /// <param name="local">The repository manager for the repository.</param>
         /// <param name="branchName">The branch name to add the commits into.</param>
         /// <param name="commitMessages">A optional output list which is populated with the commit messages.</param>
-        private void GenerateCommits(
+        private static void GenerateCommits(
             int numberCommits,
             string directory,
             IGitProcessManager local,

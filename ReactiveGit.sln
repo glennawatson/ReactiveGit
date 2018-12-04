@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.Process", "ReactiveGit.Process\ReactiveGit.Process.csproj", "{F204EA1B-817B-4227-B653-A3F485C22800}"
 EndProject
@@ -12,6 +12,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.Gui.Uwp", "ReactiveGit.Gui.Uwp\ReactiveGit.Gui.Uwp.csproj", "{FFE7922E-A3FF-4CE1-944B-FF195D308ADD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F0A7F44F-8CAB-4952-9F0C-4B86924CEE2A}"
+	ProjectSection(SolutionItems) = preProject
+		Analyzers.ruleset = Analyzers.ruleset
+		Directory.Build.props = Directory.Build.props
+		LICENSE = LICENSE
+		stylecop.json = stylecop.json
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveGit.Gui.Core", "ReactiveGit.Gui.Core\ReactiveGit.Gui.Core.csproj", "{E96FC022-B784-477C-B5D4-3E59DDAFE1E8}"
 EndProject
@@ -145,5 +151,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BAD9374D-8F89-4080-A847-199D33A08EBD}
 	EndGlobalSection
 EndGlobal

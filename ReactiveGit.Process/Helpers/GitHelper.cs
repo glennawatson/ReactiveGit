@@ -1,5 +1,6 @@
 ﻿// <copyright file="GitHelper.cs" company="Glenn Watson">
-// Copyright (c) Glenn Watson. All rights reserved.
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
 // </copyright>
 namespace ReactiveGit.Process.Helpers
 {
@@ -12,7 +13,7 @@ namespace ReactiveGit.Process.Helpers
     /// <summary>
     /// Helper class for finding details about the GIT installation.
     /// </summary>
-    public class GitHelper
+    public static class GitHelper
     {
         /// <summary>
         /// Gets the binary path to the GIT executable.
@@ -65,7 +66,7 @@ namespace ReactiveGit.Process.Helpers
             }
 
             string[] allPaths = path.Split(';');
-            string gitPath = allPaths.FirstOrDefault(p => p.ToLower().TrimEnd('\\').EndsWith("git\\cmd"));
+            string gitPath = allPaths.FirstOrDefault(p => p.ToLowerInvariant().TrimEnd('\\').EndsWith("git\\cmd", StringComparison.OrdinalIgnoreCase));
             if ((gitPath != null) && Directory.Exists(gitPath))
             {
                 gitPath = Directory.GetParent(gitPath).FullName.TrimEnd('\\');

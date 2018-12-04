@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Process.Managers
+﻿// <copyright file="BranchManager.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Process.Managers
 {
     using System;
     using System.Collections.Generic;
@@ -16,7 +21,7 @@
     /// <summary>
     /// Helper which manages branch history.
     /// </summary>
-    public class BranchManager : IBranchManager
+    public sealed class BranchManager : IBranchManager
     {
         private readonly Subject<GitBranch> currentBranch = new Subject<GitBranch>();
 
@@ -156,6 +161,12 @@
             string[] arguments = { "status", "--porcelain", "--ignore-submodules=dirty", "--untracked-files=all" };
 
             return this.gitProcessManager.RunGit(arguments, scheduler: scheduler).Any();
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.currentBranch?.Dispose();
         }
 
         private static void GenerateFormat(IList<string> arguments)

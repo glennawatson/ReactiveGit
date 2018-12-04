@@ -1,6 +1,10 @@
 ﻿// <copyright file="MainViewModel.cs" company="Glenn Watson">
-// Copyright (c) Glenn Watson. All rights reserved.
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
 // </copyright>
+
+using DynamicData.Binding;
+
 namespace ReactiveGit.Gui.Core.ViewModel
 {
     using System;
@@ -28,8 +32,8 @@ namespace ReactiveGit.Gui.Core.ViewModel
 
         private readonly IRepositoryFactory repositoryFactory;
 
-        private readonly ReactiveList<IRepositoryDocumentViewModel> repositoryViewModels =
-            new ReactiveList<IRepositoryDocumentViewModel>();
+        private readonly ObservableCollectionExtended<IRepositoryDocumentViewModel> repositoryViewModels =
+            new ObservableCollectionExtended<IRepositoryDocumentViewModel>();
 
         private readonly ReactiveCommand<Unit, string> selectRepository;
 
@@ -46,24 +50,9 @@ namespace ReactiveGit.Gui.Core.ViewModel
             IRepositoryFactory repositoryFactory,
             IRepositoryViewModelFactory viewModelFactory)
         {
-            if (screen == null)
-            {
-                throw new ArgumentNullException(nameof(screen));
-            }
-
-            if (repositoryFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repositoryFactory));
-            }
-
-            if (viewModelFactory == null)
-            {
-                throw new ArgumentNullException(nameof(viewModelFactory));
-            }
-
-            this.HostScreen = screen;
-            this.repositoryFactory = repositoryFactory;
-            this.viewModelFactory = viewModelFactory;
+            this.HostScreen = screen ?? throw new ArgumentNullException(nameof(screen));
+            this.repositoryFactory = repositoryFactory ?? throw new ArgumentNullException(nameof(repositoryFactory));
+            this.viewModelFactory = viewModelFactory ?? throw new ArgumentNullException(nameof(viewModelFactory));
 
             this.SelectFolder = new Interaction<string, string>();
 
@@ -80,9 +69,9 @@ namespace ReactiveGit.Gui.Core.ViewModel
                     repositoryFactory.CreateRepositoryCreator().CreateRepository(x).Subscribe(
                         _ => { this.OpenRepository(x); }));
 
-            this.AllSupportViewModels = this.GetAllSupportViewModels();
+            this.AllSupportViewModels = GetAllSupportViewModels();
 
-            this.VisibleSupportViewModels = new ReactiveList<ISupportViewModel>(this.AllSupportViewModels);
+            this.VisibleSupportViewModels = new ObservableCollectionExtended<ISupportViewModel>(this.AllSupportViewModels);
 
             this.WhenAnyValue(x => x.SelectedRepositoryViewModel).Subscribe(this.UpdateRepositoryDetails);
         }
@@ -119,7 +108,7 @@ namespace ReactiveGit.Gui.Core.ViewModel
         /// <inheritdoc />
         public IList<ISupportViewModel> VisibleSupportViewModels { get; }
 
-        private IReadOnlyList<ISupportViewModel> GetAllSupportViewModels()
+        private static IReadOnlyList<ISupportViewModel> GetAllSupportViewModels()
         {
             IEnumerable<Type> supportViewModelTypes =
                 typeof(ISupportViewModel).GetTypeInfo().Assembly.ExportedTypes.Where(

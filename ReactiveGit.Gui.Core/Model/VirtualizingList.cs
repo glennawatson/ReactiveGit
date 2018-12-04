@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Gui.Core.Model
+﻿// <copyright file="VirtualizingList.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Gui.Core.Model
 {
     using System;
     using System.Collections;
@@ -36,18 +41,8 @@
         /// <param name="branchName">The name of the branch.</param>
         public VirtualizingList(IBranchManager branchManager, GitBranch branchName)
         {
-            if (branchManager == null)
-            {
-                throw new ArgumentNullException(nameof(branchManager));
-            }
-
-            if (branchName == null)
-            {
-                throw new ArgumentNullException(nameof(branchName));
-            }
-
-            this.branchManager = branchManager;
-            this.branchName = branchName;
+            this.branchManager = branchManager ?? throw new ArgumentNullException(nameof(branchManager));
+            this.branchName = branchName ?? throw new ArgumentNullException(nameof(branchName));
         }
 
         /// <inheritdoc />

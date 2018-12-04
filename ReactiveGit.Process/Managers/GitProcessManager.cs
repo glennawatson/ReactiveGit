@@ -1,4 +1,9 @@
-﻿namespace ReactiveGit.Process.Managers
+﻿// <copyright file="GitProcessManager.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Process.Managers
 {
     using System;
     using System.Collections.Generic;
@@ -21,7 +26,7 @@
     /// <summary>
     /// Manages and starts GIT processes.
     /// </summary>
-    public class GitProcessManager : IGitProcessManager
+    public sealed class GitProcessManager : IGitProcessManager, IDisposable
     {
         private static readonly SemaphoreSlim RepoLimiterSemaphore = new SemaphoreSlim(1, 1);
 
@@ -146,6 +151,13 @@
                     });
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            this.gitOutput?.Dispose();
+            this.gitUpdated?.Dispose();
+        }
+
         private static Process CreateGitProcess(string arguments, string repoDirectory)
         {
             string gitInstallationPath = GitHelper.GetGitInstallationPath();
@@ -171,7 +183,7 @@
 
         private static async Task<int> RunProcessAsync(Process process, CancellationToken token)
         {
-            await RepoLimiterSemaphore.WaitAsync(token);
+            await RepoLimiterSemaphore.WaitAsync(token).ConfigureAwait(false);
 
             try
             {
@@ -192,7 +204,7 @@
                                    process.WaitForExit();
                                    return process.ExitCode;
                                },
-                           token);
+                           token).ConfigureAwait(false);
             }
             finally
             {

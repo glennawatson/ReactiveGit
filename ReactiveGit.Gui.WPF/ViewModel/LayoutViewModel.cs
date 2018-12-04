@@ -1,4 +1,11 @@
-﻿namespace ReactiveGit.Gui.WPF.ViewModel
+﻿// <copyright file="LayoutViewModel.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using DynamicData.Binding;
+
+namespace ReactiveGit.Gui.WPF.ViewModel
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +34,7 @@
 
         private static readonly string CurrentLayout = "current.layout";
 
-        private readonly IReactiveList<string> layoutFileNames = new ReactiveList<string>();
+        private readonly ObservableCollectionExtended<string> layoutFileNames = new ObservableCollectionExtended<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LayoutViewModel"/> class.

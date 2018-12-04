@@ -1,9 +1,14 @@
-﻿namespace ReactiveGit.Core.Model
+﻿// <copyright file="GitLogOptions.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace ReactiveGit.Core.Model
 {
     using System;
 
     /// <summary>
-    /// A list of options when we are doing
+    /// A list of options when we are doing.
     /// </summary>
     [Flags]
     public enum GitLogOptions

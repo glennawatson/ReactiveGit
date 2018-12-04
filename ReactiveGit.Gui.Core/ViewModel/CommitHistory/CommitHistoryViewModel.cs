@@ -1,4 +1,11 @@
-﻿namespace ReactiveGit.Gui.Core.ViewModel.CommitHistory
+﻿// <copyright file="CommitHistoryViewModel.cs" company="Glenn Watson">
+// Copyright (c) 2018 Glenn Watson. All rights reserved.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+using DynamicData.Binding;
+
+namespace ReactiveGit.Gui.Core.ViewModel.CommitHistory
 {
     using System;
     using System.Collections.Generic;
@@ -18,8 +25,8 @@
     /// </summary>
     public class CommitHistoryViewModel : GitObjectViewModelBase, ICommitHistoryViewModel
     {
-        private readonly ReactiveList<CommitHistoryItemViewModel> commitHistory =
-            new ReactiveList<CommitHistoryItemViewModel>();
+        private readonly ObservableCollectionExtended<CommitHistoryItemViewModel> commitHistory =
+            new ObservableCollectionExtended<CommitHistoryItemViewModel>();
 
         private readonly ReactiveCommand<Unit, GitCommit> refresh;
 
