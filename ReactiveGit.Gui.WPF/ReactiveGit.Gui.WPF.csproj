@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="5.0.4" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.4.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.5.0" />
     <PackageReference Include="mahapps.metro" Version="1.6.5" />
     <PackageReference Include="reactiveui.wpf" Version="9.10.1" />
     <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
