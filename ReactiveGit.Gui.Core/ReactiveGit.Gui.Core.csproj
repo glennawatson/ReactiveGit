@@ -4,7 +4,7 @@
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="pclcrypto" Version="2.1.32-alpha" />
-      <PackageReference Include="reactiveui.fody" Version="9.11.3" />
+      <PackageReference Include="reactiveui.fody" Version="9.12.1" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ReactiveGit.Core\ReactiveGit.Core.csproj" />
