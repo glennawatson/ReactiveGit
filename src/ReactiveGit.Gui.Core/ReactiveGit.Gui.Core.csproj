@@ -1,0 +1,15 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="pclcrypto" Version="2.1.32-alpha" />
+      <PackageReference Include="ReactiveGITLibrary.Core" Version="1.0.16" />
+      <PackageReference Include="reactiveui.fody" Version="10.5.1" />
+      <PackageReference Include="Splat.Drawing" Version="9.1.1" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6" />
+      <PackageReference Update="Nerdbank.GitVersioning" Version="3.0.26" />
+    </ItemGroup>
+</Project>

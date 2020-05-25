@@ -1,0 +1,24 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+    <UseWpf>true</UseWpf>
+    <OutputType>WinExe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.0.0" />
+    <PackageReference Include="Dirkster.AvalonDock" Version="3.6.0" />
+    <PackageReference Include="mahapps.metro" Version="1.6.5" />
+    <PackageReference Include="ReactiveGITLibrary.GitProcess" Version="1.0.16" />
+    <PackageReference Include="reactiveui.wpf" Version="10.5.1" />
+    <PackageReference Include="System.Management" Version="4.6.0" />
+    <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ReactiveGit.Gui.Core\ReactiveGit.Gui.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6" />
+    <PackageReference Update="Nerdbank.GitVersioning" Version="3.0.26" />
+  </ItemGroup>
+</Project>

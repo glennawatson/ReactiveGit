@@ -1,0 +1,76 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  dotNetVersion: '3.1.x'
+
+steps:
+- task: UseDotNet@2
+  displayName: Install Dot Net Core v$(dotNetVersion)
+  inputs:
+    version: $(dotNetVersion)
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore NuGet'
+  inputs:
+    command: 'restore'
+    projects: '$(solution)'
+  env:
+    COREHOST_TRACE: 0
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1    
+
+- task: DotNetCoreCLI@2  
+  inputs:
+    command: custom
+    custom: tool
+    arguments: install --tool-path . nbgv
+  displayName: Install NBGV tool
+  env:
+    COREHOST_TRACE: 0
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1    
+
+- script: nbgv cloud
+  displayName: Set Version
+  env:
+    COREHOST_TRACE: 0
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1    
+
+- task: MSBuild@1
+  displayName: Build Solutions
+  inputs:
+    solution: '$(solution)'
+    msbuildArguments: /t:build;pack /p:NoPackageAnalysis=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)\artifacts /v:m
+    configuration: $(BuildConfiguration)
+    maximumCpuCount: true
+  env:
+    COREHOST_TRACE: 0
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1    
+
+- task: DotNetCoreCLI@2
+  displayName: Run Unit Tests
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --logger:"console;verbosity=detailed"'
+  env:
+    COREHOST_TRACE: 0
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1    
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Build Artifacts
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)\artifacts
+    ArtifactName: artifacts
+    publishLocation: Container
+  condition: always()
